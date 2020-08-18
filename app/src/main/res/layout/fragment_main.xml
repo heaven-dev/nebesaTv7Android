@@ -1,0 +1,905 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragmentMainRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/default_background">
+
+    <RelativeLayout
+        android:id="@+id/toolbarMain"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:background="@color/toolbar">
+
+        <TextView
+            android:id="@+id/toolbarTextMain"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:textSize="40sp"
+            android:textColor="@color/toolbar_and_title_text"
+            android:text="@string/toolbar_text" />
+
+        <ImageView
+            android:id="@+id/toolbarImageMain"
+            android:contentDescription="@string/tv7_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="4dp"
+            android:layout_centerInParent="true"
+            android:foregroundGravity="center_vertical"
+            android:src="@drawable/logo_nebesa_tv7" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/contentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:weightSum="2" >
+
+                <!-- ongoing program container -->
+                <LinearLayout
+                    android:id="@+id/tvImageContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_weight="1">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/tv_content_border"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/tvImage"
+                            android:contentDescription="@string/tv7_logo"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="4dp"
+                            android:scaleType="fitXY"/>
+
+                        <ImageView
+                            android:id="@+id/startButton"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_centerInParent="true"
+                            android:alpha="0.8"
+                            android:background="@drawable/start_button"
+                            android:contentDescription="@string/start_stream"
+                            android:src="@drawable/ic_start" />
+
+                        <TextView
+                            android:id="@+id/tvText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:paddingTop="1dp"
+                            android:paddingBottom="1dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
+                            android:layout_marginBottom="12dp"
+                            android:gravity="center_vertical"
+                            android:background="@color/image_text_background"
+                            android:textColor="@color/image_text"
+                            android:alpha="0.8"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="" />
+
+                        <ProgressBar
+                            android:id="@+id/programProgress"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:max="100"
+                            android:indeterminateTint="@color/tv7_default"
+                            android:background="@color/progressbar_background"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="12dp" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <!-- programs guide container -->
+                <LinearLayout
+                    android:id="@+id/guideContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_weight="1">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <!-- Today text -->
+                        <TextView
+                            android:id="@+id/todayText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="0dp"
+                            android:layout_marginTop="-6dp"
+                            android:gravity="center_vertical"
+                            android:text="@string/today"
+                            android:textColor="@color/toolbar_and_title_text"
+                            android:textSize="18sp" />
+
+                        <!-- arrows icon -->
+                        <ImageView
+                            android:id="@+id/upDownArrows"
+                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"
+                            android:layout_alignParentEnd="true"
+                            android:contentDescription="@string/arrows"
+                            android:src="@drawable/ic_up_down_arrows" />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/guideRowsContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/row1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/row1Time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="0dp"
+                                android:text=""
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/row1Title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:gravity="center_vertical"
+                                android:maxLines="1"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="0dp"
+                                android:text=""
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/row1Desc"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:gravity="center_vertical"
+                                android:maxLines="1"
+                                android:text="" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/row2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/row2Time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="0dp"
+                                android:textStyle="bold"
+                                android:gravity="center_vertical"
+                                android:text=""/>
+
+                            <TextView
+                                android:id="@+id/row2Title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="0dp"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:textStyle="bold"
+                                android:gravity="center_vertical"
+                                android:text=""/>
+
+                            <TextView
+                                android:id="@+id/row2Desc"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:gravity="center_vertical"
+                                android:text=""/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/row3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/row3Time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="0dp"
+                                android:textStyle="bold"
+                                android:gravity="center_vertical"
+                                android:text=""/>
+
+                            <TextView
+                                android:id="@+id/row3Title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="0dp"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:textStyle="bold"
+                                android:gravity="center_vertical"
+                                android:text=""/>
+
+                            <TextView
+                                android:id="@+id/row3Desc"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:gravity="center_vertical"
+                                android:text=""/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/row4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/row4Time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="0dp"
+                                android:textStyle="bold"
+                                android:gravity="center_vertical"
+                                android:text=""/>
+
+                            <TextView
+                                android:id="@+id/row4Title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="0dp"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:textStyle="bold"
+                                android:gravity="center_vertical"
+                                android:text=""/>
+
+                            <TextView
+                                android:id="@+id/row4Desc"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:gravity="center_vertical"
+                                android:text=""/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/row5"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/row5Time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="0dp"
+                                android:textStyle="bold"
+                                android:gravity="center_vertical"
+                                android:text=""/>
+
+                            <TextView
+                                android:id="@+id/row5Title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="0dp"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:textStyle="bold"
+                                android:gravity="center_vertical"
+                                android:text=""/>
+
+                            <TextView
+                                android:id="@+id/row5Desc"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:gravity="center_vertical"
+                                android:text=""/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/row6"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/row6Time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="0dp"
+                                android:textStyle="bold"
+                                android:gravity="center_vertical"
+                                android:text=""/>
+
+                            <TextView
+                                android:id="@+id/row6Title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="0dp"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:textStyle="bold"
+                                android:gravity="center_vertical"
+                                android:text=""/>
+
+                            <TextView
+                                android:id="@+id/row6Desc"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:gravity="center_vertical"
+                                android:text=""/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/row7"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/row7Time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="0dp"
+                                android:textStyle="bold"
+                                android:gravity="center_vertical"
+                                android:text=""/>
+
+                            <TextView
+                                android:id="@+id/row7Title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="0dp"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:textStyle="bold"
+                                android:gravity="center_vertical"
+                                android:text=""/>
+
+                            <TextView
+                                android:id="@+id/row7Desc"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:gravity="center_vertical"
+                                android:text=""/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/row8"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/row8Time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="0dp"
+                                android:textStyle="bold"
+                                android:gravity="center_vertical"
+                                android:text=""/>
+
+                            <TextView
+                                android:id="@+id/row8Title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="0dp"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:textStyle="bold"
+                                android:gravity="center_vertical"
+                                android:text=""/>
+
+                            <TextView
+                                android:id="@+id/row8Desc"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:gravity="center_vertical"
+                                android:text=""/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/row9"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/row9Time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="0dp"
+                                android:textStyle="bold"
+                                android:gravity="center_vertical"
+                                android:text=""/>
+
+                            <TextView
+                                android:id="@+id/row9Title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="0dp"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:textStyle="bold"
+                                android:gravity="center_vertical"
+                                android:text=""/>
+
+                            <TextView
+                                android:id="@+id/row9Desc"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:gravity="center_vertical"
+                                android:text=""/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/row10"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/row10Time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="0dp"
+                                android:textStyle="bold"
+                                android:gravity="center_vertical"
+                                android:text=""/>
+
+                            <TextView
+                                android:id="@+id/row10Title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="0dp"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:textStyle="bold"
+                                android:gravity="center_vertical"
+                                android:text=""/>
+
+                            <TextView
+                                android:id="@+id/row10Desc"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:gravity="center_vertical"
+                                android:text=""/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- coming program images container -->
+            <LinearLayout
+                android:id="@+id/comingProgramImagesContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:weightSum="2"
+                android:layout_weight="1">
+
+                <!-- coming programs text -->
+                <TextView
+                    android:id="@+id/comingProgramsText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginBottom="6dp"
+                    android:gravity="center_vertical"
+                    android:textSize="18sp"
+                    android:textColor="@color/toolbar_and_title_text"
+                    android:text="@string/coming_on_channel" />
+
+                <!-- first row of coming program images -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:weightSum="5"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/image1"
+                            android:contentDescription="@string/tv7_logo"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="fitXY"/>
+
+                        <TextView
+                            android:id="@+id/image1Text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:paddingTop="1dp"
+                            android:paddingBottom="1dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:gravity="center_vertical"
+                            android:background="@color/image_text_background"
+                            android:textColor="@color/image_text"
+                            android:alpha="0.8"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/image2"
+                            android:contentDescription="@string/tv7_logo"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="fitXY"/>
+
+                        <TextView
+                            android:id="@+id/image2Text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:paddingTop="1dp"
+                            android:paddingBottom="1dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:gravity="center_vertical"
+                            android:background="@color/image_text_background"
+                            android:textColor="@color/image_text"
+                            android:alpha="0.8"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/image3"
+                            android:contentDescription="@string/tv7_logo"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="fitXY"/>
+
+                        <TextView
+                            android:id="@+id/image3Text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:paddingTop="1dp"
+                            android:paddingBottom="1dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:gravity="center_vertical"
+                            android:background="@color/image_text_background"
+                            android:textColor="@color/image_text"
+                            android:alpha="0.8"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/image4"
+                            android:contentDescription="@string/tv7_logo"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="fitXY"/>
+
+                        <TextView
+                            android:id="@+id/image4Text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:paddingTop="1dp"
+                            android:paddingBottom="1dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:gravity="center_vertical"
+                            android:background="@color/image_text_background"
+                            android:textColor="@color/image_text"
+                            android:alpha="0.8"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/image5"
+                            android:contentDescription="@string/tv7_logo"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="fitXY"/>
+
+                        <TextView
+                            android:id="@+id/image5Text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:paddingTop="1dp"
+                            android:paddingBottom="1dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:gravity="center_vertical"
+                            android:background="@color/image_text_background"
+                            android:textColor="@color/image_text"
+                            android:alpha="0.8"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+
+                <!-- second row of coming program images -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:weightSum="5"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/image6"
+                            android:contentDescription="@string/tv7_logo"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="fitXY"/>
+
+                        <TextView
+                            android:id="@+id/image6Text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:paddingTop="1dp"
+                            android:paddingBottom="1dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:gravity="center_vertical"
+                            android:background="@color/image_text_background"
+                            android:textColor="@color/image_text"
+                            android:alpha="0.8"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/image7"
+                            android:contentDescription="@string/tv7_logo"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="fitXY"/>
+
+                        <TextView
+                            android:id="@+id/image7Text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:paddingTop="1dp"
+                            android:paddingBottom="1dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:gravity="center_vertical"
+                            android:background="@color/image_text_background"
+                            android:textColor="@color/image_text"
+                            android:alpha="0.8"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/image8"
+                            android:contentDescription="@string/tv7_logo"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="fitXY"/>
+
+                        <TextView
+                            android:id="@+id/image8Text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:paddingTop="1dp"
+                            android:paddingBottom="1dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:gravity="center_vertical"
+                            android:background="@color/image_text_background"
+                            android:textColor="@color/image_text"
+                            android:alpha="0.8"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/image9"
+                            android:contentDescription="@string/tv7_logo"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="fitXY"/>
+
+                        <TextView
+                            android:id="@+id/image9Text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:paddingTop="1dp"
+                            android:paddingBottom="1dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:gravity="center_vertical"
+                            android:background="@color/image_text_background"
+                            android:textColor="@color/image_text"
+                            android:alpha="0.8"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/image10"
+                            android:contentDescription="@string/tv7_logo"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="fitXY"/>
+
+                        <TextView
+                            android:id="@+id/image10Text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentBottom="true"
+                            android:paddingTop="1dp"
+                            android:paddingBottom="1dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:gravity="center_vertical"
+                            android:background="@color/image_text_background"
+                            android:textColor="@color/image_text"
+                            android:alpha="0.8"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
+

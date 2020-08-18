@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name" translatable="false">НебесаТВ7</string>
+    <string name="tv7_logo" translatable="false">TV7</string>
+    <string name="toast_something_went_wrong" translatable="false">Something went wrong :-(</string>
+    <string name="start_stream">Start</string>
+    <string name="arrows">Arrows</string>
+    <string name="arrow">Arrow</string>
+
+    <string name="toolbar_text">Kun sisältö ratkaisee</string>
+    <string name="exit_question">Sulje TV7 sovellus?</string>
+    <string name="yes">OK</string>
+    <string name="no">Peruuta</string>
+    <string name="coming_on_channel">Tulossa kanavalta</string>
+    <string name="today">Tänään</string>
+
+</resources>

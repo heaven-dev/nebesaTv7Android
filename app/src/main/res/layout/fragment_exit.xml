@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/exitOverlayContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:alpha="0.7"
+    android:background="@color/exit_overlay_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/exitQuestionText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/exit_overlay_controls"
+            android:textSize="40sp"
+            android:layout_gravity="center"
+            android:text="@string/exit_question" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/yesButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginEnd="15dp"
+                android:layout_weight="1"
+                android:textSize="28sp"
+                android:width="140dp"
+                android:textAllCaps="false"
+                android:background="@drawable/exit_button_focus"
+                android:textColor="@color/exit_overlay_controls"
+                android:text="@string/yes" />
+
+            <TextView
+                android:id="@+id/noButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginStart="15dp"
+                android:layout_weight="1"
+                android:textSize="28sp"
+                android:width="140dp"
+                android:textAllCaps="false"
+                android:background="@drawable/exit_button_no_focus"
+                android:textColor="@color/exit_overlay_controls"
+                android:text="@string/no" />
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>
