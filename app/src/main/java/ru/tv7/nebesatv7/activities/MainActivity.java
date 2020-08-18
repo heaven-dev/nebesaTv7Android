@@ -71,8 +71,6 @@ public class MainActivity extends AppCompatActivity implements EpgDataLoadedList
             progressBar.setScaleY(PROGRESS_BAR_SIZE);
             progressBar.setScaleX(PROGRESS_BAR_SIZE);
 
-            //Utils.setLocale(getResources(), LOCALE_FI);
-
             viewModel.getEpgData(this);
         }
         catch(Exception e) {
