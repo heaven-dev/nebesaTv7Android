@@ -1,4 +1,4 @@
-package ru.tv7.taivastv7.fragments;
+package ru.tv7.nebesatv7.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -15,12 +15,12 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import ru.tv7.taivastv7.BuildConfig;
-import ru.tv7.taivastv7.R;
-import ru.tv7.taivastv7.helpers.Utils;
+import ru.tv7.nebesatv7.BuildConfig;
+import ru.tv7.nebesatv7.R;
+import ru.tv7.nebesatv7.helpers.Utils;
 
-import static ru.tv7.taivastv7.helpers.Constants.LOG_TAG;
-import static ru.tv7.taivastv7.helpers.Constants.MAIN_FRAGMENT;
+import static ru.tv7.nebesatv7.helpers.Constants.LOG_TAG;
+import static ru.tv7.nebesatv7.helpers.Constants.MAIN_FRAGMENT;
 
 /**
  * Exit fragment. Shows exit overlay when user want to exit from application.

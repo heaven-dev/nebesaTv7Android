@@ -5,7 +5,7 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        applicationId "ru.tv7.taivastv7"
+        applicationId "ru.tv7.nebesatv7"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1

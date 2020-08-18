@@ -1,4 +1,4 @@
-package ru.tv7.taivastv7.helpers;
+package ru.tv7.nebesatv7.helpers;
 
 /**
  * Helper enum.

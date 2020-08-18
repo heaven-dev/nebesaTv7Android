@@ -1,4 +1,4 @@
-package ru.tv7.taivastv7.activities;
+package ru.tv7.nebesatv7.activities;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -15,20 +15,20 @@ import androidx.lifecycle.ViewModelProviders;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.tv7.taivastv7.BuildConfig;
-import ru.tv7.taivastv7.R;
-import ru.tv7.taivastv7.fragments.ExitFragment;
-import ru.tv7.taivastv7.fragments.MainFragment;
-import ru.tv7.taivastv7.fragments.VideoPlayerFragment;
-import ru.tv7.taivastv7.helpers.Utils;
-import ru.tv7.taivastv7.interfaces.EpgDataLoadedListener;
-import ru.tv7.taivastv7.model.SharedViewModel;
+import ru.tv7.nebesatv7.BuildConfig;
+import ru.tv7.nebesatv7.R;
+import ru.tv7.nebesatv7.fragments.ExitFragment;
+import ru.tv7.nebesatv7.fragments.MainFragment;
+import ru.tv7.nebesatv7.fragments.VideoPlayerFragment;
+import ru.tv7.nebesatv7.helpers.Utils;
+import ru.tv7.nebesatv7.interfaces.EpgDataLoadedListener;
+import ru.tv7.nebesatv7.model.SharedViewModel;
 
-import static ru.tv7.taivastv7.helpers.Constants.EXIT_OVERLAY_FRAGMENT;
-import static ru.tv7.taivastv7.helpers.Constants.LOG_TAG;
-import static ru.tv7.taivastv7.helpers.Constants.MAIN_FRAGMENT;
-import static ru.tv7.taivastv7.helpers.Constants.PROGRESS_BAR_SIZE;
-import static ru.tv7.taivastv7.helpers.Constants.VIDEO_PLAYER_FRAGMENT;
+import static ru.tv7.nebesatv7.helpers.Constants.EXIT_OVERLAY_FRAGMENT;
+import static ru.tv7.nebesatv7.helpers.Constants.LOG_TAG;
+import static ru.tv7.nebesatv7.helpers.Constants.MAIN_FRAGMENT;
+import static ru.tv7.nebesatv7.helpers.Constants.PROGRESS_BAR_SIZE;
+import static ru.tv7.nebesatv7.helpers.Constants.VIDEO_PLAYER_FRAGMENT;
 
 /**
  * Main activity.

@@ -1,9 +1,10 @@
-package ru.tv7.taivastv7.helpers;
+package ru.tv7.nebesatv7.helpers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import ru.tv7.taivastv7.R;
+import ru.tv7.nebesatv7.R;
+
 
 /**
  * Constants.

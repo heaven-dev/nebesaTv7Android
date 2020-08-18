@@ -1,4 +1,4 @@
-package ru.tv7.taivastv7;
+package ru.tv7.nebesatv7;
 
 import android.app.Application;
 import android.util.Log;
@@ -7,7 +7,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
-import static ru.tv7.taivastv7.helpers.Constants.LOG_TAG;
+import ru.tv7.nebesatv7.BuildConfig;
+
+import static ru.tv7.nebesatv7.helpers.Constants.LOG_TAG;
 
 /**
  * Application class. Implements volley request queue functionality.

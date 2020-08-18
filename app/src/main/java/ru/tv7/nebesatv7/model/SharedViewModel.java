@@ -1,4 +1,4 @@
-package ru.tv7.taivastv7.model;
+package ru.tv7.nebesatv7.model;
 
 import android.util.Log;
 
@@ -28,38 +28,38 @@ import java.util.TimeZone;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import ru.tv7.taivastv7.BuildConfig;
-import ru.tv7.taivastv7.NebesaTv7;
-import ru.tv7.taivastv7.helpers.EpgItem;
-import ru.tv7.taivastv7.helpers.Utils;
-import ru.tv7.taivastv7.interfaces.EpgDataLoadedListener;
+import ru.tv7.nebesatv7.helpers.EpgItem;
+import ru.tv7.nebesatv7.helpers.Utils;
+import ru.tv7.nebesatv7.interfaces.EpgDataLoadedListener;
+import ru.tv7.nebesatv7.BuildConfig;
+import ru.tv7.nebesatv7.NebesaTv7;
 
-import static ru.tv7.taivastv7.helpers.Constants.AMPERSAND;
-import static ru.tv7.taivastv7.helpers.Constants.CATEGORY;
-import static ru.tv7.taivastv7.helpers.Constants.COLON;
-import static ru.tv7.taivastv7.helpers.Constants.DASH;
-import static ru.tv7.taivastv7.helpers.Constants.STR_DATE_FORMAT;
-import static ru.tv7.taivastv7.helpers.Constants.DESC;
-import static ru.tv7.taivastv7.helpers.Constants.DOT;
-import static ru.tv7.taivastv7.helpers.Constants.EPG_CHANNEL;
-import static ru.tv7.taivastv7.helpers.Constants.EPG_CHANNEL_PARAM;
-import static ru.tv7.taivastv7.helpers.Constants.EPG_DURATION;
-import static ru.tv7.taivastv7.helpers.Constants.EPG_DURATION_PARAM;
-import static ru.tv7.taivastv7.helpers.Constants.EPG_LANG;
-import static ru.tv7.taivastv7.helpers.Constants.EPG_LANG_PARAM;
-import static ru.tv7.taivastv7.helpers.Constants.EPG_URL;
-import static ru.tv7.taivastv7.helpers.Constants.EQUAL;
-import static ru.tv7.taivastv7.helpers.Constants.ICON;
-import static ru.tv7.taivastv7.helpers.Constants.LOG_TAG;
-import static ru.tv7.taivastv7.helpers.Constants.MS_STR;
-import static ru.tv7.taivastv7.helpers.Constants.PROGRAMME;
-import static ru.tv7.taivastv7.helpers.Constants.QUESTION_MARK;
-import static ru.tv7.taivastv7.helpers.Constants.SRC;
-import static ru.tv7.taivastv7.helpers.Constants.START;
-import static ru.tv7.taivastv7.helpers.Constants.STOP;
-import static ru.tv7.taivastv7.helpers.Constants.TITLE;
-import static ru.tv7.taivastv7.helpers.Constants.T_CHAR;
-import static ru.tv7.taivastv7.helpers.Constants.UTC;
+import static ru.tv7.nebesatv7.helpers.Constants.AMPERSAND;
+import static ru.tv7.nebesatv7.helpers.Constants.CATEGORY;
+import static ru.tv7.nebesatv7.helpers.Constants.COLON;
+import static ru.tv7.nebesatv7.helpers.Constants.DASH;
+import static ru.tv7.nebesatv7.helpers.Constants.STR_DATE_FORMAT;
+import static ru.tv7.nebesatv7.helpers.Constants.DESC;
+import static ru.tv7.nebesatv7.helpers.Constants.DOT;
+import static ru.tv7.nebesatv7.helpers.Constants.EPG_CHANNEL;
+import static ru.tv7.nebesatv7.helpers.Constants.EPG_CHANNEL_PARAM;
+import static ru.tv7.nebesatv7.helpers.Constants.EPG_DURATION;
+import static ru.tv7.nebesatv7.helpers.Constants.EPG_DURATION_PARAM;
+import static ru.tv7.nebesatv7.helpers.Constants.EPG_LANG;
+import static ru.tv7.nebesatv7.helpers.Constants.EPG_LANG_PARAM;
+import static ru.tv7.nebesatv7.helpers.Constants.EPG_URL;
+import static ru.tv7.nebesatv7.helpers.Constants.EQUAL;
+import static ru.tv7.nebesatv7.helpers.Constants.ICON;
+import static ru.tv7.nebesatv7.helpers.Constants.LOG_TAG;
+import static ru.tv7.nebesatv7.helpers.Constants.MS_STR;
+import static ru.tv7.nebesatv7.helpers.Constants.PROGRAMME;
+import static ru.tv7.nebesatv7.helpers.Constants.QUESTION_MARK;
+import static ru.tv7.nebesatv7.helpers.Constants.SRC;
+import static ru.tv7.nebesatv7.helpers.Constants.START;
+import static ru.tv7.nebesatv7.helpers.Constants.STOP;
+import static ru.tv7.nebesatv7.helpers.Constants.TITLE;
+import static ru.tv7.nebesatv7.helpers.Constants.T_CHAR;
+import static ru.tv7.nebesatv7.helpers.Constants.UTC;
 
 public class SharedViewModel extends ViewModel {
 

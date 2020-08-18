@@ -1,4 +1,4 @@
-package ru.tv7.taivastv7.interfaces;
+package ru.tv7.nebesatv7.interfaces;
 
 /**
  * Epg data load interface.

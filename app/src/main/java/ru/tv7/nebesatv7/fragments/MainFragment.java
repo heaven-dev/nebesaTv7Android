@@ -1,4 +1,4 @@
-package ru.tv7.taivastv7.fragments;
+package ru.tv7.nebesatv7.fragments;
 
 import android.os.Bundle;
 
@@ -22,29 +22,29 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import ru.tv7.taivastv7.BuildConfig;
-import ru.tv7.taivastv7.R;
-import ru.tv7.taivastv7.helpers.CallOrigin;
-import ru.tv7.taivastv7.helpers.ComingProgramImageAndTextId;
-import ru.tv7.taivastv7.helpers.EpgItem;
-import ru.tv7.taivastv7.helpers.ProgramRowId;
-import ru.tv7.taivastv7.helpers.Utils;
-import ru.tv7.taivastv7.model.SharedViewModel;
+import ru.tv7.nebesatv7.helpers.CallOrigin;
+import ru.tv7.nebesatv7.helpers.ComingProgramImageAndTextId;
+import ru.tv7.nebesatv7.helpers.EpgItem;
+import ru.tv7.nebesatv7.helpers.ProgramRowId;
+import ru.tv7.nebesatv7.helpers.Utils;
+import ru.tv7.nebesatv7.model.SharedViewModel;
+import ru.tv7.nebesatv7.BuildConfig;
+import ru.tv7.nebesatv7.R;
 
-import static ru.tv7.taivastv7.helpers.Constants.COMING_PROGRAM_IMAGE_AND_TEXT;
-import static ru.tv7.taivastv7.helpers.Constants.EXIT_OVERLAY_FRAGMENT;
-import static ru.tv7.taivastv7.helpers.Constants.GUIDE_ELEMENT_COUNT;
-import static ru.tv7.taivastv7.helpers.Constants.PROGRAM_ROW;
-import static ru.tv7.taivastv7.helpers.Constants.HTTP;
-import static ru.tv7.taivastv7.helpers.Constants.HTTPS;
-import static ru.tv7.taivastv7.helpers.Constants.LOG_TAG;
-import static ru.tv7.taivastv7.helpers.Constants.PIPE_WITH_SPACES;
-import static ru.tv7.taivastv7.helpers.Constants.PROGRAM_VISIBLE_IMAGE_COUNT;
-import static ru.tv7.taivastv7.helpers.Constants.SPACE;
-import static ru.tv7.taivastv7.helpers.Constants.STREAM_URL;
-import static ru.tv7.taivastv7.helpers.Constants.TIMER_TIMEOUT;
-import static ru.tv7.taivastv7.helpers.Constants.URL_PARAM;
-import static ru.tv7.taivastv7.helpers.Constants.VIDEO_PLAYER_FRAGMENT;
+import static ru.tv7.nebesatv7.helpers.Constants.COMING_PROGRAM_IMAGE_AND_TEXT;
+import static ru.tv7.nebesatv7.helpers.Constants.EXIT_OVERLAY_FRAGMENT;
+import static ru.tv7.nebesatv7.helpers.Constants.GUIDE_ELEMENT_COUNT;
+import static ru.tv7.nebesatv7.helpers.Constants.PROGRAM_ROW;
+import static ru.tv7.nebesatv7.helpers.Constants.HTTP;
+import static ru.tv7.nebesatv7.helpers.Constants.HTTPS;
+import static ru.tv7.nebesatv7.helpers.Constants.LOG_TAG;
+import static ru.tv7.nebesatv7.helpers.Constants.PIPE_WITH_SPACES;
+import static ru.tv7.nebesatv7.helpers.Constants.PROGRAM_VISIBLE_IMAGE_COUNT;
+import static ru.tv7.nebesatv7.helpers.Constants.SPACE;
+import static ru.tv7.nebesatv7.helpers.Constants.STREAM_URL;
+import static ru.tv7.nebesatv7.helpers.Constants.TIMER_TIMEOUT;
+import static ru.tv7.nebesatv7.helpers.Constants.URL_PARAM;
+import static ru.tv7.nebesatv7.helpers.Constants.VIDEO_PLAYER_FRAGMENT;
 
 /**
  * Main fragment. Main view of application.

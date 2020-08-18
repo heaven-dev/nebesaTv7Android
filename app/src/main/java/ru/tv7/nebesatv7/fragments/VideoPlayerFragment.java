@@ -1,4 +1,4 @@
-package ru.tv7.taivastv7.fragments;
+package ru.tv7.nebesatv7.fragments;
 
 import android.content.Context;
 import android.net.Uri;
@@ -34,22 +34,22 @@ import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import ru.tv7.taivastv7.BuildConfig;
-import ru.tv7.taivastv7.R;
-import ru.tv7.taivastv7.helpers.EpgItem;
-import ru.tv7.taivastv7.helpers.Utils;
-import ru.tv7.taivastv7.model.SharedViewModel;
+import ru.tv7.nebesatv7.helpers.EpgItem;
+import ru.tv7.nebesatv7.helpers.Utils;
+import ru.tv7.nebesatv7.model.SharedViewModel;
+import ru.tv7.nebesatv7.BuildConfig;
+import ru.tv7.nebesatv7.R;
 
-import static ru.tv7.taivastv7.helpers.Constants.COLON;
-import static ru.tv7.taivastv7.helpers.Constants.DASH_WITH_SPACES;
-import static ru.tv7.taivastv7.helpers.Constants.DOT;
-import static ru.tv7.taivastv7.helpers.Constants.LOG_TAG;
-import static ru.tv7.taivastv7.helpers.Constants.MAIN_FRAGMENT;
-import static ru.tv7.taivastv7.helpers.Constants.PIPE_WITH_SPACES;
-import static ru.tv7.taivastv7.helpers.Constants.SPACE;
-import static ru.tv7.taivastv7.helpers.Constants.TIMER_TIMEOUT;
-import static ru.tv7.taivastv7.helpers.Constants.TYPE_PARAM;
-import static ru.tv7.taivastv7.helpers.Constants.URL_PARAM;
+import static ru.tv7.nebesatv7.helpers.Constants.COLON;
+import static ru.tv7.nebesatv7.helpers.Constants.DASH_WITH_SPACES;
+import static ru.tv7.nebesatv7.helpers.Constants.DOT;
+import static ru.tv7.nebesatv7.helpers.Constants.LOG_TAG;
+import static ru.tv7.nebesatv7.helpers.Constants.MAIN_FRAGMENT;
+import static ru.tv7.nebesatv7.helpers.Constants.PIPE_WITH_SPACES;
+import static ru.tv7.nebesatv7.helpers.Constants.SPACE;
+import static ru.tv7.nebesatv7.helpers.Constants.TIMER_TIMEOUT;
+import static ru.tv7.nebesatv7.helpers.Constants.TYPE_PARAM;
+import static ru.tv7.nebesatv7.helpers.Constants.URL_PARAM;
 
 /**
  * Video player fragment. Uses the ExoPlayer to show HLS stream.

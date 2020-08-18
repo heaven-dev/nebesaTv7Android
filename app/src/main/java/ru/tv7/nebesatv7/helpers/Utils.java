@@ -1,22 +1,16 @@
-package ru.tv7.taivastv7.helpers;
+package ru.tv7.nebesatv7.helpers;
 
 import android.content.Context;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.util.DisplayMetrics;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.Toast;
 
-import java.util.Locale;
-
-import static ru.tv7.taivastv7.helpers.Constants.FADE_ANIMATION_DURATION;
-import static ru.tv7.taivastv7.helpers.Constants.FADE_ANIMATION_END;
-import static ru.tv7.taivastv7.helpers.Constants.FADE_ANIMATION_START;
-import static ru.tv7.taivastv7.helpers.Constants.SHOW_ANIMATIONS;
-import static ru.tv7.taivastv7.helpers.Constants.ZERO_STR;
+import static ru.tv7.nebesatv7.helpers.Constants.FADE_ANIMATION_DURATION;
+import static ru.tv7.nebesatv7.helpers.Constants.FADE_ANIMATION_END;
+import static ru.tv7.nebesatv7.helpers.Constants.FADE_ANIMATION_START;
+import static ru.tv7.nebesatv7.helpers.Constants.SHOW_ANIMATIONS;
+import static ru.tv7.nebesatv7.helpers.Constants.ZERO_STR;
 
 /**
  * Util methods.
