@@ -12,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -64,6 +65,11 @@ public class ExitFragment extends Fragment {
             RelativeLayout exitOverlayContainer = root.findViewById(R.id.exitOverlayContainer);
             if (exitOverlayContainer != null) {
                 Utils.fadePageAnimation(exitOverlayContainer);
+            }
+
+            LinearLayout exitContentContainer = root.findViewById(R.id.exitContentContainer);
+            if (exitContentContainer != null) {
+                Utils.fadePageAnimation(exitContentContainer);
             }
 
             yesButton = root.findViewById(R.id.yesButton);

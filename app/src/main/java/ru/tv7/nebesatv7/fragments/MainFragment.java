@@ -252,10 +252,6 @@ public class MainFragment extends Fragment {
                 TextView textView = root.findViewById(cpi.getTextId());
                 if (textView != null) {
                     String text = epgItem.getLocalStartTime() + SPACE + epgItem.getTitle();
-                    String desc = epgItem.getDesc();
-                    if (desc != null) {
-                        text += (PIPE_WITH_SPACES + desc);
-                    }
                     textView.setText(text);
                 }
             }

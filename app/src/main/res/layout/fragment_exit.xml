@@ -1,16 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/exitOverlayContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:alpha="0.7"
-    android:background="@color/exit_overlay_background">
+    android:gravity="center">
 
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/exitOverlayContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:alpha="0.7"
+        android:background="@color/exit_overlay_background"
+        android:gravity="center">
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/exitContentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
 
         <TextView
             android:id="@+id/exitQuestionText"
@@ -25,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="14dp"
             android:orientation="horizontal">
 
             <TextView
@@ -58,4 +66,5 @@
         </LinearLayout>
 
     </LinearLayout>
+
 </RelativeLayout>
