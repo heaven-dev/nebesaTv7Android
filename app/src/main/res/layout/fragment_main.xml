@@ -88,7 +88,7 @@
                             android:alpha="0.8"
                             android:background="@drawable/start_button"
                             android:contentDescription="@string/start_stream"
-                            android:src="@drawable/ic_start" />
+                            android:src="@drawable/start" />
 
                         <TextView
                             android:id="@+id/tvText"
@@ -161,7 +161,7 @@
                             android:layout_height="20dp"
                             android:layout_alignParentEnd="true"
                             android:contentDescription="@string/arrows"
-                            android:src="@drawable/ic_up_down_arrows" />
+                            android:src="@drawable/up_down_arrows" />
                     </RelativeLayout>
 
                     <LinearLayout
