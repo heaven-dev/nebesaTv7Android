@@ -76,9 +76,9 @@ Guide of [Android TV](https://developer.android.com/training/tv).
   - Follow instructions from [here](https://developer.android.com/studio/run#reference).
 
 ### Minimum Android version to run this application
-  - Lollipop
-    - API level 22
-    - Android 5.1 (Android TV)
+  - Marshmallow
+    - API level 23
+    - Android 6.0 (Android TV)
 
 ### License
  - [MIT](https://github.com/heaven-dev/nebesaTv7Android/blob/master/LICENSE.md)

@@ -32,7 +32,7 @@
         android:theme="@style/AppTheme"
         android:versionCode="1"
         android:versionName="0.0.1"
-        android:minSdkVersion="21"
+        android:minSdkVersion="23"
         android:targetSdkVersion="29">
         <activity
             android:name="ru.tv7.nebesatv7.activities.MainActivity"
