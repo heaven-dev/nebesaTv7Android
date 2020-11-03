@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.lifecycle.ViewModel;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -60,6 +61,7 @@ import static ru.tv7.nebesatv7.helpers.Constants.STOP;
 import static ru.tv7.nebesatv7.helpers.Constants.TITLE;
 import static ru.tv7.nebesatv7.helpers.Constants.T_CHAR;
 import static ru.tv7.nebesatv7.helpers.Constants.UTC;
+import static ru.tv7.nebesatv7.helpers.Constants.VOLLEY_TIMEOUT_VALUE;
 
 public class SharedViewModel extends ViewModel {
 
@@ -253,6 +255,11 @@ public class SharedViewModel extends ViewModel {
                         }
                     }
             );
+
+            jsonRequest.setRetryPolicy(new DefaultRetryPolicy(
+                    VOLLEY_TIMEOUT_VALUE,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
             NebesaTv7.getInstance().addToRequestQueue(jsonRequest);
         }
