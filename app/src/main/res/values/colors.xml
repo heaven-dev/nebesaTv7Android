@@ -12,4 +12,5 @@
     <color name="progressbar_background">#444444</color>
     <color name="video_top_bar">#444444</color>
     <color name="video_top_bar_text">#ffffff</color>
+    <color name="exoplayer_background">#000000</color>
 </resources>
