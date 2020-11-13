@@ -1,11 +1,6 @@
 package ru.tv7.nebesatv7.fragments;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModelProviders;
-
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -16,25 +11,35 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProviders;
+
 import com.bumptech.glide.Glide;
 
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import ru.tv7.nebesatv7.helpers.CallOrigin;
-import ru.tv7.nebesatv7.helpers.ComingProgramImageAndTextId;
-import ru.tv7.nebesatv7.helpers.EpgItem;
-import ru.tv7.nebesatv7.helpers.ProgramRowId;
-import ru.tv7.nebesatv7.helpers.Utils;
-import ru.tv7.nebesatv7.model.SharedViewModel;
 import ru.tv7.nebesatv7.BuildConfig;
 import ru.tv7.nebesatv7.R;
+import ru.tv7.nebesatv7.enums.CallOrigin;
+import ru.tv7.nebesatv7.helpers.ComingProgramImageAndTextId;
+import ru.tv7.nebesatv7.helpers.EpgItem;
+import ru.tv7.nebesatv7.helpers.GuideRowId;
+import ru.tv7.nebesatv7.helpers.Sidebar;
+import ru.tv7.nebesatv7.helpers.Utils;
+import ru.tv7.nebesatv7.model.ProgramScheduleViewModel;
+import ru.tv7.nebesatv7.model.SharedCacheViewModel;
 
+import static ru.tv7.nebesatv7.helpers.Constants.CHANNEL_URL_PARAM;
 import static ru.tv7.nebesatv7.helpers.Constants.COMING_PROGRAM_IMAGE_AND_TEXT;
 import static ru.tv7.nebesatv7.helpers.Constants.EXIT_OVERLAY_FRAGMENT;
 import static ru.tv7.nebesatv7.helpers.Constants.GUIDE_ELEMENT_COUNT;
-import static ru.tv7.nebesatv7.helpers.Constants.PROGRAM_ROW;
+import static ru.tv7.nebesatv7.helpers.Constants.GUIDE_ROWS;
+import static ru.tv7.nebesatv7.helpers.Constants.GUIDE_TIMER_TIMEOUT;
 import static ru.tv7.nebesatv7.helpers.Constants.HTTP;
 import static ru.tv7.nebesatv7.helpers.Constants.HTTPS;
 import static ru.tv7.nebesatv7.helpers.Constants.LOG_TAG;
@@ -42,33 +47,38 @@ import static ru.tv7.nebesatv7.helpers.Constants.PIPE_WITH_SPACES;
 import static ru.tv7.nebesatv7.helpers.Constants.PROGRAM_VISIBLE_IMAGE_COUNT;
 import static ru.tv7.nebesatv7.helpers.Constants.SPACE;
 import static ru.tv7.nebesatv7.helpers.Constants.STREAM_URL;
-import static ru.tv7.nebesatv7.helpers.Constants.TIMER_TIMEOUT;
-import static ru.tv7.nebesatv7.helpers.Constants.URL_PARAM;
-import static ru.tv7.nebesatv7.helpers.Constants.VIDEO_PLAYER_FRAGMENT;
+import static ru.tv7.nebesatv7.helpers.Constants.TV_MAIN_FRAGMENT;
+import static ru.tv7.nebesatv7.helpers.Constants.TV_PLAYER_FRAGMENT;
 
 /**
- * Main fragment. Main view of application.
+ * Tv main fragment. Main view of application.
  */
-public class MainFragment extends Fragment {
+public class TvMainFragment extends Fragment implements FragmentManager.OnBackStackChangedListener {
 
     private View root = null;
-    private FragmentManager fragmentManager = null;
-    private SharedViewModel viewModel = null;
-    private String programStartUtc = null;
+    private ProgramScheduleViewModel viewModel = null;
+    private SharedCacheViewModel sharedCacheViewModel = null;
+
+    private String programStart = null;
     private int guideIndex = 0;
     private Timer timer = null;
+
+    private ImageView startButton = null;
+    private ImageView upDownArrows = null;
+
+    private List<TextView> menuTexts = null;
 
     /**
      * Default constructor.
      */
-    public MainFragment() { }
+    public TvMainFragment() { }
 
     /**
      * Creates and return a new instance of main fragment class.
      * @return
      */
-    public static MainFragment newInstance() {
-        return new MainFragment();
+    public static TvMainFragment newInstance() {
+        return new TvMainFragment();
     }
 
     /**
@@ -80,10 +90,16 @@ public class MainFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (BuildConfig.DEBUG) {
-            Log.d(LOG_TAG, "MainFragment.onCreate() called.");
+            Log.d(LOG_TAG, "TvMainFragment.onCreate() called.");
         }
 
-        viewModel = ViewModelProviders.of(requireActivity()).get(SharedViewModel.class);
+        viewModel = ViewModelProviders.of(requireActivity()).get(ProgramScheduleViewModel.class);
+        sharedCacheViewModel = ViewModelProviders.of(requireActivity()).get(SharedCacheViewModel.class);
+
+        FragmentManager fragmentManager = Utils.getFragmentManager(getActivity());
+        if (fragmentManager != null) {
+            fragmentManager.addOnBackStackChangedListener(this);
+        }
     }
 
     /**
@@ -96,29 +112,79 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "MainFragment.onCreateView() called.");
+                Log.d(LOG_TAG, "TvMainFragment.onCreateView() called.");
             }
 
-            root = inflater.inflate(R.layout.fragment_main, container, false);
+            root = inflater.inflate(R.layout.fragment_tv_main, container, false);
 
-            LinearLayout fragmentMainRoot = root.findViewById(R.id.fragmentMainRoot);
-            if (fragmentMainRoot != null) {
-                Utils.fadePageAnimation(fragmentMainRoot);
+            LinearLayout contentContainer = root.findViewById(R.id.contentContainer);
+            if (contentContainer != null) {
+                Utils.fadePageAnimation(contentContainer);
             }
 
-            programStartUtc = null;
+            programStart = null;
             guideIndex = 0;
 
             this.createMainView(CallOrigin.NoTimer);
             this.addCountdownTimer();
+
+            startButton = root.findViewById(R.id.startButton);
+            if (startButton != null) {
+                Utils.requestFocus(startButton);
+            }
+
+            upDownArrows = root.findViewById(R.id.upDownArrows);
+
+            menuTexts = Sidebar.getMenuTextItems(root);
+
+            Sidebar.setSelectedMenuItem(root, R.id.tvMenuContainer);
         }
         catch(Exception e) {
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "MainFragment.onCreateView(): Exception: " + e);
+                Log.d(LOG_TAG, "TvMainFragment.onCreateView(): Exception: " + e);
             }
             Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
         }
         return root;
+    }
+
+    /**
+     * onViewCreated() - Android lifecycle method.
+     * @param view
+     * @param savedInstanceState
+     */
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        startButton = root.findViewById(R.id.startButton);
+        if (startButton != null) {
+            startButton.post(new Runnable() {
+                @Override
+                public void run() {
+                    Utils.requestFocus(startButton);
+                }
+            });
+        }
+    }
+
+    /**
+     * Back stack changed listener.
+     */
+    @Override
+    public void onBackStackChanged() {
+        View view = getView();
+        if (view != null && view.getId() == R.id.tvMainFragment) {
+            ImageView startButton = root.findViewById(R.id.startButton);
+            if (startButton != null) {
+                startButton.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Utils.requestFocus(startButton);
+                    }
+                });
+            }
+        }
     }
 
     /**
@@ -137,7 +203,7 @@ public class MainFragment extends Fragment {
      */
     private void createMainView(CallOrigin callOrigin) throws Exception {
         if (BuildConfig.DEBUG) {
-            Log.d(LOG_TAG, "MainFragment.createMainView() called.");
+            Log.d(LOG_TAG, "TvMainFragment.createMainView() called.");
         }
 
         boolean updateContent = false;
@@ -156,17 +222,17 @@ public class MainFragment extends Fragment {
                     }
                 }
 
-                String utcTime = epgItem.getStartUtcStr();
-                if (!utcTime.equals(programStartUtc)) {
+                String time = epgItem.getStart();
+                if (!time.equals(programStart)) {
                     // ongoing program changed from previous check - updated images and guide
                     updateContent = true;
-                    programStartUtc = utcTime;
+                    programStart = time;
                 }
             }
 
             if (updateContent) {
                 if (BuildConfig.DEBUG) {
-                    Log.d(LOG_TAG, "MainFragment.createMainView(): Update content.");
+                    Log.d(LOG_TAG, "TvMainFragment.createMainView(): Update content.");
                 }
 
                 String imageUrl = epgItem.getIcon();
@@ -204,7 +270,7 @@ public class MainFragment extends Fragment {
     private void addOngoingProgramImage(String icon, EpgItem epgItem) {
         try {
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "MainFragment.addOngoingProgramImage() called.");
+                Log.d(LOG_TAG, "TvMainFragment.addOngoingProgramImage() called.");
             }
 
             ImageView tvImage = root.findViewById(R.id.tvImage);
@@ -224,7 +290,7 @@ public class MainFragment extends Fragment {
         }
         catch(Exception e) {
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "MainFragment.addOngoingProgramImage(): Exception: " + e);
+                Log.d(LOG_TAG, "TvMainFragment.addOngoingProgramImage(): Exception: " + e);
             }
             Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
         }
@@ -239,7 +305,7 @@ public class MainFragment extends Fragment {
     private void addComingProgramImages(int index, String icon, EpgItem epgItem)  {
         try {
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "MainFragment.addComingProgramImages() called.");
+                Log.d(LOG_TAG, "TvMainFragment.addComingProgramImages() called.");
             }
 
             ComingProgramImageAndTextId cpi = COMING_PROGRAM_IMAGE_AND_TEXT.get(index);
@@ -258,7 +324,7 @@ public class MainFragment extends Fragment {
         }
         catch(Exception e) {
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "MainFragment.addComingProgramImages(): Exception: " + e);
+                Log.d(LOG_TAG, "TvMainFragment.addComingProgramImages(): Exception: " + e);
             }
             Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
         }
@@ -270,18 +336,18 @@ public class MainFragment extends Fragment {
     private void updateGuide()  {
         try {
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "MainFragment.updateGuide() called.");
+                Log.d(LOG_TAG, "TvMainFragment.updateGuide() called.");
             }
 
             List<EpgItem> guideElements  = viewModel.getGuideData(guideIndex, GUIDE_ELEMENT_COUNT);
 
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "MainFragment.updateGuide() Guide elements size: " + guideElements.size());
+                Log.d(LOG_TAG, "TvMainFragment.updateGuide() Guide elements size: " + guideElements.size());
             }
 
             for(int i = 0; i < guideElements.size(); i++) {
                 EpgItem e = guideElements.get(i);
-                ProgramRowId gd = PROGRAM_ROW.get(i);
+                GuideRowId gd = GUIDE_ROWS.get(i);
 
                 TextView rowTime = root.findViewById(gd.getTimeId());
                 TextView rowTitle = root.findViewById(gd.getTitleId());
@@ -313,7 +379,7 @@ public class MainFragment extends Fragment {
         }
         catch(Exception e) {
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "MainFragment.addComingProgramImages(): Exception: " + e);
+                Log.d(LOG_TAG, "TvMainFragment.addComingProgramImages(): Exception: " + e);
             }
             Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
         }
@@ -324,7 +390,7 @@ public class MainFragment extends Fragment {
      */
     private void addCountdownTimer() {
         if (BuildConfig.DEBUG) {
-            Log.d(LOG_TAG, "MainFragment.addCountdownTimer() called.");
+            Log.d(LOG_TAG, "TvMainFragment.addCountdownTimer() called.");
         }
 
         this.cancelTimer();
@@ -339,7 +405,7 @@ public class MainFragment extends Fragment {
 
                 updateUiInMainThread();
             }
-        }, TIMER_TIMEOUT, TIMER_TIMEOUT);
+        }, GUIDE_TIMER_TIMEOUT, GUIDE_TIMER_TIMEOUT);
     }
 
     /**
@@ -380,57 +446,121 @@ public class MainFragment extends Fragment {
     public boolean onKeyDown(int keyCode, KeyEvent events) {
         try {
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "MainFragment.onKeyDown(): keyCode: " + keyCode);
+                Log.d(LOG_TAG, "TvMainFragment.onKeyDown(): keyCode: " + keyCode);
+            }
+
+            View focusedView = Utils.getFocusedView(getActivity());
+            if (focusedView == null) {
+                Utils.requestFocus(startButton);
             }
 
             if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
                 if (BuildConfig.DEBUG) {
-                    Log.d(LOG_TAG, "MainFragment.onKeyDown(): KEYCODE_DPAD_CENTER: keyCode: " + keyCode);
+                    Log.d(LOG_TAG, "TvMainFragment.onKeyDown(): KEYCODE_DPAD_CENTER: keyCode: " + keyCode);
                 }
 
-                this.toVideoPlayer();
+                if (Sidebar.isSideMenuOpen(menuTexts)) {
+                    int focusedMenu = Sidebar.getFocusedMenuItem(root);
+                    if (focusedMenu == R.id.tvMenuContainer) {
+                        this.focusOutFromSideMenu();
+                    }
+                    else {
+                        if (BuildConfig.DEBUG) {
+                            Log.d(LOG_TAG, "TvMainFragment.onKeyDown(): Selected sidebar menu: " + focusedMenu);
+                        }
+
+                        Sidebar.menuItemSelected(focusedMenu, getActivity(), sharedCacheViewModel);
+                    }
+                }
+                else {
+                    if (focusedView == startButton) {
+                        sharedCacheViewModel.setPageToHistory(TV_MAIN_FRAGMENT);
+
+                        Bundle bundle = new Bundle();
+                        bundle.putString(CHANNEL_URL_PARAM, STREAM_URL);
+
+                        Utils.toPage(TV_PLAYER_FRAGMENT, getActivity(), true, false, bundle);
+                    }
+                }
             }
             else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
                 if (BuildConfig.DEBUG) {
-                    Log.d(LOG_TAG, "MainFragment.onKeyDown(): KEYCODE_DPAD_LEFT: keyCode: " + keyCode);
+                    Log.d(LOG_TAG, "TvMainFragment.onKeyDown(): KEYCODE_DPAD_LEFT: keyCode: " + keyCode);
+                }
+
+                if (focusedView == upDownArrows) {
+                    Utils.requestFocus(startButton);
+                }
+                else if (focusedView == startButton) {
+                    Sidebar.showMenuTexts(menuTexts);
+                    Sidebar.setFocusToMenu(root, R.id.tvMenuContainer);
                 }
             }
             else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
                 if (BuildConfig.DEBUG) {
-                    Log.d(LOG_TAG, "MainFragment.onKeyDown(): KEYCODE_DPAD_RIGHT: keyCode: " + keyCode);
+                    Log.d(LOG_TAG, "TvMainFragment.onKeyDown(): KEYCODE_DPAD_RIGHT: keyCode: " + keyCode);
+                }
+
+                if (Sidebar.isSideMenuOpen(menuTexts)) {
+                    this.focusOutFromSideMenu();
+                }
+                else {
+                    if (focusedView == startButton) {
+                        Utils.requestFocus(upDownArrows);
+                    }
                 }
             }
             else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
                 if (BuildConfig.DEBUG) {
-                    Log.d(LOG_TAG, "MainFragment.onKeyDown(): KEYCODE_DPAD_DOWN: keyCode: " + keyCode);
+                    Log.d(LOG_TAG, "TvMainFragment.onKeyDown(): KEYCODE_DPAD_DOWN: keyCode: " + keyCode);
                 }
 
-                if (viewModel.isListItemInIndex(guideIndex + GUIDE_ELEMENT_COUNT)) {
-                    guideIndex++;
-                    this.updateGuide();
+                if (Sidebar.isSideMenuOpen(menuTexts)) {
+                    Sidebar.menuFocusDown(root, R.id.tvMenuContainer);
+                }
+                else {
+                    focusedView = Utils.getFocusedView(getActivity());
+
+                    if (focusedView == upDownArrows && viewModel.isListItemInIndex(guideIndex + GUIDE_ELEMENT_COUNT)) {
+                        guideIndex++;
+                        this.updateGuide();
+                    }
                 }
             }
             else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
                 if (BuildConfig.DEBUG) {
-                    Log.d(LOG_TAG, "MainFragment.onKeyDown(): KEYCODE_DPAD_UP: keyCode: " + keyCode);
+                    Log.d(LOG_TAG, "TvMainFragment.onKeyDown(): KEYCODE_DPAD_UP: keyCode: " + keyCode);
                 }
 
-                if (guideIndex > 0) {
-                    guideIndex--;
-                    this.updateGuide();
+                if (Sidebar.isSideMenuOpen(menuTexts)) {
+                    Sidebar.menuFocusUp(root, R.id.tvMenuContainer);
+                }
+                else {
+                    focusedView = Utils.getFocusedView(getActivity());
+
+                    if (focusedView == upDownArrows && guideIndex > 0) {
+                        guideIndex--;
+                        this.updateGuide();
+                    }
                 }
             }
             else if (keyCode == KeyEvent.KEYCODE_BACK) {
                 if (BuildConfig.DEBUG) {
-                    Log.d(LOG_TAG, "MainFragment.onKeyDown(): KEYCODE_BACK: keyCode: " + keyCode);
+                    Log.d(LOG_TAG, "TvMainFragment.onKeyDown(): KEYCODE_BACK: keyCode: " + keyCode);
                 }
 
-                this.toExitOverlay();
+                if (Sidebar.isSideMenuOpen(menuTexts)) {
+                    this.focusOutFromSideMenu();
+                }
+                else {
+                    sharedCacheViewModel.setPageToHistory(TV_MAIN_FRAGMENT);
+                    Utils.toPage(EXIT_OVERLAY_FRAGMENT, getActivity(), false, false,null);
+                }
             }
         }
         catch(Exception e) {
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "MainFragment.onKeyDown(): Exception: " + e);
+                Log.d(LOG_TAG, "TvMainFragment.onKeyDown(): Exception: " + e);
             }
             Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
         }
@@ -439,48 +569,12 @@ public class MainFragment extends Fragment {
     }
 
     /**
-     * Finds a video player fragment and replaces main fragment from it.
+     * Handles focus out from side menu.
      */
-    private void toVideoPlayer() {
-        // Add video player fragment to container
+    private void focusOutFromSideMenu() {
+        Sidebar.hideMenuTexts(menuTexts);
+        Sidebar.setSelectedMenuItem(root, R.id.tvMenuContainer);
 
-        this.checkFragmentManager();
-
-        Fragment videoPlayerFragment = fragmentManager.findFragmentByTag(VIDEO_PLAYER_FRAGMENT);
-        if (videoPlayerFragment == null) {
-            videoPlayerFragment = VideoPlayerFragment.newInstance();
-        }
-
-        // Add parameters
-        Bundle bundle = new Bundle();
-        bundle.putString(URL_PARAM, STREAM_URL);
-        videoPlayerFragment.setArguments(bundle);
-
-        fragmentManager.beginTransaction().replace(R.id.fragment_container, videoPlayerFragment, VIDEO_PLAYER_FRAGMENT).addToBackStack(VIDEO_PLAYER_FRAGMENT).commit();
-    }
-
-    /**
-     * Adds exit overlay on top of main fragment. Called when user want to exit from application.
-     */
-    private void toExitOverlay() {
-        // Add exit overlay fragment to container
-
-        this.checkFragmentManager();
-
-        Fragment exitOverlayFragment = fragmentManager.findFragmentByTag(EXIT_OVERLAY_FRAGMENT);
-        if (exitOverlayFragment == null) {
-            exitOverlayFragment = ExitFragment.newInstance();
-        }
-
-        fragmentManager.beginTransaction().add(R.id.fragment_container, exitOverlayFragment, EXIT_OVERLAY_FRAGMENT).addToBackStack(EXIT_OVERLAY_FRAGMENT).commit();
-    }
-
-    /**
-     * Checks fragment manager and creates it if needed.
-     */
-    private void checkFragmentManager() {
-        if (fragmentManager == null) {
-            fragmentManager = getActivity().getSupportFragmentManager();
-        }
+        Utils.requestFocus(startButton);
     }
 }

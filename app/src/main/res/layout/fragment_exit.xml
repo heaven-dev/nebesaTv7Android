@@ -44,9 +44,10 @@
                 android:layout_marginEnd="15dp"
                 android:layout_weight="1"
                 android:textSize="28sp"
+                android:focusable="true"
                 android:width="140dp"
                 android:textAllCaps="false"
-                android:background="@drawable/exit_button_focus"
+                android:background="@drawable/exit_button"
                 android:textColor="@color/exit_overlay_controls"
                 android:text="@string/yes" />
 
@@ -58,9 +59,10 @@
                 android:layout_marginStart="15dp"
                 android:layout_weight="1"
                 android:textSize="28sp"
+                android:focusable="true"
                 android:width="140dp"
                 android:textAllCaps="false"
-                android:background="@drawable/exit_button_no_focus"
+                android:background="@drawable/exit_button"
                 android:textColor="@color/exit_overlay_controls"
                 android:text="@string/no" />
         </LinearLayout>

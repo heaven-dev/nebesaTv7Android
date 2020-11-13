@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/archiveMainFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/default_background">
+
+    <include layout="@layout/fragment_toolbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <include layout="@layout/fragment_sidebar"/>
+
+        <RelativeLayout
+            android:id="@+id/contentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/default_background"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/recommendText"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginStart="10dp"
+                android:gravity="start|center_vertical"
+                android:text="@string/we_recommend"
+                android:textColor="@color/content_area_text"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:id="@+id/recommendContainer"
+                android:layout_width="match_parent"
+                android:layout_height="156.338012dp"
+                android:layout_below="@id/recommendText"
+                android:layout_marginStart="10dp"
+                android:background="@color/archive_main_content_bg"
+                android:orientation="horizontal">
+
+                <androidx.leanback.widget.HorizontalGridView
+                    android:id="@+id/recommendScroll"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ProgressBar
+                    android:id="@+id/recommendProgress"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:visibility="gone"
+                    android:layout_centerInParent="true"
+                    android:indeterminateTint="@color/tv7_default"
+                    android:indeterminateTintMode="src_atop" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/mostViewedText"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_below="@id/recommendContainer"
+                android:layout_marginStart="10dp"
+                android:gravity="start|center_vertical"
+                android:text="@string/most_viewed"
+                android:textColor="@color/content_area_text"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:id="@+id/mostViewedContainer"
+                android:layout_width="match_parent"
+                android:layout_height="156.338012dp"
+                android:layout_below="@id/mostViewedText"
+                android:layout_marginStart="10dp"
+                android:background="@color/archive_main_content_bg"
+                android:orientation="horizontal">
+
+                <androidx.leanback.widget.HorizontalGridView
+                    android:id="@+id/mostViewedScroll"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ProgressBar
+                    android:id="@+id/mostViewedProgress"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:visibility="gone"
+                    android:layout_centerInParent="true"
+                    android:indeterminateTint="@color/tv7_default"
+                    android:indeterminateTintMode="src_atop" />
+            </RelativeLayout>
+
+
+            <TextView
+                android:id="@+id/newestText"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_below="@id/mostViewedContainer"
+                android:layout_marginStart="10dp"
+                android:gravity="start|center_vertical"
+                android:text="@string/newest"
+                android:textColor="@color/content_area_text"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:id="@+id/newestContainer"
+                android:layout_width="match_parent"
+                android:layout_height="156.338012dp"
+                android:layout_below="@id/newestText"
+                android:layout_marginStart="10dp"
+                android:background="@color/archive_main_content_bg"
+                android:orientation="horizontal">
+
+                <androidx.leanback.widget.HorizontalGridView
+                    android:id="@+id/newestScroll"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ProgressBar
+                    android:id="@+id/newestProgress"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:visibility="gone"
+                    android:layout_centerInParent="true"
+                    android:indeterminateTint="@color/tv7_default"
+                    android:indeterminateTintMode="src_atop" />
+            </RelativeLayout>
+
+
+            <TextView
+                android:id="@+id/categoriesText"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_below="@id/newestContainer"
+                android:layout_marginStart="10dp"
+                android:gravity="start|center_vertical"
+                android:text="@string/categories"
+                android:textColor="@color/content_area_text"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:id="@+id/categoriesContainer"
+                android:layout_width="match_parent"
+                android:layout_height="156.338012dp"
+                android:layout_below="@id/categoriesText"
+                android:layout_marginStart="10dp"
+                android:background="@color/archive_main_content_bg"
+                android:orientation="horizontal">
+
+                <androidx.leanback.widget.HorizontalGridView
+                    android:id="@+id/categoriesScroll"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ProgressBar
+                    android:id="@+id/categoriesProgress"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:visibility="gone"
+                    android:layout_centerInParent="true"
+                    android:indeterminateTint="@color/tv7_default"
+                    android:indeterminateTintMode="src_atop" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</LinearLayout>
+

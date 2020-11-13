@@ -3,11 +3,6 @@ package ru.tv7.nebesatv7.fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModelProviders;
-
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -16,6 +11,9 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.Player;
@@ -34,37 +32,36 @@ import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import ru.tv7.nebesatv7.helpers.EpgItem;
-import ru.tv7.nebesatv7.helpers.Utils;
-import ru.tv7.nebesatv7.model.SharedViewModel;
 import ru.tv7.nebesatv7.BuildConfig;
 import ru.tv7.nebesatv7.R;
+import ru.tv7.nebesatv7.helpers.EpgItem;
+import ru.tv7.nebesatv7.helpers.Utils;
+import ru.tv7.nebesatv7.model.ProgramScheduleViewModel;
+import ru.tv7.nebesatv7.model.SharedCacheViewModel;
 
+import static ru.tv7.nebesatv7.helpers.Constants.CHANNEL_URL_PARAM;
 import static ru.tv7.nebesatv7.helpers.Constants.COLON;
 import static ru.tv7.nebesatv7.helpers.Constants.DASH_WITH_SPACES;
 import static ru.tv7.nebesatv7.helpers.Constants.DOT;
+import static ru.tv7.nebesatv7.helpers.Constants.GUIDE_TIMER_TIMEOUT;
 import static ru.tv7.nebesatv7.helpers.Constants.LOG_TAG;
-import static ru.tv7.nebesatv7.helpers.Constants.MAIN_FRAGMENT;
 import static ru.tv7.nebesatv7.helpers.Constants.PIPE_WITH_SPACES;
 import static ru.tv7.nebesatv7.helpers.Constants.SPACE;
-import static ru.tv7.nebesatv7.helpers.Constants.TIMER_TIMEOUT;
-import static ru.tv7.nebesatv7.helpers.Constants.TYPE_PARAM;
-import static ru.tv7.nebesatv7.helpers.Constants.URL_PARAM;
 
 /**
- * Video player fragment. Uses the ExoPlayer to show HLS stream.
+ * TV player fragment. Uses the ExoPlayer to show HLS stream.
  * Home of ExoPlayer: https://github.com/google/ExoPlayer
  */
-public class VideoPlayerFragment extends Fragment implements Player.EventListener {
+public class TvPlayerFragment extends Fragment implements Player.EventListener {
 
     private View root = null;
-    private FragmentManager fragmentManager = null;
-    private SharedViewModel viewModel = null;
+    private ProgramScheduleViewModel viewModel = null;
+    private SharedCacheViewModel sharedCacheViewModel = null;
+
     private Timer timer = null;
     private int guideIndex = 0;
 
     private String videoUrl = null;
-    private String videoType = null;
 
     private SimpleExoPlayer exoPlayer = null;
     private boolean isPlaying = false;
@@ -72,14 +69,14 @@ public class VideoPlayerFragment extends Fragment implements Player.EventListene
     /**
      * Default constructor.
      */
-    public VideoPlayerFragment() { }
+    public TvPlayerFragment() { }
 
     /**
      * Creates and return new instance of this fragment.
      * @return
      */
-    public static VideoPlayerFragment newInstance() {
-        return new VideoPlayerFragment();
+    public static TvPlayerFragment newInstance() {
+        return new TvPlayerFragment();
     }
 
     /**
@@ -93,17 +90,19 @@ public class VideoPlayerFragment extends Fragment implements Player.EventListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "VideoPlayerFragment.onCreateView(): Called.");
+                Log.d(LOG_TAG, "TvPlayerFragment.onCreateView(): Called.");
             }
 
-            viewModel = ViewModelProviders.of(requireActivity()).get(SharedViewModel.class);
-            root = inflater.inflate(R.layout.fragment_video_player, container, false);
+            viewModel = ViewModelProviders.of(requireActivity()).get(ProgramScheduleViewModel.class);
+            sharedCacheViewModel = ViewModelProviders.of(requireActivity()).get(SharedCacheViewModel.class);
+
+            root = inflater.inflate(R.layout.fragment_tv_player, container, false);
 
             this.addCountdownTimer();
         }
         catch( Exception e) {
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "VideoPlayerFragment.onCreateView(): Exception: " + e);
+                Log.d(LOG_TAG, "TvPlayerFragment.onCreateView(): Exception: " + e);
             }
             Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
         }
@@ -120,17 +119,17 @@ public class VideoPlayerFragment extends Fragment implements Player.EventListene
             super.onStart();
 
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "VideoPlayerFragment.onStart(): Called.");
+                Log.d(LOG_TAG, "TvPlayerFragment.onStart(): Called.");
             }
 
             // get input parameters
             Bundle bundle = getArguments();
             if (bundle != null) {
-                videoUrl = bundle.getString(URL_PARAM);
+                videoUrl = bundle.getString(CHANNEL_URL_PARAM);
             }
 
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "VideoPlayerFragment.onStart(): Parameters. URL: " + videoUrl + " Type: " + videoType);
+                Log.d(LOG_TAG, "TvPlayerFragment.onStart(): Parameters. URL: " + videoUrl);
             }
 
             PlayerView playerView = root.findViewById(R.id.exoPlayer);
@@ -147,7 +146,7 @@ public class VideoPlayerFragment extends Fragment implements Player.EventListene
         }
         catch(Exception e) {
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "VideoPlayerFragment.onStart(): Exception: " + e);
+                Log.d(LOG_TAG, "TvPlayerFragment.onStart(): Exception: " + e);
             }
             Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
         }
@@ -162,12 +161,12 @@ public class VideoPlayerFragment extends Fragment implements Player.EventListene
     public boolean onKeyDown(int keyCode, KeyEvent events) {
         try {
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "VideoPlayerFragment.onKeyDown(): keyCode: " + keyCode);
+                Log.d(LOG_TAG, "TvPlayerFragment.onKeyDown(): keyCode: " + keyCode);
             }
 
             if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
                 if (BuildConfig.DEBUG) {
-                    Log.d(LOG_TAG, "VideoPlayerFragment.onKeyDown(): KEYCODE_DPAD_CENTER: keyCode: " + keyCode);
+                    Log.d(LOG_TAG, "TvPlayerFragment.onKeyDown(): KEYCODE_DPAD_CENTER: keyCode: " + keyCode);
                 }
 
                 if (this.isTopGuideBarVisible()) {
@@ -184,7 +183,7 @@ public class VideoPlayerFragment extends Fragment implements Player.EventListene
             }
             else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
                 if (BuildConfig.DEBUG) {
-                    Log.d(LOG_TAG, "VideoPlayerFragment.onKeyDown(): KEYCODE_DPAD_LEFT: keyCode: " + keyCode);
+                    Log.d(LOG_TAG, "TvPlayerFragment.onKeyDown(): KEYCODE_DPAD_LEFT: keyCode: " + keyCode);
                 }
 
                 if (guideIndex > 0 && isTopGuideBarVisible()) {
@@ -194,7 +193,7 @@ public class VideoPlayerFragment extends Fragment implements Player.EventListene
             }
             else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
                 if (BuildConfig.DEBUG) {
-                    Log.d(LOG_TAG, "VideoPlayerFragment.onKeyDown(): KEYCODE_DPAD_RIGHT: keyCode: " + keyCode);
+                    Log.d(LOG_TAG, "TvPlayerFragment.onKeyDown(): KEYCODE_DPAD_RIGHT: keyCode: " + keyCode);
                 }
 
                 if (viewModel.isListItemInIndex(guideIndex + 1) && isTopGuideBarVisible()) {
@@ -204,17 +203,17 @@ public class VideoPlayerFragment extends Fragment implements Player.EventListene
             }
             else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
                 if (BuildConfig.DEBUG) {
-                    Log.d(LOG_TAG, "VideoPlayerFragment.onKeyDown(): KEYCODE_DPAD_DOWN: keyCode: " + keyCode);
+                    Log.d(LOG_TAG, "TvPlayerFragment.onKeyDown(): KEYCODE_DPAD_DOWN: keyCode: " + keyCode);
                 }
             }
             else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
                 if (BuildConfig.DEBUG) {
-                    Log.d(LOG_TAG, "VideoPlayerFragment.onKeyDown(): KEYCODE_DPAD_UP: keyCode: " + keyCode);
+                    Log.d(LOG_TAG, "TvPlayerFragment.onKeyDown(): KEYCODE_DPAD_UP: keyCode: " + keyCode);
                 }
             }
             else if (keyCode == KeyEvent.KEYCODE_BACK) {
                 if (BuildConfig.DEBUG) {
-                    Log.d(LOG_TAG, "VideoPlayerFragment.onKeyDown(): KEYCODE_BACK: keyCode: " + keyCode);
+                    Log.d(LOG_TAG, "TvPlayerFragment.onKeyDown(): KEYCODE_BACK: keyCode: " + keyCode);
                 }
 
                 if (this.isTopGuideBarVisible()) {
@@ -224,13 +223,16 @@ public class VideoPlayerFragment extends Fragment implements Player.EventListene
                 else {
                     // exit from video player fragment
                     this.releasePlayer();
-                    this.backToMainView();
+                    String page = sharedCacheViewModel.getPageFromHistory();
+                    if (page != null) {
+                        Utils.toPage(page, getActivity(), true, false,null);
+                    }
                 }
             }
         }
         catch(Exception e) {
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "VideoPlayerFragment.onKeyDown(): Exception: " + e);
+                Log.d(LOG_TAG, "TvPlayerFragment.onKeyDown(): Exception: " + e);
             }
             Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
         }
@@ -256,7 +258,7 @@ public class VideoPlayerFragment extends Fragment implements Player.EventListene
     @Override
     public void onIsPlayingChanged(boolean isPlaying) {
         if (BuildConfig.DEBUG) {
-            Log.d(LOG_TAG, "VideoPlayerFragment.onIsPlayingChanged(): Playing: " + isPlaying);
+            Log.d(LOG_TAG, "TvPlayerFragment.onIsPlayingChanged(): Playing: " + isPlaying);
         }
 
         this.isPlaying = isPlaying;
@@ -272,7 +274,7 @@ public class VideoPlayerFragment extends Fragment implements Player.EventListene
             IOException e = error.getSourceException();
 
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "VideoPlayerFragment.onPlayerError(): Exception: " + e);
+                Log.d(LOG_TAG, "TvPlayerFragment.onPlayerError(): Exception: " + e);
             }
 
             Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
@@ -284,7 +286,7 @@ public class VideoPlayerFragment extends Fragment implements Player.EventListene
      */
     private void setTopBarContent(EpgItem epgItem) {
         if (BuildConfig.DEBUG) {
-            Log.d(LOG_TAG, "MainFragment.setTopBarContent() called.");
+            Log.d(LOG_TAG, "TvPlayerFragment.setTopBarContent() called.");
         }
 
         int removedCount = viewModel.removePastProgramItems();
@@ -296,7 +298,7 @@ public class VideoPlayerFragment extends Fragment implements Player.EventListene
 
         if (epgItem != null) {
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "MainFragment.setTopBarContent(): EpgItem time: " +
+                Log.d(LOG_TAG, "TvPlayerFragment.setTopBarContent(): EpgItem time: " +
                         epgItem.getLocalStartTime() + DASH_WITH_SPACES + epgItem.getLocalEndTime() + " Title: " + epgItem.getTitle());
             }
 
@@ -346,6 +348,10 @@ public class VideoPlayerFragment extends Fragment implements Player.EventListene
         }
     }
 
+    /**
+     * Is top bar guide visible or not.
+     * @return
+     */
     private boolean isTopGuideBarVisible() {
         boolean visible = true;
         RelativeLayout videoTopBar = root.findViewById(R.id.videoTopBar);
@@ -380,7 +386,7 @@ public class VideoPlayerFragment extends Fragment implements Player.EventListene
      */
     private void addCountdownTimer() {
         if (BuildConfig.DEBUG) {
-            Log.d(LOG_TAG, "MainFragment.addCountdownTimer() called.");
+            Log.d(LOG_TAG, "TvPlayerFragment.addCountdownTimer() called.");
         }
 
         this.cancelTimer();
@@ -397,7 +403,7 @@ public class VideoPlayerFragment extends Fragment implements Player.EventListene
                     updateUiInMainThread();
                 }
             }
-        }, TIMER_TIMEOUT, TIMER_TIMEOUT);
+        }, GUIDE_TIMER_TIMEOUT, GUIDE_TIMER_TIMEOUT);
     }
 
     /**
@@ -427,39 +433,6 @@ public class VideoPlayerFragment extends Fragment implements Player.EventListene
                 }
             }
         });
-    }
-
-    /**
-     * Finds main fragment from fragment manager and replaces video fragment with main fragment.
-     */
-    private void backToMainView() {
-        if (BuildConfig.DEBUG) {
-            Log.d(LOG_TAG, "VideoPlayerFragment.backToMainView() called.");
-        }
-
-        this.checkFragmentManager();
-
-        Fragment mainFragment = fragmentManager.findFragmentByTag(MAIN_FRAGMENT);
-        if (mainFragment == null) {
-            mainFragment = MainFragment.newInstance();
-        }
-
-        // Add parameters
-        Bundle bundle = new Bundle();
-        bundle.putString(URL_PARAM, videoUrl);
-        bundle.putString(TYPE_PARAM, videoUrl);
-        mainFragment.setArguments(bundle);
-
-        fragmentManager.beginTransaction().replace(R.id.fragment_container, mainFragment, MAIN_FRAGMENT).addToBackStack(MAIN_FRAGMENT).commit();
-    }
-
-    /**
-     * Create a fragment manager if not already created.
-     */
-    private void checkFragmentManager() {
-        if (fragmentManager == null) {
-            fragmentManager = getActivity().getSupportFragmentManager();
-        }
     }
 
     /**

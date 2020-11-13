@@ -17,18 +17,26 @@ import java.util.List;
 
 import ru.tv7.nebesatv7.BuildConfig;
 import ru.tv7.nebesatv7.R;
+import ru.tv7.nebesatv7.fragments.ArchiveMainFragment;
+import ru.tv7.nebesatv7.fragments.ArchivePlayerFragment;
+import ru.tv7.nebesatv7.fragments.CategoriesFragment;
 import ru.tv7.nebesatv7.fragments.ExitFragment;
-import ru.tv7.nebesatv7.fragments.MainFragment;
-import ru.tv7.nebesatv7.fragments.VideoPlayerFragment;
+import ru.tv7.nebesatv7.fragments.GuideFragment;
+import ru.tv7.nebesatv7.fragments.ProgramInfoFragment;
+import ru.tv7.nebesatv7.fragments.SearchFragment;
+import ru.tv7.nebesatv7.fragments.SearchResultFragment;
+import ru.tv7.nebesatv7.fragments.SeriesFragment;
+import ru.tv7.nebesatv7.fragments.TvMainFragment;
+import ru.tv7.nebesatv7.fragments.TvPlayerFragment;
 import ru.tv7.nebesatv7.helpers.Utils;
 import ru.tv7.nebesatv7.interfaces.EpgDataLoadedListener;
-import ru.tv7.nebesatv7.model.SharedViewModel;
+import ru.tv7.nebesatv7.model.ProgramScheduleViewModel;
 
 import static ru.tv7.nebesatv7.helpers.Constants.EXIT_OVERLAY_FRAGMENT;
 import static ru.tv7.nebesatv7.helpers.Constants.LOG_TAG;
-import static ru.tv7.nebesatv7.helpers.Constants.MAIN_FRAGMENT;
 import static ru.tv7.nebesatv7.helpers.Constants.PROGRESS_BAR_SIZE;
-import static ru.tv7.nebesatv7.helpers.Constants.VIDEO_PLAYER_FRAGMENT;
+import static ru.tv7.nebesatv7.helpers.Constants.TV_MAIN_FRAGMENT;
+
 
 /**
  * Main activity.
@@ -39,7 +47,7 @@ import static ru.tv7.nebesatv7.helpers.Constants.VIDEO_PLAYER_FRAGMENT;
 public class MainActivity extends AppCompatActivity implements EpgDataLoadedListener {
 
     private FragmentManager fragmentManager = null;
-    private SharedViewModel viewModel = null;
+    private ProgramScheduleViewModel viewModel = null;
     private EpgDataLoadedListener epgDataLoadedListener = null;
 
     private View fragmentContainer = null;
@@ -59,7 +67,9 @@ public class MainActivity extends AppCompatActivity implements EpgDataLoadedList
                 Log.d(LOG_TAG, "MainActivity.onCreate() called.");
             }
 
-            viewModel = ViewModelProviders.of(this).get(SharedViewModel.class);
+            fragmentManager = Utils.getFragmentManager(this);
+
+            viewModel = ViewModelProviders.of(this).get(ProgramScheduleViewModel.class);
             this.setEpgDataLoadedListener(this);
 
             setContentView(R.layout.activity_main);
@@ -82,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements EpgDataLoadedList
     }
 
     /**
-     * Handles keydown events and sends event to fragment.
+     * Handles key down events and sends events to visible fragment.
      * @param keyCode
      * @param events
      * @return
@@ -94,28 +104,51 @@ public class MainActivity extends AppCompatActivity implements EpgDataLoadedList
                 Log.d(LOG_TAG, "MainActivity.onKeyDown(): keyCode: " + keyCode);
             }
 
-            this.checkFragmentManager();
-
             Fragment fragment = this.getVisibleFragment();
-            if (fragment instanceof MainFragment) {
-                // Main fragment visible - event to main fragment
-                Fragment mainFragment = fragmentManager.findFragmentByTag(MAIN_FRAGMENT);
-                if (mainFragment != null) {
-                    return ((MainFragment) mainFragment).onKeyDown(keyCode, events);
+            if (fragment != null) {
+                if (fragment instanceof TvMainFragment) {
+                    // TV main fragment visible - event to main fragment
+                    return ((TvMainFragment) fragment).onKeyDown(keyCode, events);
                 }
-            }
-            else if (fragment instanceof VideoPlayerFragment) {
-                // Video player fragment visible - event to video player fragment
-                Fragment videoPlayerFragment = fragmentManager.findFragmentByTag(VIDEO_PLAYER_FRAGMENT);
-                if (videoPlayerFragment != null) {
-                    return ((VideoPlayerFragment) videoPlayerFragment).onKeyDown(keyCode, events);
+                if (fragment instanceof ArchiveMainFragment) {
+                    // Archive main fragment visible - event to main fragment
+                    return ((ArchiveMainFragment) fragment).onKeyDown(keyCode, events);
                 }
-            }
-            else if (fragment instanceof ExitFragment) {
-                // Exit overlay fragment visible - event to exit overlay fragment
-                Fragment exitOverlayFragment = fragmentManager.findFragmentByTag(EXIT_OVERLAY_FRAGMENT);
-                if (exitOverlayFragment != null) {
-                    return ((ExitFragment) exitOverlayFragment).onKeyDown(keyCode, events);
+                else if (fragment instanceof TvPlayerFragment) {
+                    // Video player fragment visible - event to video player fragment
+                    return ((TvPlayerFragment) fragment).onKeyDown(keyCode, events);
+                }
+                else if (fragment instanceof ArchivePlayerFragment) {
+                    // Archive player fragment visible - event to archive player fragment
+                    return ((ArchivePlayerFragment) fragment).onKeyDown(keyCode, events);
+                }
+                else if (fragment instanceof ProgramInfoFragment) {
+                    // Program info fragment visible - event to program info fragment
+                    return ((ProgramInfoFragment) fragment).onKeyDown(keyCode, events);
+                }
+                else if (fragment instanceof CategoriesFragment) {
+                    // Categories fragment visible - event to program info fragment
+                    return ((CategoriesFragment) fragment).onKeyDown(keyCode, events);
+                }
+                else if (fragment instanceof SeriesFragment) {
+                    // Series fragment visible - event to program info fragment
+                    return ((SeriesFragment) fragment).onKeyDown(keyCode, events);
+                }
+                else if (fragment instanceof GuideFragment) {
+                    // Guide fragment visible - event to program info fragment
+                    return ((GuideFragment) fragment).onKeyDown(keyCode, events);
+                }
+                else if (fragment instanceof SearchFragment) {
+                    // Search fragment visible - event to program info fragment
+                    return ((SearchFragment) fragment).onKeyDown(keyCode, events);
+                }
+                else if (fragment instanceof SearchResultFragment) {
+                    // Search result fragment visible - event to program info fragment
+                    return ((SearchResultFragment) fragment).onKeyDown(keyCode, events);
+                }
+                else if (fragment instanceof ExitFragment) {
+                    // Exit overlay fragment visible - event to exit overlay fragment
+                    return ((ExitFragment) fragment).onKeyDown(keyCode, events);
                 }
             }
         }
@@ -142,7 +175,7 @@ public class MainActivity extends AppCompatActivity implements EpgDataLoadedList
         progressBar.setVisibility(View.GONE);
         fragmentContainer.setVisibility(View.VISIBLE);
 
-        this.toMainFragment();
+        Utils.toPage(TV_MAIN_FRAGMENT, this, false, false,null);
     }
 
     /**
@@ -157,58 +190,34 @@ public class MainActivity extends AppCompatActivity implements EpgDataLoadedList
     }
 
     /**
-     * Finds main fragment and opens it.
-     */
-    private void toMainFragment() {
-        checkFragmentManager();
-
-        // Add main fragment to fragment container
-        Fragment mainFragment = fragmentManager.findFragmentByTag(MAIN_FRAGMENT);
-        if (mainFragment == null) {
-            mainFragment = MainFragment.newInstance();
-        }
-
-        fragmentManager.beginTransaction().add(R.id.fragment_container, mainFragment, MAIN_FRAGMENT).addToBackStack(MAIN_FRAGMENT).commit();
-    }
-
-    /**
      * Returns visible fragment.
      * @return
      */
     private Fragment getVisibleFragment(){
-        this.checkFragmentManager();
-
         // Possible multiple fragments visible because exit overlay fragment
         List<Fragment> visibleFragments = new ArrayList<>();
 
-        List<Fragment> fragments = fragmentManager.getFragments();
-        if(fragments != null) {
-            for(Fragment fragment : fragments){
-                if(fragment != null && fragment.isVisible())
-                    visibleFragments.add(fragment);
+        if (fragmentManager != null) {
+            List<Fragment> fragments = fragmentManager.getFragments();
+            if(fragments != null) {
+                for(Fragment fragment : fragments){
+                    if(fragment != null && fragment.isVisible())
+                        visibleFragments.add(fragment);
+                }
+            }
+
+            Fragment visibleFragment = null;
+            if (visibleFragments.size() > 1) {
+                visibleFragment = fragmentManager.findFragmentByTag(EXIT_OVERLAY_FRAGMENT);
+            }
+
+            if (visibleFragment != null) {
+                // return exit overlay fragment
+                return visibleFragment;
             }
         }
 
-        Fragment visibleFragment = null;
-        if (visibleFragments.size() > 1) {
-            visibleFragment = fragmentManager.findFragmentByTag(EXIT_OVERLAY_FRAGMENT);
-        }
-
-        if (visibleFragment != null) {
-            // return exit overlay fragment
-            return visibleFragment;
-        }
-
         return visibleFragments.get(0);
-    }
-
-    /**
-     * Checks fragment manager and creates it if needed.
-     */
-    private void checkFragmentManager() {
-        if (fragmentManager == null) {
-            fragmentManager = getSupportFragmentManager();
-        }
     }
 
     /**

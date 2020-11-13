@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/seriesFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/default_background">
+
+    <include layout="@layout/fragment_toolbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <include layout="@layout/fragment_sidebar"/>
+
+        <RelativeLayout
+            android:id="@+id/contentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/default_background"
+            android:orientation="vertical">
+
+            <androidx.leanback.widget.VerticalGridView
+                android:id="@+id/seriesScroll"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="30dp" />
+
+            <TextView
+                android:id="@+id/seriesTitle"
+                android:layout_width="match_parent"
+                android:layout_height="24dp"
+                android:text="@string/series"
+                android:textSize="18sp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@color/default_background"
+                android:textColor="@color/content_area_text" />
+
+            <ProgressBar
+                android:id="@+id/seriesProgress"
+                style="?android:attr/progressBarStyle"
+                android:indeterminate="true"
+                android:layout_centerInParent="true"
+                android:indeterminateTintMode="src_atop"
+                android:indeterminateTint="@color/tv7_default"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</LinearLayout>
+

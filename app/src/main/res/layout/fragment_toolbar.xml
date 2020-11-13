@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:orientation="horizontal"
+    android:background="@color/toolbar">
+
+    <TextView
+        android:id="@+id/toolbarText"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="20dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textSize="26sp"
+        android:gravity="center_vertical"
+        android:textColor="@color/toolbar_and_title_text"
+        android:text="@string/toolbar_text" />
+
+    <ImageView
+        android:id="@+id/toolbarImage"
+        android:contentDescription="@string/tv7_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="-24dp"
+        android:layout_centerInParent="true"
+        android:foregroundGravity="center_vertical"
+        android:src="@drawable/logo_nebesa_tv7" />
+</RelativeLayout>
