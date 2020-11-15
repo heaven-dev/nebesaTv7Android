@@ -17,7 +17,7 @@ abstract public class Constants {
     public static final int VOLLEY_TIMEOUT_VALUE = 60000;
 
     public static final String STREAM_URL = "https://vod.tv7.fi:443/tv7-ru/_definst_/smil:tv7-ru.smil/playlist.m3u8";
-    public static final String ARCHIVE_BASE_URL = "https://sandbox.tv7.fi/nebesa/wp-json/tv7-api/v1/";
+    public static final String ARCHIVE_BASE_URL = "https://www.nebesatv7.com/wp-json/tv7-api/v1/";
     public static final String ARCHIVE_VIDEO_URL = "https://vod.tv7.fi:443/vod/_definst_/mp4:_LINK_PATH_/playlist.m3u8";
 
     public static final String ARCHIVE_LANGUAGE = "RU1";
