@@ -32,6 +32,7 @@ abstract public class Constants {
     public static final int FADE_ANIMATION_DURATION = 900;
     public static final float FADE_ANIMATION_START = 0.0f;
     public static final float FADE_ANIMATION_END = 1.0f;
+    public static final int ONGOING_PROGRAM_ANIMATION_DURATION = 2000;
 
     public static final String TV_MAIN_FRAGMENT = "tv_main_fragment";
     public static final String ARCHIVE_MAIN_FRAGMENT = "archive_main_fragment";

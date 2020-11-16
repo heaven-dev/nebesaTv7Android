@@ -1,9 +1,12 @@
 package ru.tv7.nebesatv7.adapter;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,6 +25,7 @@ import static ru.tv7.nebesatv7.helpers.Constants.CAPTION;
 import static ru.tv7.nebesatv7.helpers.Constants.IMAGE_PATH;
 import static ru.tv7.nebesatv7.helpers.Constants.ONE_STR;
 import static ru.tv7.nebesatv7.helpers.Constants.ONGOING_PROGRAM;
+import static ru.tv7.nebesatv7.helpers.Constants.ONGOING_PROGRAM_ANIMATION_DURATION;
 import static ru.tv7.nebesatv7.helpers.Constants.SERIES_AND_NAME;
 import static ru.tv7.nebesatv7.helpers.Constants.START_END_TIME;
 
@@ -113,11 +117,6 @@ public class GuideGridAdapter extends RecyclerView.Adapter<GuideGridAdapter.Simp
                     holder.seriesAndName.setText(value);
                 }
 
-                value = Utils.getValue(obj, SERIES_AND_NAME);
-                if (value != null) {
-                    holder.seriesAndName.setText(value);
-                }
-
                 value = Utils.getValue(obj, START_END_TIME);
                 if (value != null) {
                     holder.startEndTime.setText(value);
@@ -126,6 +125,26 @@ public class GuideGridAdapter extends RecyclerView.Adapter<GuideGridAdapter.Simp
                 value = Utils.getValue(obj, ONGOING_PROGRAM);
                 if (value != null && value.equals(ONE_STR)) {
                     holder.ongoingProgram.setVisibility(View.VISIBLE);
+
+                    GradientDrawable gdb = (GradientDrawable) holder.ongoingProgram.getBackground();
+
+                    int startColor = context.getColor(R.color.ongoing_program_icon_bg_start);
+                    int endColor = context.getColor(R.color.ongoing_program_icon_bg_end);
+
+                    ValueAnimator animation = ValueAnimator.ofArgb(startColor, endColor);
+                    animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                            if (gdb != null) {
+                                gdb.setColor((int)valueAnimator.getAnimatedValue());
+                            }
+                        }
+                    });
+
+                    animation.setDuration(ONGOING_PROGRAM_ANIMATION_DURATION);
+                    animation.setRepeatCount(Animation.INFINITE);
+                    animation.setRepeatMode(ValueAnimator.REVERSE);
+                    animation.start();
                 }
 
                 value = Utils.getValue(obj, CAPTION);

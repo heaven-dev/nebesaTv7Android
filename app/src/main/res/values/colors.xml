@@ -24,7 +24,7 @@
     <color name="exoplayer_background">#000000</color>
     <color name="series_program_icon_background">#cccccc</color>
     <color name="series_program_icon_stroke">#000000</color>
-    <color name="ongoing_program_icon_background">#b00b1e</color>
-    <color name="ongoing_program_icon_stroke">#b00b1e</color>
+    <color name="ongoing_program_icon_bg_start">#b00b1e</color>
+    <color name="ongoing_program_icon_bg_end">#df9da5</color>
     <color name="search_text_box_bg">#eeeeee</color>
 </resources>
