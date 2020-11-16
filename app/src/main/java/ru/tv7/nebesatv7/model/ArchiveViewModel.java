@@ -91,7 +91,6 @@ import static ru.tv7.nebesatv7.helpers.Constants.SUB_CATEGORIES_METHOD;
 import static ru.tv7.nebesatv7.helpers.Constants.TIME;
 import static ru.tv7.nebesatv7.helpers.Constants.TRANSLATION_METHOD;
 import static ru.tv7.nebesatv7.helpers.Constants.TYPE;
-import static ru.tv7.nebesatv7.helpers.Constants.UTC;
 import static ru.tv7.nebesatv7.helpers.Constants.UTF_8;
 import static ru.tv7.nebesatv7.helpers.Constants.VISIBLE_ON_VOD_SINCE;
 import static ru.tv7.nebesatv7.helpers.Constants.VOD_PARAM;
