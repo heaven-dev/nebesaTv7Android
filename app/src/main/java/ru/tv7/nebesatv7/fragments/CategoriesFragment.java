@@ -290,15 +290,17 @@ public class CategoriesFragment extends Fragment implements ArchiveDataLoadedLis
                     Sidebar.menuFocusDown(root, R.id.archiveMenuContainer);
                 }
                 else {
-                    int pos = this.getSelectedPosition();
+                    if (!loadingData) {
+                        int pos = this.getSelectedPosition();
 
-                    this.setSelectedPosition(++pos);
+                        this.setSelectedPosition(++pos);
 
-                    // paging
-                    if (!loadingData && pos > 0 && offset > 0 && pos + CATEGORY_PROGRAMS_SEARCH_LIMIT / 2 == dataLength) {
-                        loadingData = true;
+                        // paging
+                        if (pos > 0 && offset > 0 && pos + CATEGORY_PROGRAMS_SEARCH_LIMIT / 2 == dataLength) {
+                            loadingData = true;
 
-                        this.loadCategoryPrograms(Utils.stringToInt(Utils.getValue(selectedCategory, CATEGORY_ID)));
+                            this.loadCategoryPrograms(Utils.stringToInt(Utils.getValue(selectedCategory, CATEGORY_ID)));
+                        }
                     }
                 }
             }

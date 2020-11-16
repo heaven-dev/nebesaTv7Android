@@ -285,17 +285,19 @@ public class SeriesFragment extends Fragment implements ArchiveDataLoadedListene
                     Sidebar.menuFocusDown(root, R.id.archiveMenuContainer);
                 }
                 else {
-                    int pos = this.getSelectedPosition();
+                    if (!loadingData) {
+                        int pos = this.getSelectedPosition();
 
-                    this.setSelectedPosition(++pos);
+                        this.setSelectedPosition(++pos);
 
-                    // paging
-                    if (!loadingData && pos > 0 && offset > 0 && pos + SERIES_PROGRAMS_SEARCH_LIMIT / 2 == dataLength) {
-                        loadingData = true;
+                        // paging
+                        if (pos > 0 && offset > 0 && pos + SERIES_PROGRAMS_SEARCH_LIMIT / 2 == dataLength) {
+                            loadingData = true;
 
-                        int seriesId = this.getSeriesId();
-                        if (seriesId > 0) {
-                            this.loadSeriesPrograms(seriesId);
+                            int seriesId = this.getSeriesId();
+                            if (seriesId > 0) {
+                                this.loadSeriesPrograms(seriesId);
+                            }
                         }
                     }
                 }
