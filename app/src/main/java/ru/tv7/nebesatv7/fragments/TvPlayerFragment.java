@@ -27,8 +27,6 @@ import com.google.android.exoplayer2.util.Util;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -337,7 +335,7 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
             // current date time
             TextView timeNow = root.findViewById(R.id.timeNow);
             if (timeNow != null) {
-                Calendar today = GregorianCalendar.getInstance(TimeZone.getDefault());
+                Calendar today = Utils.getLocalCalendar();
                 today.setTime(new Date());
 
                 String dateTimeStr = today.get(Calendar.DATE) + DOT + (today.get(Calendar.MONTH) + 1) + DOT + today.get(Calendar.YEAR) +

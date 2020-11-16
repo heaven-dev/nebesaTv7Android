@@ -16,8 +16,6 @@ import org.json.JSONObject;
 import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
 
 import ru.tv7.nebesatv7.BuildConfig;
 import ru.tv7.nebesatv7.NebesaTv7;
@@ -865,7 +863,7 @@ public class ArchiveViewModel extends ViewModel {
      */
     private String getDateTimeByTimeInMs(String time) {
         if (time != null) {
-            Calendar calendar = GregorianCalendar.getInstance(TimeZone.getDefault());
+            Calendar calendar = Utils.getLocalCalendar();
             calendar.setTimeInMillis(Long.valueOf(time));
 
             return calendar.get(Calendar.DATE) + DOT + (calendar.get(Calendar.MONTH) + 1) + DOT + calendar.get(Calendar.YEAR)
@@ -883,7 +881,7 @@ public class ArchiveViewModel extends ViewModel {
      */
     private String getDateByTimeInMs(String time) {
         if (time != null) {
-            Calendar calendar = GregorianCalendar.getInstance(TimeZone.getDefault());
+            Calendar calendar = Utils.getLocalCalendar();
             calendar.setTimeInMillis(Long.valueOf(time));
 
             return calendar.get(Calendar.DATE) + DOT + (calendar.get(Calendar.MONTH) + 1) + DOT + calendar.get(Calendar.YEAR);
@@ -901,7 +899,7 @@ public class ArchiveViewModel extends ViewModel {
      */
     private boolean isPastTime(String time) {
         if (time != null) {
-            Calendar now = GregorianCalendar.getInstance(TimeZone.getTimeZone(UTC));
+            Calendar now = Utils.getUtcCalendar();
             now.setTime(new Date());
 
             return now.getTimeInMillis() > Long.valueOf(time);
@@ -911,14 +909,14 @@ public class ArchiveViewModel extends ViewModel {
     }
 
     private String createLocalTimeString(String time) {
-        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+        Calendar calendar = Utils.getLocalCalendar();
         calendar.setTimeInMillis(Long.parseLong(time));
 
         return Utils.prependZero(calendar.get(Calendar.HOUR_OF_DAY)) + COLON + Utils.prependZero(calendar.get(Calendar.MINUTE));
     }
 
     private String createLocalDateString(String time) {
-        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
+        Calendar calendar = Utils.getLocalCalendar();
         calendar.setTimeInMillis(Long.parseLong(time));
 
         return calendar.get(Calendar.DATE) + DOT + (calendar.get(Calendar.MONTH) + 1) + DOT + calendar.get(Calendar.YEAR);

@@ -242,7 +242,7 @@ public abstract class Utils {
     }
 
     public static String getTodayUtcFormattedLocalDate() {
-        Calendar today = Calendar.getInstance(TimeZone.getDefault());
+        Calendar today = getLocalCalendar();
         today.setTime(new Date());
 
         return today.get(Calendar.YEAR) + DASH + prependZero(today.get(Calendar.MONTH) + 1) + DASH + prependZero(today.get(Calendar.DATE));
@@ -262,7 +262,7 @@ public abstract class Utils {
     }
 
     public static long getUtcTimeInMilliseconds() {
-        Calendar calendar = GregorianCalendar.getInstance(TimeZone.getTimeZone(UTC));
+        Calendar calendar = getUtcCalendar();
         return calendar.getTimeInMillis();
     }
 
@@ -309,6 +309,10 @@ public abstract class Utils {
         return GregorianCalendar.getInstance(TimeZone.getDefault());
     }
 
+    public static Calendar getUtcCalendar() {
+        return GregorianCalendar.getInstance(TimeZone.getTimeZone(UTC));
+    }
+
     public static int stringToInt(String value) {
         return Integer.parseInt(value);
     }
@@ -317,3 +321,4 @@ public abstract class Utils {
         return Long.parseLong(value);
     }
 }
+

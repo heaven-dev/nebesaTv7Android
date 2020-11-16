@@ -22,7 +22,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -397,7 +396,7 @@ public class ProgramScheduleViewModel extends ViewModel {
         DateFormat format = new SimpleDateFormat(STR_DATE_FORMAT);
         format.setTimeZone(TimeZone.getTimeZone(UTC));
 
-        Calendar calendar = GregorianCalendar.getInstance(TimeZone.getTimeZone(UTC));
+        Calendar calendar = Utils.getUtcCalendar();
         calendar.setTime(format.parse(utcStr));
         return String.valueOf(calendar.getTimeInMillis());
     }
@@ -443,7 +442,7 @@ public class ProgramScheduleViewModel extends ViewModel {
      * @throws Exception
      */
     private int getOngoingProgramProgressValue(String start, String stop) throws Exception {
-        Calendar today = Calendar.getInstance(TimeZone.getDefault());
+        Calendar today = Utils.getLocalCalendar();
         today.setTime(new Date());
         long now = today.getTimeInMillis();
 
