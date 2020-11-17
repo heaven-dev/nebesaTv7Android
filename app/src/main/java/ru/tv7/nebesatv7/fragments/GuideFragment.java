@@ -25,6 +25,7 @@ import ru.tv7.nebesatv7.BuildConfig;
 import ru.tv7.nebesatv7.R;
 import ru.tv7.nebesatv7.adapter.GuideGridAdapter;
 import ru.tv7.nebesatv7.helpers.GuideDate;
+import ru.tv7.nebesatv7.helpers.PageStateItem;
 import ru.tv7.nebesatv7.helpers.Sidebar;
 import ru.tv7.nebesatv7.helpers.Utils;
 import ru.tv7.nebesatv7.interfaces.ArchiveDataLoadedListener;
@@ -35,8 +36,13 @@ import static ru.tv7.nebesatv7.helpers.Constants.ARCHIVE_MAIN_FRAGMENT;
 import static ru.tv7.nebesatv7.helpers.Constants.DATES_COUNT;
 import static ru.tv7.nebesatv7.helpers.Constants.GUIDE_DATA;
 import static ru.tv7.nebesatv7.helpers.Constants.GUIDE_DATE_IDS;
+import static ru.tv7.nebesatv7.helpers.Constants.GUIDE_FRAGMENT;
 import static ru.tv7.nebesatv7.helpers.Constants.LOG_TAG;
 import static ru.tv7.nebesatv7.helpers.Constants.ONGOING_PROGRAM_INDEX;
+import static ru.tv7.nebesatv7.helpers.Constants.PROGRAM_INFO_FRAGMENT;
+import static ru.tv7.nebesatv7.helpers.PageStateItem.DATA;
+import static ru.tv7.nebesatv7.helpers.PageStateItem.SELECTED_DATE_ID;
+import static ru.tv7.nebesatv7.helpers.PageStateItem.SELECTED_POS;
 
 /**
  * Guide fragment.
@@ -50,6 +56,7 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
     private List<TextView> menuTexts = null;
 
     private VerticalGridView guideScroll = null;
+    private GuideGridAdapter guideGridAdapter = null;
 
     private List<GuideDate> dates = new ArrayList<>();
 
@@ -120,7 +127,17 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
                 }
             }
 
-            this.loadGuideByDate(Utils.getTodayUtcFormattedLocalDate());
+            PageStateItem pageStateItem = sharedCacheViewModel.getGuidePageStateItem();
+            if (pageStateItem != null) {
+                Utils.showProgressBar(root, R.id.guideProgress);
+
+                selectedDateId = (Integer)pageStateItem.getValue(SELECTED_DATE_ID);
+                this.addElements((JSONArray)pageStateItem.getValue(DATA), false);
+                this.scrollToPosition((Integer)pageStateItem.getValue(SELECTED_POS));
+            }
+            else {
+                this.loadGuideByDate(Utils.getTodayUtcFormattedLocalDate());
+            }
         }
         catch (Exception e) {
             if (BuildConfig.DEBUG) {
@@ -135,7 +152,7 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
      * Creates grid and adds data to it.
      * @param jsonArray
      */
-    private void addElements(JSONArray jsonArray) {
+    private void addElements(JSONArray jsonArray, boolean isPageLoad) {
         try {
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "GuideFragment.addElements(): Guide data loaded. Data length: " + jsonArray.length());
@@ -148,11 +165,11 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
                 ongoingProgramIndex = obj.getInt(ONGOING_PROGRAM_INDEX);
 
                 guideScroll = root.findViewById(R.id.guideScroll);
-                GuideGridAdapter guideGridAdapter = new GuideGridAdapter(getContext(), guideData);
+                guideGridAdapter = new GuideGridAdapter(getContext(), guideData);
 
                 guideScroll.setAdapter(guideGridAdapter);
 
-                if (ongoingProgramIndex != -1) {
+                if (isPageLoad && ongoingProgramIndex != -1) {
                     this.scrollToPosition(ongoingProgramIndex);
                 }
 
@@ -163,6 +180,13 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
                 }
 
                 this.setDateSelection();
+
+                if (isPageLoad) {
+                    Utils.requestFocusById(root, selectedDateId);
+                }
+                else {
+                    Utils.requestFocus(guideScroll);
+                }
             }
 
             Utils.hideProgressBar(root, R.id.guideProgress);
@@ -186,7 +210,7 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
             Log.d(LOG_TAG, "GuideFragment.onArchiveDataLoaded(): Archive data loaded. Type: " + type);
         }
 
-        this.addElements(jsonArray);
+        this.addElements(jsonArray, true);
     }
 
     /**
@@ -243,6 +267,30 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
                             selectedDateId = GUIDE_DATE_IDS.get(index);
                             this.loadGuideByDate(gd.getDate());
                         }
+                    }
+                }
+                else {
+                    int pos = this.getSelectedPosition();
+
+                    JSONObject obj = guideGridAdapter.getElementByIndex(pos);
+                    if (obj != null) {
+                        sharedCacheViewModel.setSelectedProgram(obj);
+
+                        JSONObject jsonObj = new JSONObject();
+                        jsonObj.put(ONGOING_PROGRAM_INDEX, ongoingProgramIndex);
+                        jsonObj.put(GUIDE_DATA, guideGridAdapter.getElements());
+
+                        JSONArray jsonArray = new JSONArray();
+                        jsonArray.put(jsonObj);
+
+                        sharedCacheViewModel.setGuidePageStateItem(new PageStateItem(
+                                jsonArray,
+                                pos,
+                                selectedDateId));
+
+                        sharedCacheViewModel.setPageToHistory(GUIDE_FRAGMENT);
+
+                        Utils.toPage(PROGRAM_INFO_FRAGMENT, getActivity(), true, false,null);
                     }
                 }
             }
@@ -333,6 +381,8 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
                     this.focusOutFromSideMenu();
                 }
                 else {
+                    sharedCacheViewModel.resetGuidePageStateItem();
+
                     Utils.toPage(ARCHIVE_MAIN_FRAGMENT, getActivity(), true, false,null);
                 }
             }
@@ -471,7 +521,5 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
             int id = GUIDE_DATE_IDS.get(i);
             Utils.setSelectedById(root, id, id == selectedDateId);
         }
-
-        Utils.requestFocusById(root, selectedDateId);
     }
 }

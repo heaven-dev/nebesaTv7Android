@@ -14,6 +14,7 @@ import ru.tv7.nebesatv7.R;
 abstract public class Constants {
     public static final String LOG_TAG = "tv7";
 
+    public static final boolean VOLLEY_CACHE = false;
     public static final int VOLLEY_TIMEOUT_VALUE = 60000;
 
     public static final String STREAM_URL = "https://vod.tv7.fi:443/tv7-ru/_definst_/smil:tv7-ru.smil/playlist.m3u8";

@@ -37,6 +37,10 @@ import static ru.tv7.nebesatv7.helpers.Constants.SERIES_ID;
 import static ru.tv7.nebesatv7.helpers.Constants.SERIES_NAME;
 import static ru.tv7.nebesatv7.helpers.Constants.SERIES_PROGRAMS_SEARCH_LIMIT;
 import static ru.tv7.nebesatv7.helpers.Constants.SID;
+import static ru.tv7.nebesatv7.helpers.PageStateItem.DATA;
+import static ru.tv7.nebesatv7.helpers.PageStateItem.DATA_LENGTH;
+import static ru.tv7.nebesatv7.helpers.PageStateItem.OFFSET;
+import static ru.tv7.nebesatv7.helpers.PageStateItem.SELECTED_POS;
 
 /**
  * Series fragment.
@@ -119,10 +123,10 @@ public class SeriesFragment extends Fragment implements ArchiveDataLoadedListene
                 if (pageStateItem != null) {
                     Utils.showProgressBar(root, R.id.seriesProgress);
 
-                    this.addElements(pageStateItem.getData());
-                    this.scrollToPosition(pageStateItem.getSelectedPos());
-                    dataLength = pageStateItem.getDataLength();
-                    offset = pageStateItem.getOffset();
+                    this.addElements((JSONArray)pageStateItem.getValue(DATA));
+                    this.scrollToPosition((Integer)pageStateItem.getValue(SELECTED_POS));
+                    dataLength = (Integer)pageStateItem.getValue(DATA_LENGTH);
+                    offset = (Integer)pageStateItem.getValue(OFFSET);
                 }
                 else {
                     int seriesId = this.getSeriesId();
@@ -164,6 +168,7 @@ public class SeriesFragment extends Fragment implements ArchiveDataLoadedListene
                 else {
                     // next loads
                     seriesGridAdapter.addElements(jsonArray);
+                    seriesGridAdapter.notifyDataSetChanged();
                 }
 
                 int length = jsonArray.length();

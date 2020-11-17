@@ -634,7 +634,7 @@ public class ArchiveViewModel extends ViewModel {
         for (int i = 0; i < array.length(); i++) {
             JSONObject respObj = new JSONObject();
             JSONObject sourceObj = array.getJSONObject(i);
-            
+
             setValue(respObj, ID, this.getValue(sourceObj, ID), true);
             setValue(respObj, IMAGE_PATH, this.getValue(sourceObj, IMAGE_PATH), false);
             setValue(respObj, LINK_PATH, this.getValue(sourceObj, LINK_PATH), false);
@@ -698,7 +698,7 @@ public class ArchiveViewModel extends ViewModel {
                 if (firstBroadcast != null) {
                     String duration = getValue(sourceObj, DURATION);
                     if (duration != null) {
-                        String startTime = String.valueOf(Long.valueOf(firstBroadcast) - Long.valueOf(duration));
+                        String startTime = String.valueOf(Long.parseLong(firstBroadcast) - Long.parseLong(duration));
                         setValue(respObj, BROADCAST_DATE_TIME, getDateTimeByTimeInMs(startTime), false);
                     }
                 }
@@ -791,6 +791,15 @@ public class ArchiveViewModel extends ViewModel {
 
             setValue(respObj, START_DATE, startDate, false);
             setValue(respObj, END_DATE, endDate, false);
+
+            setValue(respObj, BROADCAST_DATE_TIME, getDateTimeByTimeInMs(start), false);
+            setValue(respObj, BROADCAST_DATE, getDateByTimeInMs(start), false);
+
+            String duration = String.valueOf(Long.parseLong(end) - Long.parseLong(start));
+            setValue(respObj, DURATION, Utils.getTimeStampByDurationMs(duration), false);
+
+            setValue(respObj, EPISODE_NUMBER, this.getValue(sourceObj, EPISODE_NUMBER), true);
+            setValue(respObj, IS_VISIBLE_ON_VOD, ZERO_STR, true);
 
             // series and name
             String series = this.getValue(sourceObj, SERIES);

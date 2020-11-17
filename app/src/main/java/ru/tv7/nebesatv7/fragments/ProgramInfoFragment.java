@@ -123,7 +123,7 @@ public class ProgramInfoFragment extends Fragment {
                 }
             }
 
-            boolean videoAvailable = Utils.getValue(selectedProgram,IS_VISIBLE_ON_VOD).equals(ONE_STR);
+            boolean videoAvailable = Utils.getValue(selectedProgram, IS_VISIBLE_ON_VOD).equals(ONE_STR);
 
             startButton = root.findViewById(R.id.startButton);
             if (startButton != null) {

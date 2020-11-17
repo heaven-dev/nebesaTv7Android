@@ -21,6 +21,7 @@ public class SharedCacheViewModel extends ViewModel {
 
     private PageStateItem seriesPage = null;
     private PageStateItem categoriesPage = null;
+    private PageStateItem guidePage = null;
     private PageStateItem searchResultPage = null;
 
     private ArchiveMainPageStateItem archiveMainPage = null;
@@ -91,6 +92,19 @@ public class SharedCacheViewModel extends ViewModel {
     }
 
 
+    public PageStateItem getGuidePageStateItem() {
+        return guidePage;
+    }
+
+    public void setGuidePageStateItem(PageStateItem pageStateItem) {
+        this.guidePage = pageStateItem;
+    }
+
+    public void resetGuidePageStateItem() {
+        guidePage = null;
+    }
+
+
     public PageStateItem getSearchResultPageStateItem() {
         return searchResultPage;
     }
@@ -136,6 +150,7 @@ public class SharedCacheViewModel extends ViewModel {
 
         seriesPage = null;
         categoriesPage = null;
+        guidePage = null;
         searchResultPage = null;
 
         archiveMainPage = null;

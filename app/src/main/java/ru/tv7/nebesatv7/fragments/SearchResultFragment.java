@@ -36,6 +36,8 @@ import static ru.tv7.nebesatv7.helpers.Constants.SEARCH_RESULT_FRAGMENT;
 import static ru.tv7.nebesatv7.helpers.Constants.SERIES;
 import static ru.tv7.nebesatv7.helpers.Constants.SERIES_FRAGMENT;
 import static ru.tv7.nebesatv7.helpers.Constants.TYPE;
+import static ru.tv7.nebesatv7.helpers.PageStateItem.DATA;
+import static ru.tv7.nebesatv7.helpers.PageStateItem.SELECTED_POS;
 
 /**
  * Search result fragment. Shows info of program and possible play video button.
@@ -108,8 +110,8 @@ public class SearchResultFragment extends Fragment implements ArchiveDataLoadedL
             if (pageStateItem != null) {
                 Utils.showProgressBar(root, R.id.searchResultProgress);
 
-                this.addElements(pageStateItem.getData());
-                this.scrollToPosition(pageStateItem.getSelectedPos());
+                this.addElements((JSONArray)pageStateItem.getValue(DATA));
+                this.scrollToPosition((Integer)pageStateItem.getValue(SELECTED_POS));
             }
             else {
                 String searchString = sharedCacheViewModel.getSearchString();
@@ -253,9 +255,7 @@ public class SearchResultFragment extends Fragment implements ArchiveDataLoadedL
                     if (obj != null) {
                         sharedCacheViewModel.setSearchResultPageStateItem(new PageStateItem(
                                 searchResultGridAdapter.getElements(),
-                                pos,
-                                null,
-                                null));
+                                pos));
 
                         sharedCacheViewModel.setSelectedProgram(obj);
 

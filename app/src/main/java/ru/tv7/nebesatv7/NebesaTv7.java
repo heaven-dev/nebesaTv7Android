@@ -10,6 +10,7 @@ import com.android.volley.toolbox.Volley;
 import ru.tv7.nebesatv7.BuildConfig;
 
 import static ru.tv7.nebesatv7.helpers.Constants.LOG_TAG;
+import static ru.tv7.nebesatv7.helpers.Constants.VOLLEY_CACHE;
 
 /**
  * Application class. Implements volley request queue functionality.
@@ -78,6 +79,7 @@ public class NebesaTv7 extends Application {
             Log.d(LOG_TAG, "NebesaTv7.addToRequestQueue() called.");
         }
 
+        req.setShouldCache(VOLLEY_CACHE);
         req.setTag(TAG);
         getRequestQueue().add(req);
     }
