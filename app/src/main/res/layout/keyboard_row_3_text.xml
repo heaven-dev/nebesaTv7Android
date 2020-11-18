@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/keyboard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/default_background">
+
+    <LinearLayout
+        android:id="@+id/keyboardRow3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/k_2_0"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:gravity="center"
+            android:layout_marginEnd="3dp"
+            android:focusable="true"
+            android:nextFocusUp="@+id/k_1_0"
+            android:nextFocusDown="@+id/searchKey"
+            android:nextFocusRight="@+id/k_2_1"
+            android:text=""
+            android:textSize="22sp"
+            android:textColor="@color/content_area_text"
+            android:background="@drawable/list_item"/>
+
+        <TextView
+            android:id="@+id/k_2_1"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:gravity="center"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="3dp"
+            android:focusable="true"
+            android:nextFocusUp="@+id/k_1_1"
+            android:nextFocusDown="@+id/searchKey"
+            android:nextFocusLeft="@+id/k_2_0"
+            android:nextFocusRight="@+id/k_2_2"
+            android:text=""
+            android:textSize="22sp"
+            android:textColor="@color/content_area_text"
+            android:background="@drawable/list_item"/>
+
+        <TextView
+            android:id="@+id/k_2_2"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:gravity="center"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="3dp"
+            android:focusable="true"
+            android:nextFocusUp="@+id/k_1_2"
+            android:nextFocusDown="@+id/searchKey"
+            android:nextFocusLeft="@+id/k_2_1"
+            android:nextFocusRight="@+id/k_2_3"
+            android:text=""
+            android:textSize="22sp"
+            android:textColor="@color/content_area_text"
+            android:background="@drawable/list_item"/>
+
+        <TextView
+            android:id="@+id/k_2_3"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:gravity="center"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="3dp"
+            android:focusable="true"
+            android:nextFocusUp="@+id/k_1_3"
+            android:nextFocusDown="@+id/searchKey"
+            android:nextFocusLeft="@+id/k_2_2"
+            android:nextFocusRight="@+id/k_2_4"
+            android:text=""
+            android:textSize="22sp"
+            android:textColor="@color/content_area_text"
+            android:background="@drawable/list_item"/>
+
+        <TextView
+            android:id="@+id/k_2_4"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:gravity="center"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="3dp"
+            android:focusable="true"
+            android:nextFocusUp="@+id/k_1_4"
+            android:nextFocusDown="@+id/searchKey"
+            android:nextFocusLeft="@+id/k_2_3"
+            android:nextFocusRight="@+id/k_2_5"
+            android:text=""
+            android:textSize="22sp"
+            android:textColor="@color/content_area_text"
+            android:background="@drawable/list_item"/>
+
+        <TextView
+            android:id="@+id/k_2_5"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:gravity="center"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="3dp"
+            android:focusable="true"
+            android:nextFocusUp="@+id/k_1_5"
+            android:nextFocusDown="@+id/searchKey"
+            android:nextFocusLeft="@+id/k_2_4"
+            android:nextFocusRight="@+id/k_2_6"
+            android:text=""
+            android:textSize="22sp"
+            android:textColor="@color/content_area_text"
+            android:background="@drawable/list_item"/>
+
+        <TextView
+            android:id="@+id/k_2_6"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:gravity="center"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="3dp"
+            android:focusable="true"
+            android:nextFocusUp="@+id/k_1_6"
+            android:nextFocusDown="@+id/searchKey"
+            android:nextFocusLeft="@+id/k_2_5"
+            android:nextFocusRight="@+id/k_2_7"
+            android:text=""
+            android:textSize="22sp"
+            android:textColor="@color/content_area_text"
+            android:background="@drawable/list_item"/>
+
+        <TextView
+            android:id="@+id/k_2_7"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:gravity="center"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="3dp"
+            android:focusable="true"
+            android:nextFocusUp="@+id/k_1_7"
+            android:nextFocusDown="@+id/searchKey"
+            android:nextFocusLeft="@+id/k_2_6"
+            android:nextFocusRight="@+id/k_2_8"
+            android:text=""
+            android:textSize="22sp"
+            android:textColor="@color/content_area_text"
+            android:background="@drawable/list_item"/>
+
+        <LinearLayout
+            android:id="@+id/k_2_8"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="3dp"
+            android:gravity="center"
+            android:focusable="true"
+            android:nextFocusUp="@+id/k_1_8"
+            android:nextFocusDown="@+id/searchKey"
+            android:nextFocusLeft="@+id/k_2_7"
+            android:nextFocusRight="@+id/k_2_9"
+            android:background="@drawable/list_item">
+            <ImageView
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:src="@drawable/space" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/k_2_9"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="3dp"
+            android:gravity="center"
+            android:focusable="true"
+            android:nextFocusUp="@+id/k_1_9"
+            android:nextFocusDown="@+id/searchKey"
+            android:nextFocusLeft="@+id/k_2_8"
+            android:nextFocusRight="@+id/k_2_10"
+            android:background="@drawable/list_item">
+        <ImageView
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:src="@drawable/backspace" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/k_2_10"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="3dp"
+            android:gravity="center"
+            android:focusable="true"
+            android:nextFocusUp="@+id/k_1_10"
+            android:nextFocusDown="@+id/searchKey"
+            android:nextFocusLeft="@+id/k_2_9"
+            android:nextFocusRight="@+id/k_2_11"
+            android:background="@drawable/list_item">
+            <ImageView
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:src="@drawable/uppercase" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/k_2_11"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_marginStart="3dp"
+            android:gravity="center"
+            android:focusable="true"
+            android:nextFocusUp="@+id/k_1_11"
+            android:nextFocusDown="@+id/searchKey"
+            android:nextFocusLeft="@+id/k_2_10"
+            android:background="@drawable/list_item">
+            <ImageView
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:src="@drawable/special_chars" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
+

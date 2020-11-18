@@ -22,24 +22,22 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import ru.tv7.nebesatv7.BuildConfig;
+import ru.tv7.nebesatv7.NebesaTv7;
 import ru.tv7.nebesatv7.helpers.EpgItem;
 import ru.tv7.nebesatv7.helpers.Utils;
 import ru.tv7.nebesatv7.interfaces.EpgDataLoadedListener;
-import ru.tv7.nebesatv7.BuildConfig;
-import ru.tv7.nebesatv7.NebesaTv7;
 
 import static ru.tv7.nebesatv7.helpers.Constants.AMPERSAND;
 import static ru.tv7.nebesatv7.helpers.Constants.CATEGORY;
 import static ru.tv7.nebesatv7.helpers.Constants.COLON;
 import static ru.tv7.nebesatv7.helpers.Constants.DASH;
-import static ru.tv7.nebesatv7.helpers.Constants.STR_DATE_FORMAT;
 import static ru.tv7.nebesatv7.helpers.Constants.DESC;
 import static ru.tv7.nebesatv7.helpers.Constants.DOT;
 import static ru.tv7.nebesatv7.helpers.Constants.EPG_CHANNEL;
@@ -58,12 +56,13 @@ import static ru.tv7.nebesatv7.helpers.Constants.QUESTION_MARK;
 import static ru.tv7.nebesatv7.helpers.Constants.SRC;
 import static ru.tv7.nebesatv7.helpers.Constants.START;
 import static ru.tv7.nebesatv7.helpers.Constants.STOP;
+import static ru.tv7.nebesatv7.helpers.Constants.STR_DATE_FORMAT;
 import static ru.tv7.nebesatv7.helpers.Constants.TITLE;
 import static ru.tv7.nebesatv7.helpers.Constants.T_CHAR;
 import static ru.tv7.nebesatv7.helpers.Constants.UTC;
 import static ru.tv7.nebesatv7.helpers.Constants.VOLLEY_TIMEOUT_VALUE;
 
-public class SharedViewModel extends ViewModel {
+public class ProgramScheduleViewModel extends ViewModel {
 
     private List<EpgItem> programmeList = new ArrayList<>();
     private boolean ongoingProgramFound = false;
@@ -86,14 +85,14 @@ public class SharedViewModel extends ViewModel {
             if (this.isListItemInIndex(idx)) {
                 epgItem = programmeList.get(idx);
                 if (index == 0) {
-                    int progressValue = getOngoingProgramProgressValue(createUtcDateTimeString(epgItem.getStart()), createUtcDateTimeString(epgItem.getStop()));
+                    int progressValue = getOngoingProgramProgressValue(epgItem.getStart(), epgItem.getStop());
                     epgItem.setOngoingProgress(progressValue);
                 }
             }
         }
         catch(Exception e) {
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "SharedViewModel.getEpgItemByIndex(): Exception: " + e);
+                Log.d(LOG_TAG, "ProgramScheduleViewModel.getEpgItemByIndex(): Exception: " + e);
             }
         }
         return epgItem;
@@ -120,7 +119,7 @@ public class SharedViewModel extends ViewModel {
         }
         catch(Exception e) {
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "SharedViewModel.removePastProgramItems(): Exception: " + e);
+                Log.d(LOG_TAG, "ProgramScheduleViewModel.removePastProgramItems(): Exception: " + e);
             }
         }
         return index;
@@ -136,7 +135,7 @@ public class SharedViewModel extends ViewModel {
 
         for(int i = 0; i < programmeList.size(); i++) {
             EpgItem e = programmeList.get(i);
-            if (e != null && isOngoingProgram(e.getStartUtcStr(), e.getStopUtcStr())) {
+            if (e != null && isOngoingProgram(e.getStart(), e.getStop())) {
                 index = i;
                 break;
             }
@@ -155,7 +154,7 @@ public class SharedViewModel extends ViewModel {
 
         try {
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "SharedViewModel.getOngoingAndComingPrograms(): called. Count: " + count);
+                Log.d(LOG_TAG, "ProgramScheduleViewModel.getOngoingAndComingPrograms(): called. Count: " + count);
             }
 
             int index = this.getOngoingProgramIndex();
@@ -164,7 +163,7 @@ public class SharedViewModel extends ViewModel {
             if (epgDataList.size() > 0) {
                 EpgItem e = epgDataList.get(0);
                 if (e != null) {
-                    int progressValue = getOngoingProgramProgressValue(createUtcDateTimeString(e.getStart()), createUtcDateTimeString(e.getStop()));
+                    int progressValue = getOngoingProgramProgressValue(e.getStart(), e.getStop());
                     e.setOngoingProgress(progressValue);
                     epgDataList.set(0, e);
                 }
@@ -172,7 +171,7 @@ public class SharedViewModel extends ViewModel {
         }
         catch(Exception e) {
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "SharedViewModel.getOngoingAndComingPrograms(): Exception: " + e);
+                Log.d(LOG_TAG, "ProgramScheduleViewModel.getOngoingAndComingPrograms(): Exception: " + e);
             }
         }
 
@@ -190,7 +189,7 @@ public class SharedViewModel extends ViewModel {
 
         try {
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "SharedViewModel.getOngoingAndComingPrograms(): called. Count: " + count + " Start index: " + startIndex);
+                Log.d(LOG_TAG, "ProgramScheduleViewModel.getOngoingAndComingPrograms(): called. Count: " + count + " Start index: " + startIndex);
             }
 
             int index = this.getOngoingProgramIndex() + startIndex;
@@ -199,7 +198,7 @@ public class SharedViewModel extends ViewModel {
         }
         catch(Exception e) {
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "SharedViewModel.getGuideData(): Exception: " + e);
+                Log.d(LOG_TAG, "ProgramScheduleViewModel.getGuideData(): Exception: " + e);
             }
         }
         return epgDataList;
@@ -212,7 +211,7 @@ public class SharedViewModel extends ViewModel {
     public void getEpgData(final EpgDataLoadedListener epgDataLoadedListener) {
         try {
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "SharedViewModel.getEpgData(): called.");
+                Log.d(LOG_TAG, "ProgramScheduleViewModel.getEpgData(): called.");
             }
 
             this.clearCache();
@@ -223,7 +222,7 @@ public class SharedViewModel extends ViewModel {
                     AMPERSAND + EPG_DURATION_PARAM + EQUAL + EPG_DURATION;
 
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "SharedViewModel.getEpgData(): Epg URL: " + url);
+                Log.d(LOG_TAG, "ProgramScheduleViewModel.getEpgData(): Epg URL: " + url);
             }
 
             StringRequest jsonRequest = new StringRequest(
@@ -234,7 +233,7 @@ public class SharedViewModel extends ViewModel {
                         public void onResponse(String response) {
                             try {
                                 if (BuildConfig.DEBUG) {
-                                    Log.d(LOG_TAG, "SharedViewModel.getEpgData(): onResponse()");
+                                    Log.d(LOG_TAG, "ProgramScheduleViewModel.getEpgData(): onResponse()");
                                 }
 
                                 processEpgXmlData(response);
@@ -249,7 +248,7 @@ public class SharedViewModel extends ViewModel {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             if (BuildConfig.DEBUG) {
-                                Log.d(LOG_TAG, "SharedViewModel.getEpgData(): ErrorListener(): Error fetching json: " + error.toString());
+                                Log.d(LOG_TAG, "ProgramScheduleViewModel.getEpgData(): ErrorListener(): Error fetching json: " + error.toString());
                             }
                             epgDataLoadedListener.onEpgDataLoadError(error.getMessage());
                         }
@@ -265,7 +264,7 @@ public class SharedViewModel extends ViewModel {
         }
         catch(Exception e) {
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "SharedViewModel.getEpgData(): Error downloading EPG data. Exception: " + e);
+                Log.d(LOG_TAG, "ProgramScheduleViewModel.getEpgData(): Error downloading EPG data. Exception: " + e);
             }
             epgDataLoadedListener.onEpgDataLoadError(e.getMessage());
         }
@@ -312,6 +311,9 @@ public class SharedViewModel extends ViewModel {
                         throw new Exception(errorText);
                     }
 
+                    start = this.getUtcTimeInMillisecondsByDate(this.createUtcDateTimeString(start));
+                    stop = this.getUtcTimeInMillisecondsByDate(this.createUtcDateTimeString(stop));
+
                     NodeList programmeChilds = programmeItem.getChildNodes();
                     if (programmeChilds == null) {
                         throw new Exception(errorText);
@@ -351,17 +353,14 @@ public class SharedViewModel extends ViewModel {
                         }
                     }
 
-                    String startUtcStr = createUtcDateTimeString(start);
-                    String stopUtcStr = createUtcDateTimeString(stop);
-
-                    if (!ongoingProgramFound && isOngoingProgram(startUtcStr, stopUtcStr)) {
+                    if (!ongoingProgramFound && isOngoingProgram(start, stop)) {
                         ongoingProgramFound = true;
                     }
 
                     if (ongoingProgramFound) {
-                        EpgItem epgItem = new EpgItem(start, stop, this.createLocalTimeString(startUtcStr),
-                                this.createLocalTimeString(stopUtcStr), this.createLocalDateString(startUtcStr) , this.createLocalDateString(stopUtcStr),
-                                this.isStartDateToday(startUtcStr), startUtcStr, stopUtcStr, title, desc, category, icon);
+                        EpgItem epgItem = new EpgItem(start, stop, Utils.createLocalTimeString(start),
+                                Utils.createLocalTimeString(stop), Utils.createLocalDateString(start) , Utils.createLocalDateString(stop),
+                                this.isStartDateToday(start), title, desc, category, icon);
 
                         programmeList.add(epgItem);
                     }
@@ -370,7 +369,7 @@ public class SharedViewModel extends ViewModel {
         }
         catch (Exception e) {
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "SharedViewModel.getEpgData(): Exception: " + e);
+                Log.d(LOG_TAG, "ProgramScheduleViewModel.getEpgData(): Exception: " + e);
             }
 
             throw new Exception(e);
@@ -388,62 +387,32 @@ public class SharedViewModel extends ViewModel {
     }
 
     /**
-     * Creates and return local time string. Format: 'hh:mm'
+     * Get UTC time in ms by given UTC date time string.
      * @param utcStr
      * @return
      * @throws Exception
      */
-    private String createLocalTimeString(String utcStr) throws Exception {
-        Calendar calendar = createLocalCalendar(utcStr);
-
-        int hours = calendar.get(Calendar.HOUR_OF_DAY);
-        int minutes = calendar.get(Calendar.MINUTE);
-
-        return Utils.prependZero(hours) + COLON + Utils.prependZero(minutes);
-    }
-
-    /**
-     * Creates and return local date string. Format: 'dd.mm.yyyy'
-     * @param utcStr
-     * @return
-     * @throws Exception
-     */
-    private String createLocalDateString(String utcStr) throws Exception {
-        Calendar calendar = createLocalCalendar(utcStr);
-
-        int date = calendar.get(Calendar.DATE);
-        int month = calendar.get(Calendar.MONTH) + 1;
-        int year = calendar.get(Calendar.YEAR);
-
-        return Utils.prependZero(date) + DOT + Utils.prependZero(month) + DOT + year;
-    }
-
-    /**
-     * Create local calendar object from UTC date time string.
-     * @param utcStr
-     * @return
-     * @throws Exception
-     */
-    private Calendar createLocalCalendar(String utcStr) throws Exception {
+    public String getUtcTimeInMillisecondsByDate(String utcStr) throws Exception {
         DateFormat format = new SimpleDateFormat(STR_DATE_FORMAT);
         format.setTimeZone(TimeZone.getTimeZone(UTC));
 
-        Calendar calendar = GregorianCalendar.getInstance(TimeZone.getDefault());
+        Calendar calendar = Utils.getUtcCalendar();
         calendar.setTime(format.parse(utcStr));
-        return calendar;
+        return String.valueOf(calendar.getTimeInMillis());
     }
 
     /**
      * Check is start date time on today.
-     * @param utcStr
+     * @param time
      * @return
      * @throws Exception
      */
-    private boolean isStartDateToday(String utcStr) throws Exception {
-        Calendar today = GregorianCalendar.getInstance(TimeZone.getDefault());
+    private boolean isStartDateToday(String time) throws Exception {
+        Calendar today = Utils.getLocalCalendar();
         today.setTime(new Date());
 
-        Calendar calendar = createLocalCalendar(utcStr);
+        Calendar calendar = Utils.getLocalCalendar();
+        calendar.setTimeInMillis(Utils.stringToLong(time));
 
         return today.get(Calendar.DATE) == calendar.get(Calendar.DATE)
                 && today.get(Calendar.MONTH) + 1 == calendar.get(Calendar.MONTH) + 1
@@ -451,37 +420,34 @@ public class SharedViewModel extends ViewModel {
     }
 
     /**
-     * Check is now time between start and stop UTC time string.
-     * @param startUtcStr
-     * @param stopUtcStr
+     * Check is now time between start and stop.
+     * @param start
+     * @param end
      * @return
      * @throws Exception
      */
-    private boolean isOngoingProgram(String startUtcStr, String stopUtcStr) throws Exception {
-        Calendar today = Calendar.getInstance(TimeZone.getDefault());
-        today.setTime(new Date());
-        long now = today.getTimeInMillis();
+    private boolean isOngoingProgram(String start, String end) throws Exception {
+        long now = Utils.getUtcTimeInMilliseconds();
+        long s = Utils.stringToLong(start);
+        long e = Utils.stringToLong(end);
 
-        long startTime = createLocalCalendar(startUtcStr).getTimeInMillis();
-        long stopTime = createLocalCalendar(stopUtcStr).getTimeInMillis();
-
-        return now >= startTime && now <= stopTime;
+        return now >= s && now <= e;
     }
 
     /**
      * Get ongoing program progress value.
-     * @param startUtcStr
-     * @param stopUtcStr
+     * @param start
+     * @param stop
      * @return
      * @throws Exception
      */
-    private int getOngoingProgramProgressValue(String startUtcStr, String stopUtcStr) throws Exception {
-        Calendar today = Calendar.getInstance(TimeZone.getDefault());
+    private int getOngoingProgramProgressValue(String start, String stop) throws Exception {
+        Calendar today = Utils.getLocalCalendar();
         today.setTime(new Date());
         long now = today.getTimeInMillis();
 
-        long startTime = createLocalCalendar(startUtcStr).getTimeInMillis();
-        long stopTime = createLocalCalendar(stopUtcStr).getTimeInMillis();
+        long startTime = Utils.getLocalTimeInMilliseconds(start);
+        long stopTime = Utils.getLocalTimeInMilliseconds(stop);
 
         float duration = (float) (stopTime - startTime);
         float passed = (float) (now - startTime);
@@ -494,7 +460,7 @@ public class SharedViewModel extends ViewModel {
             programmeList.clear();
 
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "SharedViewModel.clearCache(): Cache cleared.");
+                Log.d(LOG_TAG, "ProgramScheduleViewModel.clearCache(): Cache cleared.");
             }
         }
     }

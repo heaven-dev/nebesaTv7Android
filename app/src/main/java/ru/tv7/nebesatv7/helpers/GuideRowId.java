@@ -3,13 +3,13 @@ package ru.tv7.nebesatv7.helpers;
 /**
  * Helper class.
  */
-public class ProgramRowId {
+public class GuideRowId {
     private int rowId;
     private int timeId;
     private int titleId;
     private int descId;
 
-    public ProgramRowId(int rowId, int timeId, int titleId, int descId) {
+    public GuideRowId(int rowId, int timeId, int titleId, int descId) {
         this.rowId = rowId;
         this.timeId = timeId;
         this.titleId = titleId;

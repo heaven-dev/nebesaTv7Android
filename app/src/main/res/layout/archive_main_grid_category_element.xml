@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/categoryContainer"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginEnd="10dp"
+    android:focusable="true"
+    android:background="@drawable/list_item">
+
+    <LinearLayout
+        android:id="@+id/categoryItem"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:gravity="center"
+        android:weightSum="2">
+
+        <ImageView
+            android:id="@+id/categoryImage"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:contentDescription="@string/tv7_logo"
+            android:layout_weight="0.5"
+            android:src="@drawable/logo" />
+
+        <TextView
+            android:id="@+id/categoryText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="6dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/tv7_logo"
+            android:textColor="@color/content_area_text"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/backItem"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="10dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/backImage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:contentDescription="@string/tv7_logo"
+            android:src="@drawable/back" />
+
+        <TextView
+            android:id="@+id/backText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/tv7_logo"
+            android:textColor="@color/content_area_text"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+</LinearLayout>
+

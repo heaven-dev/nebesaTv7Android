@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/guideFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/default_background">
+
+    <include layout="@layout/fragment_toolbar"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <include layout="@layout/fragment_sidebar"/>
+
+        <RelativeLayout
+            android:id="@+id/contentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/default_background"
+            android:orientation="vertical">
+
+            <androidx.leanback.widget.VerticalGridView
+                android:id="@+id/guideScroll"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="50dp" />
+
+
+            <LinearLayout
+                android:id="@+id/datesContainer"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:gravity="center_vertical"
+                android:layout_alignParentTop="true"
+                android:orientation="horizontal"
+                android:weightSum="7"
+                android:background="@color/default_background">
+
+                <TextView
+                    android:id="@+id/date_0"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/list_item"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="5dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:focusable="true"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:textColor="@color/content_area_text"/>
+
+                <TextView
+                    android:id="@+id/date_1"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/list_item"
+                    android:gravity="center"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:focusable="true"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:textColor="@color/content_area_text"/>
+
+                <TextView
+                    android:id="@+id/date_2"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/list_item"
+                    android:gravity="center"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:focusable="true"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:textColor="@color/content_area_text"/>
+
+                <TextView
+                    android:id="@+id/date_3"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/list_item"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:focusable="true"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:textColor="@color/content_area_text"/>
+
+                <TextView
+                    android:id="@+id/date_4"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/list_item"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:focusable="true"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:textColor="@color/content_area_text"/>
+
+                <TextView
+                    android:id="@+id/date_5"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/list_item"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:focusable="true"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:textColor="@color/content_area_text"/>
+
+                <TextView
+                    android:id="@+id/date_6"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/list_item"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:layout_marginStart="5dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:focusable="true"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:textColor="@color/content_area_text"/>
+
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/guideProgress"
+                style="?android:attr/progressBarStyle"
+                android:indeterminate="true"
+                android:layout_centerInParent="true"
+                android:indeterminateTintMode="src_atop"
+                android:indeterminateTint="@color/tv7_default"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</LinearLayout>
+

@@ -1,9 +1,16 @@
 <resources>
     <color name="default_background">#ffffff</color>
+    <color name="white">#ffffff</color>
     <color name="exit_overlay_background">#000000</color>
     <color name="tv7_default">#0099cc</color>
     <color name="toolbar_and_title_text">#444444</color>
     <color name="toolbar">#eeeeee</color>
+    <color name="sidebar_text">#444444</color>
+    <color name="sidebar_icon">#444444</color>
+    <color name="content_area_text">#444444</color>
+    <color name="sidebar">#eeeeee</color>
+    <color name="archive_main_content_bg">#eeeeee</color>
+    <color name="sidebar_selected_item">#bbbbbb</color>
     <color name="exit_overlay_controls">#ffffff</color>
     <color name="player_text">#ffffff</color>
     <color name="tv_content_border">#444444</color>
@@ -12,5 +19,12 @@
     <color name="progressbar_background">#444444</color>
     <color name="video_top_bar">#444444</color>
     <color name="video_top_bar_text">#ffffff</color>
+    <color name="main_archive_image_border">#444444</color>
+    <color name="gradient_bottom">#000000</color>
     <color name="exoplayer_background">#000000</color>
+    <color name="series_program_icon_background">#cccccc</color>
+    <color name="series_program_icon_stroke">#000000</color>
+    <color name="ongoing_program_icon_bg_start">#b00b1e</color>
+    <color name="ongoing_program_icon_bg_end">#df9da5</color>
+    <color name="search_text_box_bg">#eeeeee</color>
 </resources>

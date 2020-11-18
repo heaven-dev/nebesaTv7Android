@@ -1,7 +1,7 @@
 package ru.tv7.nebesatv7.helpers;
 
 /**
- * Helper class.
+ * Electronic program guide helper class.
  */
 public class EpgItem {
     private String start = null;
@@ -11,8 +11,6 @@ public class EpgItem {
     private String localStartDate = null;
     private String localEndDate = null;
     private Boolean isStartDateToday = null;
-    private String startUtcStr = null;
-    private String stopUtcStr = null;
     private String title = null;
     private String desc = null;
     private String category = null;
@@ -20,7 +18,7 @@ public class EpgItem {
     private Integer ongoingProgress = null;
 
     public EpgItem(String start, String stop, String localStartTime, String localEndTime, String localStartDate, String localeEndDate,
-                   Boolean isStartDateToday, String startUtcStr, String stopUtcStr, String title, String desc, String category, String icon) {
+                   Boolean isStartDateToday, String title, String desc, String category, String icon) {
         this.start = start;
         this.stop = stop;
         this.localStartTime = localStartTime;
@@ -28,8 +26,6 @@ public class EpgItem {
         this.localStartDate = localStartDate;
         this.localEndDate = localeEndDate;
         this.isStartDateToday = isStartDateToday;
-        this.startUtcStr = startUtcStr;
-        this.stopUtcStr = stopUtcStr;
         this.title = title;
         this.desc = desc;
         this.category = category;
@@ -44,8 +40,6 @@ public class EpgItem {
         this.localStartDate = e.getLocalStartDate();
         this.localEndDate = e.getLocalEndDate();
         this.isStartDateToday = e.getStartDateToday();
-        this.startUtcStr = e.getStartUtcStr();
-        this.stopUtcStr = e.getStopUtcStr();
         this.title = e.getTitle();
         this.desc = e.getDesc();
         this.category = e.getCategory();
@@ -80,14 +74,6 @@ public class EpgItem {
 
     public Boolean getStartDateToday() {
         return isStartDateToday;
-    }
-
-    public String getStartUtcStr() {
-        return startUtcStr;
-    }
-
-    public String getStopUtcStr() {
-        return stopUtcStr;
     }
 
     public String getTitle() {
