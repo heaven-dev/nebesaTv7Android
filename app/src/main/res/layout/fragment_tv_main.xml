@@ -149,12 +149,14 @@
                         android:id="@+id/guideRowsContainer"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:weightSum="10"
                         android:orientation="vertical">
 
                         <LinearLayout
                             android:id="@+id/row1"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
                             android:orientation="horizontal">
 
                             <TextView
@@ -192,7 +194,8 @@
                         <LinearLayout
                             android:id="@+id/row2"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
                             android:orientation="horizontal">
                             <TextView
                                 android:id="@+id/row2Time"
@@ -229,7 +232,8 @@
                         <LinearLayout
                             android:id="@+id/row3"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
                             android:orientation="horizontal">
                             <TextView
                                 android:id="@+id/row3Time"
@@ -266,7 +270,8 @@
                         <LinearLayout
                             android:id="@+id/row4"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
                             android:orientation="horizontal">
                             <TextView
                                 android:id="@+id/row4Time"
@@ -303,7 +308,8 @@
                         <LinearLayout
                             android:id="@+id/row5"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
                             android:orientation="horizontal">
                             <TextView
                                 android:id="@+id/row5Time"
@@ -340,7 +346,8 @@
                         <LinearLayout
                             android:id="@+id/row6"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
                             android:orientation="horizontal">
                             <TextView
                                 android:id="@+id/row6Time"
@@ -377,7 +384,8 @@
                         <LinearLayout
                             android:id="@+id/row7"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
                             android:orientation="horizontal">
                             <TextView
                                 android:id="@+id/row7Time"
@@ -414,7 +422,8 @@
                         <LinearLayout
                             android:id="@+id/row8"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
                             android:orientation="horizontal">
                             <TextView
                                 android:id="@+id/row8Time"
@@ -451,7 +460,8 @@
                         <LinearLayout
                             android:id="@+id/row9"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
                             android:orientation="horizontal">
                             <TextView
                                 android:id="@+id/row9Time"
@@ -488,7 +498,8 @@
                         <LinearLayout
                             android:id="@+id/row10"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
                             android:orientation="horizontal">
                             <TextView
                                 android:id="@+id/row10Time"
@@ -884,4 +895,3 @@
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
-

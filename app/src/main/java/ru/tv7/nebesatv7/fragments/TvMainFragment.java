@@ -209,56 +209,58 @@ public class TvMainFragment extends Fragment implements FragmentManager.OnBackSt
         boolean updateContent = false;
         List<EpgItem> programs = viewModel.getOngoingAndComingPrograms(PROGRAM_VISIBLE_IMAGE_COUNT);
 
-        for(int index = 0; index < programs.size(); index++) {
-            EpgItem epgItem = programs.get(index);
+        if (programs.size() == PROGRAM_VISIBLE_IMAGE_COUNT) {
 
-            if (index == 0) {
-                // update progress bar
-                ProgressBar programProgress = root.findViewById(R.id.programProgress);
-                if (programProgress != null) {
-                    Integer progressValue = epgItem.getOngoingProgress();
-                    if (progressValue != null) {
-                        programProgress.setProgress(progressValue);
+            for(int index = 0; index < programs.size(); index++) {
+                EpgItem epgItem = programs.get(index);
+
+                if (index == 0) {
+                    // update progress bar
+                    ProgressBar programProgress = root.findViewById(R.id.programProgress);
+                    if (programProgress != null) {
+                        Integer progressValue = epgItem.getOngoingProgress();
+                        if (progressValue != null) {
+                            programProgress.setProgress(progressValue);
+                        }
+                    }
+
+                    String time = epgItem.getStart();
+                    if (!time.equals(programStart)) {
+                        // ongoing program changed from previous check - updated images and guide
+                        updateContent = true;
+                        programStart = time;
                     }
                 }
 
-                String time = epgItem.getStart();
-                if (!time.equals(programStart)) {
-                    // ongoing program changed from previous check - updated images and guide
-                    updateContent = true;
-                    programStart = time;
+                if (updateContent) {
+                    if (BuildConfig.DEBUG) {
+                        Log.d(LOG_TAG, "TvMainFragment.createMainView(): Update content.");
+                    }
+
+                    String imageUrl = epgItem.getIcon();
+
+                    // Change scheme from http to https
+                    if (imageUrl != null && !imageUrl.startsWith(HTTPS)) {
+                        imageUrl = imageUrl.replace(HTTP, HTTPS);
+                    }
+
+                    if (index == 0) {
+                        this.addOngoingProgramImage(imageUrl, epgItem);
+                    } else {
+                        this.addComingProgramImages(index - 1, imageUrl, epgItem);
+                    }
                 }
             }
 
             if (updateContent) {
-                if (BuildConfig.DEBUG) {
-                    Log.d(LOG_TAG, "TvMainFragment.createMainView(): Update content.");
+                if (callOrigin == CallOrigin.Timer) {
+                    // remove past epg items from the program list
+                    viewModel.removePastProgramItems();
+                    guideIndex = viewModel.getOngoingProgramIndex();
                 }
 
-                String imageUrl = epgItem.getIcon();
-
-                // Change scheme from http to https
-                if (imageUrl != null && !imageUrl.startsWith(HTTPS)) {
-                    imageUrl = imageUrl.replace(HTTP, HTTPS);
-                }
-
-                if (index == 0) {
-                    this.addOngoingProgramImage(imageUrl, epgItem);
-                }
-                else {
-                    this.addComingProgramImages(index - 1, imageUrl, epgItem);
-                }
+                this.updateGuide();
             }
-        }
-
-        if (updateContent) {
-            if (callOrigin == CallOrigin.Timer) {
-                // remove past epg items from the program list
-                viewModel.removePastProgramItems();
-                guideIndex = viewModel.getOngoingProgramIndex();
-            }
-
-            this.updateGuide();
         }
     }
 
@@ -341,37 +343,40 @@ public class TvMainFragment extends Fragment implements FragmentManager.OnBackSt
 
             List<EpgItem> guideElements  = viewModel.getGuideData(guideIndex, GUIDE_ELEMENT_COUNT);
 
-            if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "TvMainFragment.updateGuide() Guide elements size: " + guideElements.size());
-            }
+            if (guideElements.size() == GUIDE_ELEMENT_COUNT) {
 
-            for(int i = 0; i < guideElements.size(); i++) {
-                EpgItem e = guideElements.get(i);
-                GuideRowId gd = GUIDE_ROWS.get(i);
-
-                TextView rowTime = root.findViewById(gd.getTimeId());
-                TextView rowTitle = root.findViewById(gd.getTitleId());
-                TextView rowDesc = root.findViewById(gd.getDescId());
-                if (rowTime != null && rowTitle != null && rowDesc != null) {
-                    rowTime.setText(e.getLocalStartTime());
-                    rowTitle.setText(e.getTitle());
-
-                    String desc = e.getDesc();
-                    if (desc != null) {
-                        desc = PIPE_WITH_SPACES + desc;
-                        rowDesc.setText(desc);
-                    }
+                if (BuildConfig.DEBUG) {
+                    Log.d(LOG_TAG, "TvMainFragment.updateGuide() Guide elements size: " + guideElements.size());
                 }
 
-                if (i == 0) {
-                    // First row - set today text or date
-                    TextView todayText = root.findViewById(R.id.todayText);
-                    if (todayText != null) {
-                        if (e.getStartDateToday()) {
-                            todayText.setText(getResources().getString(R.string.today));
+                for (int i = 0; i < guideElements.size(); i++) {
+                    EpgItem e = guideElements.get(i);
+                    GuideRowId gd = GUIDE_ROWS.get(i);
+
+                    TextView rowTime = root.findViewById(gd.getTimeId());
+                    TextView rowTitle = root.findViewById(gd.getTitleId());
+                    TextView rowDesc = root.findViewById(gd.getDescId());
+                    if (rowTime != null && rowTitle != null && rowDesc != null) {
+                        rowTime.setText(e.getLocalStartTime());
+                        rowTitle.setText(e.getTitle());
+
+                        String desc = e.getDesc();
+                        if (desc != null) {
+                            desc = PIPE_WITH_SPACES + desc;
+                            rowDesc.setText(desc);
                         }
-                        else {
-                            todayText.setText(e.getLocalStartDate());
+                    }
+
+                    if (i == 0) {
+                        // First row - set today text or date
+                        TextView todayText = root.findViewById(R.id.todayText);
+                        if (todayText != null) {
+                            if (e.getStartDateToday()) {
+                                todayText.setText(getResources().getString(R.string.today));
+                            }
+                            else {
+                                todayText.setText(e.getLocalStartDate());
+                            }
                         }
                     }
                 }
@@ -379,7 +384,7 @@ public class TvMainFragment extends Fragment implements FragmentManager.OnBackSt
         }
         catch(Exception e) {
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "TvMainFragment.addComingProgramImages(): Exception: " + e);
+                Log.d(LOG_TAG, "TvMainFragment.updateGuide(): Exception: " + e);
             }
             Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
         }
