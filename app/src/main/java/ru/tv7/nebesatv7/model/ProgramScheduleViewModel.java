@@ -66,6 +66,7 @@ public class ProgramScheduleViewModel extends ViewModel {
 
     private List<EpgItem> programmeList = new ArrayList<>();
     private boolean ongoingProgramFound = false;
+    private int ongoingProgramIndex = 0;
 
     @Override
     protected void onCleared() {
@@ -126,22 +127,21 @@ public class ProgramScheduleViewModel extends ViewModel {
     }
 
     /**
-     * Returns index of ongoing program.
+     * Returns and stores index of ongoing program.
      * @return
      * @throws Exception
      */
     public int getOngoingProgramIndex() throws Exception {
-        int index = 0;
-
         for(int i = 0; i < programmeList.size(); i++) {
             EpgItem e = programmeList.get(i);
-            if (e != null && isOngoingProgram(e.getStart(), e.getStop())) {
-                index = i;
+            if (e != null && this.isOngoingProgram(e.getStart(), e.getStop())) {
+                ongoingProgramIndex = i;
+
                 break;
             }
         }
 
-        return index;
+        return ongoingProgramIndex;
     }
 
     /**
@@ -452,7 +452,16 @@ public class ProgramScheduleViewModel extends ViewModel {
         float duration = (float) (stopTime - startTime);
         float passed = (float) (now - startTime);
 
-        return (int) (passed / duration * 100);
+        int value = (int) (passed / duration * 100);
+        if (value < 0) {
+            value = 0;
+        }
+
+        if (value > 100) {
+            value = 100;
+        }
+
+        return value;
     }
 
     private void clearCache() {
