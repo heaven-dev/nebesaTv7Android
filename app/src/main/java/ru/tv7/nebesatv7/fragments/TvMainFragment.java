@@ -138,6 +138,8 @@ public class TvMainFragment extends Fragment implements FragmentManager.OnBackSt
             menuTexts = Sidebar.getMenuTextItems(root);
 
             Sidebar.setSelectedMenuItem(root, R.id.tvMenuContainer);
+
+            viewModel.removePastProgramItems();
         }
         catch(Exception e) {
             if (BuildConfig.DEBUG) {
@@ -343,7 +345,7 @@ public class TvMainFragment extends Fragment implements FragmentManager.OnBackSt
 
             List<EpgItem> guideElements  = viewModel.getGuideData(guideIndex, GUIDE_ELEMENT_COUNT);
 
-            if (guideElements.size() == GUIDE_ELEMENT_COUNT) {
+            if (guideElements != null && guideElements.size() == GUIDE_ELEMENT_COUNT) {
 
                 if (BuildConfig.DEBUG) {
                     Log.d(LOG_TAG, "TvMainFragment.updateGuide() Guide elements size: " + guideElements.size());

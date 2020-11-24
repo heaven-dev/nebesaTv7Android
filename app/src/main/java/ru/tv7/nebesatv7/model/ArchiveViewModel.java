@@ -36,6 +36,7 @@ import static ru.tv7.nebesatv7.helpers.Constants.CATEGORY_NAME;
 import static ru.tv7.nebesatv7.helpers.Constants.CATEGORY_PROGRAMS_METHOD;
 import static ru.tv7.nebesatv7.helpers.Constants.COLON;
 import static ru.tv7.nebesatv7.helpers.Constants.DASH_WITH_SPACES;
+import static ru.tv7.nebesatv7.helpers.Constants.DATE_INDEX;
 import static ru.tv7.nebesatv7.helpers.Constants.DATE_PARAM;
 import static ru.tv7.nebesatv7.helpers.Constants.DOT;
 import static ru.tv7.nebesatv7.helpers.Constants.DURATION;
@@ -267,7 +268,7 @@ public class ArchiveViewModel extends ViewModel {
                 Log.d(LOG_TAG, "ArchiveViewModel.getBroadcastRecommendationPrograms(): URL" + url);
             }
 
-            this.runQuery(url, type, archiveDataLoadedListener);
+            this.runQuery(url, type, null, archiveDataLoadedListener);
         }
     }
 
@@ -286,7 +287,7 @@ public class ArchiveViewModel extends ViewModel {
             Log.d(LOG_TAG, "ArchiveViewModel.getRecommendPrograms(): URL" + url);
         }
 
-        this.runQuery(url, type, archiveDataLoadedListener);
+        this.runQuery(url, type, null, archiveDataLoadedListener);
     }
 
     /**
@@ -310,7 +311,7 @@ public class ArchiveViewModel extends ViewModel {
                 Log.d(LOG_TAG, "ArchiveViewModel.getMostViewedPrograms(): URL" + url);
             }
 
-            this.runQuery(url, type, archiveDataLoadedListener);
+            this.runQuery(url, type, null, archiveDataLoadedListener);
         }
     }
 
@@ -337,7 +338,7 @@ public class ArchiveViewModel extends ViewModel {
                 Log.d(LOG_TAG, "ArchiveViewModel.getNewestPrograms(): URL" + url);
             }
 
-            this.runQuery(url, type, archiveDataLoadedListener);
+            this.runQuery(url, type, null, archiveDataLoadedListener);
         }
     }
 
@@ -361,7 +362,7 @@ public class ArchiveViewModel extends ViewModel {
                 Log.d(LOG_TAG, "ArchiveViewModel.getParentCategories(): URL" + url);
             }
 
-            this.runQuery(url, type, archiveDataLoadedListener);
+            this.runQuery(url, type, null, archiveDataLoadedListener);
         }
     }
 
@@ -385,7 +386,7 @@ public class ArchiveViewModel extends ViewModel {
                 Log.d(LOG_TAG, "ArchiveViewModel.getSubCategories(): URL" + url);
             }
 
-            this.runQuery(url, type, archiveDataLoadedListener);
+            this.runQuery(url, type, null, archiveDataLoadedListener);
         }
     }
 
@@ -401,7 +402,7 @@ public class ArchiveViewModel extends ViewModel {
             Log.d(LOG_TAG, "ArchiveViewModel.getTranslation(): URL: " + url);
         }
 
-        this.runQuery(url, type, archiveDataLoadedListener);
+        this.runQuery(url, type, null, archiveDataLoadedListener);
     }
 
 
@@ -421,7 +422,7 @@ public class ArchiveViewModel extends ViewModel {
             Log.d(LOG_TAG, "ArchiveViewModel.getCategoryPrograms(): URL: " + url);
         }
 
-        this.runQuery(url, type, archiveDataLoadedListener);
+        this.runQuery(url, type, null, archiveDataLoadedListener);
     }
 
     /**
@@ -437,7 +438,7 @@ public class ArchiveViewModel extends ViewModel {
             Log.d(LOG_TAG, "ArchiveViewModel.getProgramInfo(): URL: " + url);
         }
 
-        this.runQuery(url, type, archiveDataLoadedListener);
+        this.runQuery(url, type, null, archiveDataLoadedListener);
     }
 
     /**
@@ -453,7 +454,7 @@ public class ArchiveViewModel extends ViewModel {
             Log.d(LOG_TAG, "ArchiveViewModel.getSeriesInfo(): URL: " + url);
         }
 
-        this.runQuery(url, type, archiveDataLoadedListener);
+        this.runQuery(url, type, null,  archiveDataLoadedListener);
     }
 
     /**
@@ -472,7 +473,7 @@ public class ArchiveViewModel extends ViewModel {
             Log.d(LOG_TAG, "ArchiveViewModel.getSeriesPrograms(): URL: " + url);
         }
 
-        this.runQuery(url, type, archiveDataLoadedListener);
+        this.runQuery(url, type, null, archiveDataLoadedListener);
     }
 
     /**
@@ -480,7 +481,7 @@ public class ArchiveViewModel extends ViewModel {
      * @param date
      * @param archiveDataLoadedListener
      */
-    public void getGuideByDate(final String date, final ArchiveDataLoadedListener archiveDataLoadedListener) {
+    public void getGuideByDate(final String date, final Integer dateIndex, final ArchiveDataLoadedListener archiveDataLoadedListener) {
         String type = GUIDE_DATE_METHOD;
 
         String url = ARCHIVE_BASE_URL + GET_ + type + QUESTION_MARK + DATE_PARAM + EQUAL + date;
@@ -488,7 +489,7 @@ public class ArchiveViewModel extends ViewModel {
             Log.d(LOG_TAG, "ArchiveViewModel.getGuideByDate(): URL: " + url);
         }
 
-        this.runQuery(url, type, archiveDataLoadedListener);
+        this.runQuery(url, type, dateIndex, archiveDataLoadedListener);
     }
 
     /**
@@ -508,7 +509,7 @@ public class ArchiveViewModel extends ViewModel {
                 Log.d(LOG_TAG, "ArchiveViewModel.searchItemsByString(): URL: " + url);
             }
 
-            this.runQuery(url, type, archiveDataLoadedListener);
+            this.runQuery(url, type, null, archiveDataLoadedListener);
         }
         catch(Exception e) {
             if (BuildConfig.DEBUG) {
@@ -525,7 +526,7 @@ public class ArchiveViewModel extends ViewModel {
      * @param type
      * @param archiveDataLoadedListener
      */
-    private void runQuery(final String url, final String type, final ArchiveDataLoadedListener archiveDataLoadedListener) {
+    private void runQuery(final String url, final String type, final Object data, final ArchiveDataLoadedListener archiveDataLoadedListener) {
         if (BuildConfig.DEBUG) {
             Log.d(LOG_TAG, "ArchiveViewModel.runQuery(): called.");
         }
@@ -560,7 +561,7 @@ public class ArchiveViewModel extends ViewModel {
                                 archiveDataLoadedListener.onArchiveDataLoaded(filtered, type);
                             }
                             else if (type.equals(GUIDE_DATE_METHOD)) {
-                                JSONArray filtered = filterGuideByDateResponse(response, type);
+                                JSONArray filtered = filterGuideByDateResponse(response, type, (Integer)data);
 
                                 archiveDataLoadedListener.onArchiveDataLoaded(filtered, type);
                             }
@@ -753,13 +754,13 @@ public class ArchiveViewModel extends ViewModel {
         return respArray;
     }
 
-    private JSONArray filterGuideByDateResponse(JSONObject jsonObject, String type) throws Exception {
+    private JSONArray filterGuideByDateResponse(JSONObject jsonObject, String type, Integer dateIndex) throws Exception {
         JSONArray respArray = new JSONArray();
 
         JSONArray array = jsonObject.getJSONArray(type);
         long currentTime = Utils.getTimeInMilliseconds();
 
-        int ongoingProgramIndex = -1;
+        int ongoingProgramIndex = 0;
         for (int i = 0; i < array.length(); i++) {
             JSONObject respObj = new JSONObject();
             JSONObject sourceObj = array.getJSONObject(i);
@@ -774,8 +775,7 @@ public class ArchiveViewModel extends ViewModel {
                 throw new Exception("Invalid response in guide by date query!");
             }
 
-            if (currentTime >= Long.parseLong(start) && currentTime <= Long.parseLong(end)) {
-                setValue(respObj, ONGOING_PROGRAM, ONE_STR, true);
+            if (currentTime >= Long.parseLong(start) && currentTime <= Long.parseLong(end) || Long.parseLong(end) < currentTime) {
                 ongoingProgramIndex = i;
             }
 
@@ -825,9 +825,27 @@ public class ArchiveViewModel extends ViewModel {
 
         JSONObject responseObj = new JSONObject();
         responseObj.put(ONGOING_PROGRAM_INDEX, ongoingProgramIndex);
-        responseObj.put(GUIDE_DATA, respArray);
+        responseObj.put(DATE_INDEX, dateIndex);
+        responseObj.put(GUIDE_DATA, dateIndex == 0 ? this.addOngoingProgramToIndex(respArray, ongoingProgramIndex) : respArray);
 
         return new JSONArray().put(responseObj);
+    }
+
+    /**
+     * Adds ongoing program flag to index.
+     * @param respArray
+     * @param index
+     * @return
+     * @throws Exception
+     */
+    private JSONArray addOngoingProgramToIndex(JSONArray respArray, int index) throws Exception {
+        JSONObject obj = respArray.getJSONObject(index);
+        if (obj != null) {
+            setValue(obj, ONGOING_PROGRAM, ONE_STR, true);
+            respArray.put(index, obj);
+        }
+
+        return respArray;
     }
 
     /**

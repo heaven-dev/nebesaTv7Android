@@ -34,6 +34,7 @@ import ru.tv7.nebesatv7.model.SharedCacheViewModel;
 
 import static ru.tv7.nebesatv7.helpers.Constants.ARCHIVE_MAIN_FRAGMENT;
 import static ru.tv7.nebesatv7.helpers.Constants.DATES_COUNT;
+import static ru.tv7.nebesatv7.helpers.Constants.DATE_INDEX;
 import static ru.tv7.nebesatv7.helpers.Constants.GUIDE_DATA;
 import static ru.tv7.nebesatv7.helpers.Constants.GUIDE_DATE_IDS;
 import static ru.tv7.nebesatv7.helpers.Constants.GUIDE_FRAGMENT;
@@ -136,7 +137,7 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
                 this.scrollToPosition((Integer)pageStateItem.getValue(SELECTED_POS));
             }
             else {
-                this.loadGuideByDate(Utils.getTodayUtcFormattedLocalDate());
+                this.loadGuideByDate(Utils.getTodayUtcFormattedLocalDate(), 0);
             }
         }
         catch (Exception e) {
@@ -169,7 +170,7 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
 
                 guideScroll.setAdapter(guideGridAdapter);
 
-                if (isPageLoad && ongoingProgramIndex != -1) {
+                if (isPageLoad && obj.getInt(DATE_INDEX) == 0) {
                     this.scrollToPosition(ongoingProgramIndex);
                 }
 
@@ -265,7 +266,7 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
                         GuideDate gd = dates.get(index);
                         if (gd != null) {
                             selectedDateId = GUIDE_DATE_IDS.get(index);
-                            this.loadGuideByDate(gd.getDate());
+                            this.loadGuideByDate(gd.getDate(), index);
                         }
                     }
                 }
@@ -417,9 +418,9 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
      * Calls load guide by date method.
      * @param date
      */
-    private void loadGuideByDate(String date) {
+    private void loadGuideByDate(String date, Integer dateIndex) {
         Utils.showProgressBar(root, R.id.guideProgress);
-        archiveViewModel.getGuideByDate(date, this);
+        archiveViewModel.getGuideByDate(date, dateIndex, this);
     }
 
     /**

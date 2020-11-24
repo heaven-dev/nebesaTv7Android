@@ -65,8 +65,6 @@ import static ru.tv7.nebesatv7.helpers.Constants.VOLLEY_TIMEOUT_VALUE;
 public class ProgramScheduleViewModel extends ViewModel {
 
     private List<EpgItem> programmeList = new ArrayList<>();
-    private boolean ongoingProgramFound = false;
-    private int ongoingProgramIndex = 0;
 
     @Override
     protected void onCleared() {
@@ -132,16 +130,18 @@ public class ProgramScheduleViewModel extends ViewModel {
      * @throws Exception
      */
     public int getOngoingProgramIndex() throws Exception {
+        int index = 0;
+        long now = Utils.getUtcTimeInMilliseconds();
+
         for(int i = 0; i < programmeList.size(); i++) {
             EpgItem e = programmeList.get(i);
-            if (e != null && this.isOngoingProgram(e.getStart(), e.getStop())) {
-                ongoingProgramIndex = i;
 
-                break;
+            if (e != null && this.isOngoingProgram(e.getStart(), e.getStop()) || Utils.stringToLong(e.getStop()) < now) {
+                index = i;
             }
         }
 
-        return ongoingProgramIndex;
+        return index;
     }
 
     /**
@@ -279,8 +279,6 @@ public class ProgramScheduleViewModel extends ViewModel {
         try {
             String errorText = "Error parsing xml data!";
 
-            ongoingProgramFound = false;
-
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             InputSource is = new InputSource(new StringReader(xmlStr));
@@ -353,17 +351,11 @@ public class ProgramScheduleViewModel extends ViewModel {
                         }
                     }
 
-                    if (!ongoingProgramFound && isOngoingProgram(start, stop)) {
-                        ongoingProgramFound = true;
-                    }
-
-                    if (ongoingProgramFound) {
-                        EpgItem epgItem = new EpgItem(start, stop, Utils.createLocalTimeString(start),
+                    EpgItem epgItem = new EpgItem(start, stop, Utils.createLocalTimeString(start),
                                 Utils.createLocalTimeString(stop), Utils.createLocalDateString(start) , Utils.createLocalDateString(stop),
                                 this.isStartDateToday(start), title, desc, category, icon);
 
-                        programmeList.add(epgItem);
-                    }
+                    programmeList.add(epgItem);
                 }
             }
         }

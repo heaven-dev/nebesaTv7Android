@@ -61,7 +61,7 @@ abstract public class Constants {
     public static final int DATES_COUNT = 7;
 
     public static final String EPG_URL = "https://helsinki.tv7.fi/exodus-interfaces/xmltv.xml";
-    public static final String EPG_DURATION = "3d";
+    public static final String EPG_DURATION = "2d";
     public static final String EPG_CHANNEL_PARAM = "channel";
     public static final String EPG_LANG_PARAM = "lang";
     public static final String EPG_DURATION_PARAM = "duration";
@@ -175,6 +175,7 @@ abstract public class Constants {
     public static final String START_END_TIME = "start_end_time";
     public static final String ONGOING_PROGRAM = "ongoing_program";
     public static final String ONGOING_PROGRAM_INDEX = "ongoing_program_index";
+    public static final String DATE_INDEX = "date_index";
     public static final String GUIDE_DATA = "guide_data";
     public static final String BACK_TEXT = "back_text";
     public static final String RESULTS = "results";
