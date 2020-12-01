@@ -23,6 +23,7 @@ public class SharedCacheViewModel extends ViewModel {
     private PageStateItem categoriesPage = null;
     private PageStateItem guidePage = null;
     private PageStateItem searchResultPage = null;
+    private PageStateItem favoritesPage = null;
 
     private ArchiveMainPageStateItem archiveMainPage = null;
 
@@ -118,6 +119,19 @@ public class SharedCacheViewModel extends ViewModel {
     }
 
 
+    public PageStateItem getFavoritesPageStateItem() {
+        return favoritesPage;
+    }
+
+    public void setFavoritesPageStateItem(PageStateItem pageStateItem) {
+        this.favoritesPage = pageStateItem;
+    }
+
+    public void resetFavoritesPageStateItem() {
+        favoritesPage = null;
+    }
+
+
     public ArchiveMainPageStateItem getArchiveMainPageStateItem() {
         return archiveMainPage;
     }
@@ -152,6 +166,7 @@ public class SharedCacheViewModel extends ViewModel {
         categoriesPage = null;
         guidePage = null;
         searchResultPage = null;
+        favoritesPage = null;
 
         archiveMainPage = null;
 

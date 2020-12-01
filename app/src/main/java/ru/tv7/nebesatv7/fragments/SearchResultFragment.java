@@ -1,5 +1,6 @@
 package ru.tv7.nebesatv7.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -139,22 +140,27 @@ public class SearchResultFragment extends Fragment implements ArchiveDataLoadedL
                 Log.d(LOG_TAG, "SearchResultFragment.addElements(): Archive data loaded. Data length: " + jsonArray.length());
             }
 
-            hitCount = 0;
-
-            if (jsonArray != null && jsonArray.length() > 0) {
-                searchResultScroll = root.findViewById(R.id.searchResultScroll);
-                searchResultGridAdapter = new SearchResultGridAdapter(getContext(), jsonArray);
-
-                searchResultScroll.setAdapter(searchResultGridAdapter);
-
-                hitCount = jsonArray.length();
-
-                if (BuildConfig.DEBUG) {
-                    Log.d(LOG_TAG, "SearchResultFragment.addElements(): Search items loaded: " + hitCount);
-                }
+            if (jsonArray == null) {
+                jsonArray = new JSONArray();
             }
-            else {
+
+            hitCount = jsonArray.length();
+
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "SearchResultFragment.addElements(): Search items loaded: " + hitCount);
+            }
+
+            searchResultScroll = root.findViewById(R.id.searchResultScroll);
+            searchResultGridAdapter = new SearchResultGridAdapter(getContext(), jsonArray);
+            searchResultScroll.setAdapter(searchResultGridAdapter);
+
+            if (jsonArray.length() == 0) {
                 Utils.requestFocusById(root, R.id.searchResultTitle);
+
+                TextView noHitsText = root.findViewById(R.id.noHitsText);
+                if (noHitsText != null) {
+                    noHitsText.setVisibility(View.VISIBLE);
+                }
             }
 
             Utils.hideProgressBar(root, R.id.searchResultProgress);
@@ -199,7 +205,12 @@ public class SearchResultFragment extends Fragment implements ArchiveDataLoadedL
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "SearchResultFragment.onArchiveDataLoaded(): Exception: " + e);
             }
-            Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
+
+            Context context = getContext();
+            if (context != null) {
+                String message = context.getString(R.string.toast_something_went_wrong);
+                Utils.showErrorToast(context, message);
+            }
         }
     }
 
@@ -210,11 +221,23 @@ public class SearchResultFragment extends Fragment implements ArchiveDataLoadedL
      */
     @Override
     public void onArchiveDataLoadError(String message, String type) {
-        if (BuildConfig.DEBUG) {
-            Log.d(LOG_TAG, "Archive data load error. Type: " + type + " - Error message: " + message);
-        }
+        try {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "Archive data load error. Type: " + type + " - Error message: " + message);
+            }
 
-        Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
+            Context context = getContext();
+            if (context != null) {
+                message = context.getString(R.string.toast_something_went_wrong);
+
+                Utils.showErrorToast(context, message);
+            }
+        }
+        catch(Exception e) {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "SearchResultFragment.onArchiveDataLoadError(): Exception: " + e);
+            }
+        }
     }
 
     /**
@@ -227,6 +250,10 @@ public class SearchResultFragment extends Fragment implements ArchiveDataLoadedL
         try {
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "SearchResultFragment.onKeyDown(): keyCode: " + keyCode);
+            }
+
+            if (searchResultScroll == null || searchResultGridAdapter == null) {
+                return false;
             }
 
             View focusedView = Utils.getFocusedView(getActivity());
@@ -378,7 +405,7 @@ public class SearchResultFragment extends Fragment implements ArchiveDataLoadedL
         Utils.showProgressBar(root, R.id.searchResultProgress);
         String programId = Utils.getValue(obj, ID);
         if (programId != null) {
-            archiveViewModel.getProgramInfo(Integer.parseInt(programId), this);
+            archiveViewModel.getProgramInfo(programId, this);
         }
     }
 

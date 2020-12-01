@@ -1,5 +1,6 @@
 package ru.tv7.nebesatv7.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -34,6 +35,7 @@ import static ru.tv7.nebesatv7.helpers.Constants.CATEGORY_NAME;
 import static ru.tv7.nebesatv7.helpers.Constants.CATEGORY_PROGRAMS_SEARCH_LIMIT;
 import static ru.tv7.nebesatv7.helpers.Constants.COLON_WITH_SPACE;
 import static ru.tv7.nebesatv7.helpers.Constants.LOG_TAG;
+import static ru.tv7.nebesatv7.helpers.Constants.NO_MORE_PAGING_DATA;
 import static ru.tv7.nebesatv7.helpers.Constants.PARENT_NAME;
 import static ru.tv7.nebesatv7.helpers.Constants.PIPE_WITH_SPACES;
 import static ru.tv7.nebesatv7.helpers.Constants.PLAY;
@@ -157,27 +159,34 @@ public class CategoriesFragment extends Fragment implements ArchiveDataLoadedLis
                 Log.d(LOG_TAG, "CategoriesFragment.addElements(): Archive data loaded. Data length: " + jsonArray.length());
             }
 
-            if (jsonArray != null && jsonArray.length() > 0) {
-                if (dataLength == 0) {
-                    // first load
-                    categoriesScroll = root.findViewById(R.id.categoriesScroll);
-                    categoryGridAdapter = new CategoryGridAdapter(getContext(), jsonArray);
+            if (jsonArray == null) {
+                jsonArray = new JSONArray();
+            }
 
-                    categoriesScroll.setAdapter(categoryGridAdapter);
-                }
-                else {
-                    // next loads
-                    categoryGridAdapter.addElements(jsonArray);
-                    categoryGridAdapter.notifyDataSetChanged();
-                }
+            if (dataLength == 0) {
+                // first load
+                categoriesScroll = root.findViewById(R.id.categoriesScroll);
+                categoryGridAdapter = new CategoryGridAdapter(getContext(), jsonArray);
 
-                int length = jsonArray.length();
-                dataLength += length;
-                offset += length;
+                categoriesScroll.setAdapter(categoryGridAdapter);
+            }
+            else {
+                // next loads
+                categoryGridAdapter.addElements(jsonArray);
+                categoryGridAdapter.notifyDataSetChanged();
+            }
 
-                if (BuildConfig.DEBUG) {
-                    Log.d(LOG_TAG, "CategoriesFragment.addElements(): Items loaded: " + dataLength);
-                }
+            int length = jsonArray.length();
+            dataLength += length;
+            offset += length;
+
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "CategoriesFragment.addElements(): Items loaded: " + dataLength);
+            }
+
+            if (length < CATEGORY_PROGRAMS_SEARCH_LIMIT) {
+                // no more data
+                offset = NO_MORE_PAGING_DATA;
             }
 
             loadingData = false;
@@ -199,11 +208,24 @@ public class CategoriesFragment extends Fragment implements ArchiveDataLoadedLis
      */
     @Override
     public void onArchiveDataLoaded(JSONArray jsonArray, String type) {
-        if (BuildConfig.DEBUG) {
-            Log.d(LOG_TAG, "CategoriesFragment.onArchiveDataLoaded(): Archive data loaded. Type: " + type);
-        }
+        try {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "CategoriesFragment.onArchiveDataLoaded(): Archive data loaded. Type: " + type);
+            }
 
-        this.addElements(jsonArray);
+            this.addElements(jsonArray);
+        }
+        catch(Exception e) {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "CategoriesFragment.onArchiveDataLoaded(): Exception: " + e);
+            }
+
+            Context context = getContext();
+            if (context != null) {
+                String message = context.getString(R.string.toast_something_went_wrong);
+                Utils.showErrorToast(context, message);
+            }
+        }
     }
 
     /**
@@ -213,11 +235,23 @@ public class CategoriesFragment extends Fragment implements ArchiveDataLoadedLis
      */
     @Override
     public void onArchiveDataLoadError(String message, String type) {
-        if (BuildConfig.DEBUG) {
-            Log.d(LOG_TAG, "Archive data load error. Type: " + type + " - Error message: " + message);
-        }
+        try {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "Archive data load error. Type: " + type + " - Error message: " + message);
+            }
 
-        Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
+            Context context = getContext();
+            if (context != null) {
+                message = context.getString(R.string.toast_something_went_wrong);
+
+                Utils.showErrorToast(context, message);
+            }
+        }
+        catch(Exception e) {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "CategoriesFragment.onArchiveDataLoadError(): Exception: " + e);
+            }
+        }
     }
 
     /**
@@ -230,6 +264,10 @@ public class CategoriesFragment extends Fragment implements ArchiveDataLoadedLis
         try {
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "CategoriesFragment.onKeyDown(): keyCode: " + keyCode);
+            }
+
+            if (categoriesScroll == null || categoryGridAdapter == null) {
+                return false;
             }
 
             if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
@@ -301,7 +339,7 @@ public class CategoriesFragment extends Fragment implements ArchiveDataLoadedLis
                         this.setSelectedPosition(++pos);
 
                         // paging
-                        if (pos > 0 && offset > 0 && pos + CATEGORY_PROGRAMS_SEARCH_LIMIT / 2 == dataLength) {
+                        if (pos > 0 && offset != NO_MORE_PAGING_DATA && pos + CATEGORY_PROGRAMS_SEARCH_LIMIT / 2 == dataLength) {
                             loadingData = true;
 
                             this.loadCategoryPrograms(Utils.stringToInt(Utils.getValue(selectedCategory, CATEGORY_ID)));

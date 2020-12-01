@@ -37,6 +37,7 @@ import ru.tv7.nebesatv7.model.SharedCacheViewModel;
 import static ru.tv7.nebesatv7.helpers.Constants.ARCHIVE_LANGUAGE;
 import static ru.tv7.nebesatv7.helpers.Constants.ARCHIVE_MAIN_CONTENT_ROW_IDS;
 import static ru.tv7.nebesatv7.helpers.Constants.ARCHIVE_MAIN_FRAGMENT;
+import static ru.tv7.nebesatv7.helpers.Constants.ARCHIVE_MAIN_NO_SEL_POS;
 import static ru.tv7.nebesatv7.helpers.Constants.ARCHIVE_MAIN_ROW_COUNT;
 import static ru.tv7.nebesatv7.helpers.Constants.ARCHIVE_MAIN_TITLE_HEIGHT;
 import static ru.tv7.nebesatv7.helpers.Constants.BACK_TEXT;
@@ -324,7 +325,8 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                 else {
                     this.addElements(jsonArray, type);
                 }
-            } else {
+            }
+            else {
                 this.addElements(jsonArray, type);
             }
         }
@@ -332,7 +334,12 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "ArchiveMainFragment.onArchiveDataLoaded(): Exception: " + e);
             }
-            Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
+
+            Context context = getContext();
+            if (context != null) {
+                String message = context.getString(R.string.toast_something_went_wrong);
+                Utils.showErrorToast(context, message);
+            }
         }
     }
 
@@ -343,11 +350,23 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
      */
     @Override
     public void onArchiveDataLoadError(String message, String type) {
-        if (BuildConfig.DEBUG) {
-            Log.d(LOG_TAG, "Archive data load error. Type: " + type + " - Error message: " + message);
-        }
+        try {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "Archive data load error. Type: " + type + " - Error message: " + message);
+            }
 
-        Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
+            Context context = getContext();
+            if (context != null) {
+                message = context.getString(R.string.toast_something_went_wrong);
+
+                Utils.showErrorToast(context, message);
+            }
+        }
+        catch(Exception e) {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "ArchiveMainFragment.onArchiveDataLoadError(): Exception: " + e);
+            }
+        }
     }
 
     /**
@@ -381,26 +400,21 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                     }
                 }
                 else {
-                    JSONObject jsonObject = null;
                     int pos = this.getSelectedPosition();
-
-                    if (focusedRow == RECOMMENDATIONS_ROW_ID) {
-                        jsonObject = archiveViewModel.getRecommendationsByIndex(pos);
-                    }
-                    else if (focusedRow == MOST_VIEWED_ROW_ID) {
-                        jsonObject = archiveViewModel.getMostViewedByIndex(pos);
-                    }
-                    else if (focusedRow == NEWEST_ROW_ID) {
-                        jsonObject = archiveViewModel.getNewestByIndex(pos);
+                    if (pos == ARCHIVE_MAIN_NO_SEL_POS) {
+                        return false;
                     }
 
                     if (focusedRow != CATEGORIES_ROW_ID) {
-                        sharedCacheViewModel.setSelectedProgram(jsonObject);
-                        sharedCacheViewModel.setPageToHistory(ARCHIVE_MAIN_FRAGMENT);
+                        JSONObject program = this.getProgramByIndex(pos);
+                        if (program != null) {
+                            sharedCacheViewModel.setSelectedProgram(program);
+                            sharedCacheViewModel.setPageToHistory(ARCHIVE_MAIN_FRAGMENT);
 
-                        this.cachePageState();
+                            this.cachePageState();
 
-                        Utils.toPage(PROGRAM_INFO_FRAGMENT, getActivity(), true, false,null);
+                            Utils.toPage(PROGRAM_INFO_FRAGMENT, getActivity(), true, false,null);
+                        }
                     }
                     else {
                         // categories selection
@@ -457,6 +471,10 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                 }
 
                 int pos = this.getSelectedPosition();
+                if (pos == ARCHIVE_MAIN_NO_SEL_POS) {
+                    return false;
+                }
+
                 if (pos > 0) {
                     setSelectedPosition(--pos);
                     colFocusWas.put(focusedRow, pos);
@@ -476,6 +494,9 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                 }
                 else {
                     int pos = this.getSelectedPosition();
+                    if (pos == ARCHIVE_MAIN_NO_SEL_POS) {
+                        return false;
+                    }
 
                     setSelectedPosition(++pos);
                     colFocusWas.put(focusedRow, pos);
@@ -724,11 +745,16 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
      * Get scroll view item position.
      */
     private int getSelectedPosition() {
-        int pos = this.getScrollView(focusedRow).getSelectedPosition();
-        if (pos < 0) {
-            pos = 0;
+        HorizontalGridView horizontalGridView = this.getScrollView(focusedRow);
+        if (horizontalGridView != null) {
+            int pos = horizontalGridView.getSelectedPosition();
+            if (pos < 0) {
+                pos = 0;
+            }
+            return pos;
         }
-        return pos;
+
+        return ARCHIVE_MAIN_NO_SEL_POS;
     }
 
     /**
@@ -760,10 +786,10 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
     private void cachePageState() {
         sharedCacheViewModel.setArchiveMainPageStateItem(
                 new ArchiveMainPageStateItem(
-                    focusedRow,
-                    this.getSelectedPosition(),
-                    colFocusWas,
-                    visibleSubCategories));
+                        focusedRow,
+                        this.getSelectedPosition(),
+                        colFocusWas,
+                        visibleSubCategories));
     }
 
     /**
@@ -804,5 +830,26 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
         if (categoriesText != null) {
             categoriesText.setText(text);
         }
+    }
+
+    /**
+     * Returns focused row program by index.
+     * @param index
+     * @throws Exception
+     */
+    private JSONObject getProgramByIndex(int index) throws Exception {
+        JSONObject program = null;
+
+        if (focusedRow == RECOMMENDATIONS_ROW_ID) {
+            program = archiveViewModel.getRecommendationsByIndex(index);
+        }
+        else if (focusedRow == MOST_VIEWED_ROW_ID) {
+            program = archiveViewModel.getMostViewedByIndex(index);
+        }
+        else if (focusedRow == NEWEST_ROW_ID) {
+            program = archiveViewModel.getNewestByIndex(index);
+        }
+
+        return program;
     }
 }

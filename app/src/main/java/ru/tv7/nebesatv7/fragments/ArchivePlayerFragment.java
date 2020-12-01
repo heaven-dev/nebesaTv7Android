@@ -268,6 +268,10 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
                 Log.d(LOG_TAG, "ArchivePlayerFragment.onKeyDown(): keyCode: " + keyCode);
             }
 
+            if (exoPlayer == null) {
+                return false;
+            }
+
             if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
                 if (BuildConfig.DEBUG) {
                     Log.d(LOG_TAG, "ArchivePlayerFragment.onKeyDown(): KEYCODE_DPAD_CENTER: keyCode: " + keyCode);
@@ -448,7 +452,12 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "ArchivePlayerFragment.onArchiveDataLoaded(): Exception: " + e);
             }
-            Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
+
+            Context context = getContext();
+            if (context != null) {
+                String message = context.getString(R.string.toast_something_went_wrong);
+                Utils.showErrorToast(context, message);
+            }
         }
 
         this.startVideo(subtitlesUrl, langId);
@@ -461,11 +470,23 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
      */
     @Override
     public void onArchiveDataLoadError(String message, String type) {
-        if (BuildConfig.DEBUG) {
-            Log.d(LOG_TAG, "ArchivePlayerFragment.onArchiveDataLoadError(): Data load error. Type: " + type + " - Error message: " + message);
-        }
+        try {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "Archive data load error. Type: " + type + " - Error message: " + message);
+            }
 
-        Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
+            Context context = getContext();
+            if (context != null) {
+                message = context.getString(R.string.toast_something_went_wrong);
+
+                Utils.showErrorToast(context, message);
+            }
+        }
+        catch(Exception e) {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "ArchivePlayerFragment.onArchiveDataLoadError(): Exception: " + e);
+            }
+        }
     }
 
     /**

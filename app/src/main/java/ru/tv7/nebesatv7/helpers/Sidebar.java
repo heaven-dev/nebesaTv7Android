@@ -91,6 +91,9 @@ public class Sidebar {
         else if (id == R.id.guideMenuContainer) {
             focusedMenuId = setFocusToMenu(root, R.id.searchMenuContainer);
         }
+        else if (id == R.id.searchMenuContainer) {
+            focusedMenuId = setFocusToMenu(root, R.id.favoritesMenuContainer);
+        }
 
         if (focusedMenuId == 0) {
             return;
@@ -108,7 +111,10 @@ public class Sidebar {
         int id = getFocusedMenuItem(root);
 
         int focusedMenuId = 0;
-        if (id == R.id.searchMenuContainer) {
+        if (id == R.id.favoritesMenuContainer) {
+            focusedMenuId = setFocusToMenu(root, R.id.searchMenuContainer);
+        }
+        else if (id == R.id.searchMenuContainer) {
             focusedMenuId = setFocusToMenu(root, R.id.guideMenuContainer);
         }
         else if (id == R.id.guideMenuContainer) {
@@ -161,6 +167,9 @@ public class Sidebar {
             }
             else if (menuId == R.id.searchMenuContainer) {
                 fragmentTag = Constants.SEARCH_FRAGMENT;
+            }
+            else if (menuId == R.id.favoritesMenuContainer) {
+                fragmentTag = Constants.FAVORITES_FRAGMENT;
             }
 
             Utils.toPage(fragmentTag, activity, true, false,null);

@@ -62,7 +62,7 @@
                             android:layout_centerInParent="true"
                             android:alpha="0.8"
                             android:focusable="true"
-                            android:background="@drawable/start_button"
+                            android:background="@drawable/selectable_button"
                             android:contentDescription="@string/start_stream"
                             android:src="@drawable/start" />
 

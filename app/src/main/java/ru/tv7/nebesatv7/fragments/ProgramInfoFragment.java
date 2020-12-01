@@ -7,15 +7,20 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.bumptech.glide.Glide;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -32,6 +37,11 @@ import static ru.tv7.nebesatv7.helpers.Constants.CAPTION;
 import static ru.tv7.nebesatv7.helpers.Constants.COLON_WITH_SPACE;
 import static ru.tv7.nebesatv7.helpers.Constants.DURATION;
 import static ru.tv7.nebesatv7.helpers.Constants.EPISODE_NUMBER;
+import static ru.tv7.nebesatv7.helpers.Constants.FAVORITES_TEXT_ANIMATION_DURATION;
+import static ru.tv7.nebesatv7.helpers.Constants.FAVORITES_TEXT_ANIMATION_END;
+import static ru.tv7.nebesatv7.helpers.Constants.FAVORITES_TEXT_ANIMATION_START;
+import static ru.tv7.nebesatv7.helpers.Constants.FAVORITES_TEXT_ANIMATION_START_OFFSET;
+import static ru.tv7.nebesatv7.helpers.Constants.ID;
 import static ru.tv7.nebesatv7.helpers.Constants.IMAGE_PATH;
 import static ru.tv7.nebesatv7.helpers.Constants.IS_VISIBLE_ON_VOD;
 import static ru.tv7.nebesatv7.helpers.Constants.LOG_TAG;
@@ -47,11 +57,15 @@ public class ProgramInfoFragment extends Fragment {
     private View root = null;
     private SharedCacheViewModel sharedCacheViewModel = null;
 
-    private JSONObject selectedProgram = null;
     private List<TextView> menuTexts = null;
 
-    private ImageView backgroundImage = null;
+    private boolean videoAvailable = false;
+
     private ImageView startButton = null;
+    private ImageView favoriteButton = null;
+
+    private JSONObject selectedProgram = null;
+    private int programFavoritesIndex = -1;
 
     /**
      * Default constructor.
@@ -112,7 +126,7 @@ public class ProgramInfoFragment extends Fragment {
             menuTexts = Sidebar.getMenuTextItems(root);
             Sidebar.setSelectedMenuItem(root, R.id.archiveMenuContainer);
 
-            backgroundImage = root.findViewById(R.id.backgroundImage);
+            ImageView backgroundImage = root.findViewById(R.id.backgroundImage);
             if (backgroundImage != null) {
                 String imagePath = Utils.getValue(selectedProgram, IMAGE_PATH);
                 if (imagePath != null) {
@@ -123,7 +137,7 @@ public class ProgramInfoFragment extends Fragment {
                 }
             }
 
-            boolean videoAvailable = Utils.getValue(selectedProgram, IS_VISIBLE_ON_VOD).equals(ONE_STR);
+            videoAvailable = Utils.getValue(selectedProgram, IS_VISIBLE_ON_VOD).equals(ONE_STR);
 
             startButton = root.findViewById(R.id.startButton);
             if (startButton != null) {
@@ -133,16 +147,29 @@ public class ProgramInfoFragment extends Fragment {
                 }
                 else {
                     startButton.setVisibility(View.GONE);
-                    if (backgroundImage != null) {
-                        Utils.requestFocus(backgroundImage);
+                }
+            }
+
+            favoriteButton = root.findViewById(R.id.favoriteButton);
+            if (favoriteButton != null) {
+                String programId = Utils.getValue(selectedProgram, ID);
+                if (programId != null) {
+                    if (!videoAvailable) {
+                        Utils.requestFocus(favoriteButton);
+                    }
+
+                    programFavoritesIndex = Utils.isProgramInFavorites(getContext(), programId);
+
+                    if (programFavoritesIndex != -1) {
+                        this.setFavoritesButtonImage(R.drawable.favorites);
                     }
                 }
             }
 
             Resources resources = getResources();
             if (resources != null) {
-                String titleText = null;
-                String valueText = null;
+                String titleText;
+                String valueText;
 
                 TextView firstBroadcast = root.findViewById(R.id.firstBroadcast);
                 if (firstBroadcast != null) {
@@ -228,6 +255,9 @@ public class ProgramInfoFragment extends Fragment {
             }
 
             View focusedView = Utils.getFocusedView(getActivity());
+            if (focusedView == null) {
+                return false;
+            }
 
             if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
                 if (BuildConfig.DEBUG) {
@@ -238,9 +268,23 @@ public class ProgramInfoFragment extends Fragment {
                     Sidebar.menuItemSelected(Sidebar.getFocusedMenuItem(root), getActivity(), sharedCacheViewModel);
                 }
                 else {
-                    if (focusedView.getId() == R.id.startButton) {
+                    int focusedId = focusedView.getId();
+
+                    if (focusedId == R.id.startButton) {
                         sharedCacheViewModel.setPageToHistory(PROGRAM_INFO_FRAGMENT);
                         Utils.toPage(ARCHIVE_PLAYER_FRAGMENT, getActivity(), true, false, null);
+                    }
+                    else if (focusedId == R.id.favoriteButton) {
+                        if (programFavoritesIndex == -1) {
+                            this.addToSavedFavorites();
+                            this.setFavoritesButtonImage(R.drawable.favorites);
+                            this.setFavoritesPopupText(R.string.added_to_favorites);
+                        }
+                        else {
+                            this.removeFromSavedFavorites();
+                            this.setFavoritesButtonImage(R.drawable.favorites_not_selected);
+                            this.setFavoritesPopupText(R.string.removed_from_favorites);
+                        }
                     }
                 }
             }
@@ -251,7 +295,10 @@ public class ProgramInfoFragment extends Fragment {
 
                 int focusedId = focusedView.getId();
 
-                if (focusedView != null && (focusedId == R.id.startButton || focusedId == R.id.backgroundImage)) {
+                if (focusedId == R.id.favoriteButton && videoAvailable) {
+                    Utils.requestFocus(startButton);
+                }
+                else if (focusedId == R.id.startButton || focusedId == R.id.favoriteButton && !videoAvailable) {
                     Sidebar.showMenuTexts(menuTexts);
                     Sidebar.setFocusToMenu(root, R.id.archiveMenuContainer);
                 }
@@ -261,8 +308,13 @@ public class ProgramInfoFragment extends Fragment {
                     Log.d(LOG_TAG, "ProgramInfoFragment.onKeyDown(): KEYCODE_DPAD_RIGHT: keyCode: " + keyCode);
                 }
 
+                int focusedId = focusedView.getId();
+
                 if (Sidebar.isSideMenuOpen(menuTexts)) {
                     this.focusOutFromSideMenu();
+                }
+                else if (focusedId == R.id.startButton) {
+                    Utils.requestFocus(favoriteButton);
                 }
             }
             else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
@@ -316,11 +368,81 @@ public class ProgramInfoFragment extends Fragment {
         Sidebar.hideMenuTexts(menuTexts);
         Sidebar.setSelectedMenuItem(root, R.id.archiveMenuContainer);
 
-        if (startButton.getVisibility() == View.VISIBLE) {
+        if (videoAvailable) {
             Utils.requestFocus(startButton);
         }
         else {
-            Utils.requestFocus(backgroundImage);
+            Utils.requestFocus(favoriteButton);
+        }
+    }
+
+    /**
+     * Adds program to favorites. Saves to shared prefs.
+     * @throws Exception
+     */
+    private void addToSavedFavorites() throws Exception {
+        JSONArray jsonArray = Utils.getSavedFavorites(getContext());
+        if (jsonArray != null) {
+            jsonArray.put(selectedProgram);
+
+            Utils.saveFavorites(getContext(), jsonArray);
+
+            programFavoritesIndex = jsonArray.length() - 1;
+        }
+    }
+
+    /**
+     * Removes program from favorites. Saves to shared prefs.
+     * @throws Exception
+     */
+    private void removeFromSavedFavorites() throws Exception {
+        JSONArray jsonArray = Utils.getSavedFavorites(getContext());
+        if (jsonArray != null && programFavoritesIndex != -1) {
+            jsonArray.remove(programFavoritesIndex);
+
+            Utils.saveFavorites(getContext(), jsonArray);
+
+            programFavoritesIndex = - 1;
+        }
+    }
+
+    /**
+     * Sets favorite button image.
+     * @param drawableId
+     */
+    private void setFavoritesButtonImage(int drawableId) {
+        favoriteButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), drawableId, null));
+    }
+
+    /**
+     * Sets favorite added/removed popup text and start fade out animation.
+     * @param textId
+     */
+    private void setFavoritesPopupText(int textId) {
+        TextView addedRemovedFavorites = root.findViewById(R.id.addedRemovedFavorites);
+        if (addedRemovedFavorites != null) {
+            addedRemovedFavorites.setText(textId);
+            addedRemovedFavorites.setVisibility(View.VISIBLE);
+
+            Animation animation = new AlphaAnimation(FAVORITES_TEXT_ANIMATION_START, FAVORITES_TEXT_ANIMATION_END);
+            animation.setInterpolator(new AccelerateInterpolator());
+            animation.setStartOffset(FAVORITES_TEXT_ANIMATION_START_OFFSET);
+            animation.setDuration(FAVORITES_TEXT_ANIMATION_DURATION);
+
+            animation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {}
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    addedRemovedFavorites.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {}
+            });
+
+            addedRemovedFavorites.startAnimation(animation);
         }
     }
 }

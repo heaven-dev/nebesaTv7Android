@@ -114,58 +114,61 @@ public class ArchiveViewModel extends ViewModel {
 
     public JSONObject getRecommendationsByIndex(int index) throws Exception {
         JSONObject jsonObject = null;
-        try {
-            if (recommendations != null) {
-                if (!recommendations.isDataInIndex(index)) {
-                    if (BuildConfig.DEBUG) {
-                        Log.d(LOG_TAG, "*** ArchiveViewModel.getRecommendationsByIndex(): Not recommend data in index!");
-                    }
-                    throw new Exception("Not recommend data in index!");
+
+        if (recommendations != null) {
+            if (!recommendations.isDataInIndex(index)) {
+                if (BuildConfig.DEBUG) {
+                    Log.d(LOG_TAG, "*** ArchiveViewModel.getRecommendationsByIndex(): Not recommend data in index!");
                 }
-                jsonObject = recommendations.getData().getJSONObject(index);
+                throw new Exception("Not recommend data in index!");
+            }
+
+            JSONArray jsonArray = recommendations.getData();
+            if (jsonArray != null) {
+                jsonObject = jsonArray.getJSONObject(index);
             }
         }
-        catch(Exception e) {
-            throw new Exception(e);
-        }
+
         return jsonObject;
     }
 
     public JSONObject getMostViewedByIndex(int index) throws Exception {
         JSONObject jsonObject = null;
-        try {
-            if (mostViewed != null) {
-                if (!mostViewed.isDataInIndex(index)) {
-                    if (BuildConfig.DEBUG) {
-                        Log.d(LOG_TAG, "*** ArchiveViewModel.getMostViewedByIndex(): Not most viewed data in index!");
-                    }
-                    throw new Exception("Not most viewed data in index!");
+
+        if (mostViewed != null) {
+            if (!mostViewed.isDataInIndex(index)) {
+                if (BuildConfig.DEBUG) {
+                    Log.d(LOG_TAG, "*** ArchiveViewModel.getMostViewedByIndex(): Not most viewed data in index!");
                 }
-                jsonObject = mostViewed.getData().getJSONObject(index);
+                throw new Exception("Not most viewed data in index!");
+            }
+
+            JSONArray jsonArray = mostViewed.getData();
+            if (jsonArray != null) {
+                jsonObject = jsonArray.getJSONObject(index);
             }
         }
-        catch(Exception e) {
-            throw new Exception(e);
-        }
+
         return jsonObject;
     }
 
     public JSONObject getNewestByIndex(int index) throws Exception {
         JSONObject jsonObject = null;
-        try {
-            if (newest != null) {
-                if (!newest.isDataInIndex(index)) {
-                    if (BuildConfig.DEBUG) {
-                        Log.d(LOG_TAG, "*** ArchiveViewModel.getNewestByIndex(): Not newest data in index!");
-                    }
-                    throw new Exception("Not newest data in index!");
+
+        if (newest != null) {
+            if (!newest.isDataInIndex(index)) {
+                if (BuildConfig.DEBUG) {
+                    Log.d(LOG_TAG, "*** ArchiveViewModel.getNewestByIndex(): Not newest data in index!");
                 }
-                jsonObject = newest.getData().getJSONObject(index);
+                throw new Exception("Not newest data in index!");
+            }
+
+            JSONArray jsonArray = newest.getData();
+            if (jsonArray != null) {
+                jsonObject = jsonArray.getJSONObject(index);
             }
         }
-        catch(Exception e) {
-            throw new Exception(e);
-        }
+
         return jsonObject;
     }
 
@@ -430,7 +433,7 @@ public class ArchiveViewModel extends ViewModel {
      * @param programId
      * @param archiveDataLoadedListener
      */
-    public void getProgramInfo(final int programId, final ArchiveDataLoadedListener archiveDataLoadedListener) {
+    public void getProgramInfo(final String programId, final ArchiveDataLoadedListener archiveDataLoadedListener) {
         String type = PROGRAM_INFO_METHOD;
 
         String url = ARCHIVE_BASE_URL + GET_ + type + QUESTION_MARK + PROGRAM_ID_PARAM + EQUAL + programId;
@@ -591,22 +594,25 @@ public class ArchiveViewModel extends ViewModel {
                         if (BuildConfig.DEBUG) {
                             Log.d(LOG_TAG, "ArchiveViewModel.onResponse(): Error fetching json: " + e.getMessage());
                         }
-
-                        if (archiveDataLoadedListener != null) {
-                            archiveDataLoadedListener.onArchiveDataLoadError(e.getMessage(), type);
-                        }
                     }
                 }
             },
             new Response.ErrorListener() {
                 @Override
-                public void onErrorResponse(VolleyError error){
-                    if (BuildConfig.DEBUG) {
-                        Log.d(LOG_TAG, "ArchiveViewModel.ErrorListener(): Error fetching json: " + error.toString());
-                    }
+                public void onErrorResponse(VolleyError error) {
+                    try {
+                        if (BuildConfig.DEBUG) {
+                            Log.d(LOG_TAG, "ArchiveViewModel.onErrorResponse(): Error fetching json: " + error.toString());
+                        }
 
-                    if (archiveDataLoadedListener != null) {
-                        archiveDataLoadedListener.onArchiveDataLoadError(error.getMessage(), type);
+                        if (archiveDataLoadedListener != null) {
+                            archiveDataLoadedListener.onArchiveDataLoadError(error.getMessage(), type);
+                        }
+                    }
+                    catch(Exception e) {
+                        if (BuildConfig.DEBUG) {
+                            Log.d(LOG_TAG, "ArchiveViewModel.onErrorResponse(): Error fetching json: " + e.getMessage());
+                        }
                     }
                 }
             }
@@ -680,7 +686,7 @@ public class ArchiveViewModel extends ViewModel {
             setValue(respObj, TYPE, this.getValue(sourceObj, TYPE), false);
             setValue(respObj, PATH, this.getValue(sourceObj, PATH), false);
 
-            if (objectName.equals(BROADCAST_RECOMMENDATIONS_METHOD)) {
+            if (objectName.equals(BROADCAST_RECOMMENDATIONS_METHOD) || objectName.equals(PROGRAM_INFO_METHOD)) {
                 String isVisibleOnVod = this.getValue(sourceObj, IS_VISIBLE_ON_VOD);
                 if (isVisibleOnVod != null) {
                     setValue(respObj, IS_VISIBLE_ON_VOD, isVisibleOnVod, true);
@@ -764,6 +770,9 @@ public class ArchiveViewModel extends ViewModel {
         for (int i = 0; i < array.length(); i++) {
             JSONObject respObj = new JSONObject();
             JSONObject sourceObj = array.getJSONObject(i);
+
+            setValue(respObj, ID, this.getValue(sourceObj, ID), true);
+            setValue(respObj, PATH, this.getValue(sourceObj, PATH), false);
 
             setValue(respObj, IMAGE_PATH, this.getValue(sourceObj, IMAGE_PATH), false);
             setValue(respObj, CAPTION, this.getValue(sourceObj, CAPTION), false);

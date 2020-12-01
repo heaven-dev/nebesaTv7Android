@@ -1,5 +1,6 @@
 package ru.tv7.nebesatv7.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -207,11 +208,24 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
      */
     @Override
     public void onArchiveDataLoaded(JSONArray jsonArray, String type) {
-        if (BuildConfig.DEBUG) {
-            Log.d(LOG_TAG, "GuideFragment.onArchiveDataLoaded(): Archive data loaded. Type: " + type);
-        }
+        try {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "GuideFragment.onArchiveDataLoaded(): Archive data loaded. Type: " + type);
+            }
 
-        this.addElements(jsonArray, true);
+            this.addElements(jsonArray, true);
+        }
+        catch(Exception e) {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "GuideFragment.onArchiveDataLoaded(): Exception: " + e);
+            }
+
+            Context context = getContext();
+            if (context != null) {
+                String message = context.getString(R.string.toast_something_went_wrong);
+                Utils.showErrorToast(context, message);
+            }
+        }
     }
 
     /**
@@ -221,11 +235,23 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
      */
     @Override
     public void onArchiveDataLoadError(String message, String type) {
-        if (BuildConfig.DEBUG) {
-            Log.d(LOG_TAG, "Archive data load error. Type: " + type + " - Error message: " + message);
-        }
+        try {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "Archive data load error. Type: " + type + " - Error message: " + message);
+            }
 
-        Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
+            Context context = getContext();
+            if (context != null) {
+                message = context.getString(R.string.toast_something_went_wrong);
+
+                Utils.showErrorToast(context, message);
+            }
+        }
+        catch(Exception e) {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "GuideFragment.onArchiveDataLoadError(): Exception: " + e);
+            }
+        }
     }
 
     /**
@@ -238,6 +264,10 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
         try {
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "GuideFragment.onKeyDown(): keyCode: " + keyCode);
+            }
+
+            if (guideScroll == null || guideGridAdapter == null) {
+                return false;
             }
 
             View focusedDate = this.isDateFocused();

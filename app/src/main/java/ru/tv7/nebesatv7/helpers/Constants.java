@@ -30,10 +30,16 @@ abstract public class Constants {
     public static final String SEARCH_URL = "https://edom.tv7.fi:8443/search1.2/SearchServlet";
 
     public static final float PROGRESS_BAR_SIZE = 0.85f;
-    public static final int FADE_ANIMATION_DURATION = 900;
-    public static final float FADE_ANIMATION_START = 0.0f;
-    public static final float FADE_ANIMATION_END = 1.0f;
+    public static final int FADE_IN_ANIMATION_DURATION = 900;
+    public static final float FADE_IN_ANIMATION_START = 0.0f;
+    public static final float FADE_IN_ANIMATION_END = 1.0f;
+
     public static final int ONGOING_PROGRAM_ANIMATION_DURATION = 2000;
+
+    public static final int FAVORITES_TEXT_ANIMATION_DURATION = 1500;
+    public static final float FAVORITES_TEXT_ANIMATION_START = 1.0f;
+    public static final float FAVORITES_TEXT_ANIMATION_END = 0.0f;
+    public static final long FAVORITES_TEXT_ANIMATION_START_OFFSET = 500;
 
     public static final String TV_MAIN_FRAGMENT = "tv_main_fragment";
     public static final String ARCHIVE_MAIN_FRAGMENT = "archive_main_fragment";
@@ -45,6 +51,7 @@ abstract public class Constants {
     public static final String PROGRAM_INFO_FRAGMENT = "program_info_fragment";
     public static final String SEARCH_FRAGMENT = "search_fragment";
     public static final String SEARCH_RESULT_FRAGMENT = "search_result_fragment";
+    public static final String FAVORITES_FRAGMENT = "favorites_fragment";
     public static final String EXIT_OVERLAY_FRAGMENT = "exit_overlay_fragment";
 
     public static final String CHANNEL_URL_PARAM = "channel_url";
@@ -59,6 +66,8 @@ abstract public class Constants {
     public static final int VIDEO_CONTROLS_TIMEOUT = 6000;
 
     public static final int DATES_COUNT = 7;
+    public static final int ARCHIVE_MAIN_NO_SEL_POS = -1;
+    public static final int NO_MORE_PAGING_DATA = -1;
 
     public static final String EPG_URL = "https://helsinki.tv7.fi/exodus-interfaces/xmltv.xml";
     public static final String EPG_DURATION = "2d";
@@ -102,6 +111,9 @@ abstract public class Constants {
     public static final String ICON = "icon";
     public static final String SRC = "src";
     public static final String ONE_STR = "1";
+
+    public static final String FAVORITES_SP_TAG = "favorites_shared_pref";
+    public static final String FAVORITES_SP_DEFAULT = "[]";
 
     public static final int TOOLBAR_HEIGHT = 60;
     public static final int ARCHIVE_MAIN_TITLE_HEIGHT = 30;
@@ -220,7 +232,8 @@ abstract public class Constants {
             new MenuItem(R.id.tvMenuContainer, R.id.tvMenuText),
             new MenuItem(R.id.archiveMenuContainer, R.id.archiveMenuText),
             new MenuItem(R.id.guideMenuContainer, R.id.guideMenuText),
-            new MenuItem(R.id.searchMenuContainer, R.id.searchMenuText)
+            new MenuItem(R.id.searchMenuContainer, R.id.searchMenuText),
+            new MenuItem(R.id.favoritesMenuContainer, R.id.favoritesMenuText)
     ));
 
     public static final List<Integer> ARCHIVE_MAIN_CONTENT_ROW_IDS = new ArrayList<>(Arrays.asList(

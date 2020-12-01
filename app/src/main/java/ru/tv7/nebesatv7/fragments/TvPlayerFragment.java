@@ -98,7 +98,7 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
 
             this.addCountdownTimer();
         }
-        catch( Exception e) {
+        catch(Exception e) {
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "TvPlayerFragment.onCreateView(): Exception: " + e);
             }
@@ -160,6 +160,10 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
         try {
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "TvPlayerFragment.onKeyDown(): keyCode: " + keyCode);
+            }
+
+            if (exoPlayer == null) {
+                return false;
             }
 
             if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {

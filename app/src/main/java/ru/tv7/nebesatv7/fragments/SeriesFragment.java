@@ -1,5 +1,6 @@
 package ru.tv7.nebesatv7.fragments;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,6 +32,7 @@ import ru.tv7.nebesatv7.model.SharedCacheViewModel;
 
 import static ru.tv7.nebesatv7.helpers.Constants.COLON_WITH_SPACE;
 import static ru.tv7.nebesatv7.helpers.Constants.LOG_TAG;
+import static ru.tv7.nebesatv7.helpers.Constants.NO_MORE_PAGING_DATA;
 import static ru.tv7.nebesatv7.helpers.Constants.PROGRAM_INFO_FRAGMENT;
 import static ru.tv7.nebesatv7.helpers.Constants.SERIES_FRAGMENT;
 import static ru.tv7.nebesatv7.helpers.Constants.SERIES_ID;
@@ -155,29 +157,36 @@ public class SeriesFragment extends Fragment implements ArchiveDataLoadedListene
                 Log.d(LOG_TAG, "SeriesFragment.addElements(): Archive data loaded. Data length: " + jsonArray.length());
             }
 
-            if (jsonArray != null && jsonArray.length() > 0) {
-                if (dataLength == 0) {
-                    // first load
-                    this.addTitleText(jsonArray.getJSONObject(0));
+            if (jsonArray == null) {
+                jsonArray = new JSONArray();
+            }
 
-                    seriesScroll = root.findViewById(R.id.seriesScroll);
-                    seriesGridAdapter = new SeriesGridAdapter(getContext(), jsonArray);
+            if (dataLength == 0) {
+                // first load
+                this.addTitleText(jsonArray.getJSONObject(0));
 
-                    seriesScroll.setAdapter(seriesGridAdapter);
-                }
-                else {
-                    // next loads
-                    seriesGridAdapter.addElements(jsonArray);
-                    seriesGridAdapter.notifyDataSetChanged();
-                }
+                seriesScroll = root.findViewById(R.id.seriesScroll);
+                seriesGridAdapter = new SeriesGridAdapter(getContext(), jsonArray);
 
-                int length = jsonArray.length();
-                dataLength += length;
-                offset += length;
+                seriesScroll.setAdapter(seriesGridAdapter);
+            }
+            else {
+                // next loads
+                seriesGridAdapter.addElements(jsonArray);
+                seriesGridAdapter.notifyDataSetChanged();
+            }
 
-                if (BuildConfig.DEBUG) {
-                    Log.d(LOG_TAG, "SeriesFragment.addElements(): Items loaded: " + dataLength);
-                }
+            int length = jsonArray.length();
+            dataLength += length;
+            offset += length;
+
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "SeriesFragment.addElements(): Items loaded: " + dataLength);
+            }
+
+            if (length < SERIES_PROGRAMS_SEARCH_LIMIT) {
+                // no more data
+                offset = NO_MORE_PAGING_DATA;
             }
 
             loadingData = false;
@@ -199,11 +208,24 @@ public class SeriesFragment extends Fragment implements ArchiveDataLoadedListene
      */
     @Override
     public void onArchiveDataLoaded(JSONArray jsonArray, String type) {
-        if (BuildConfig.DEBUG) {
-            Log.d(LOG_TAG, "SeriesFragment.onArchiveDataLoaded(): Series programs data loaded. Type: " + type);
-        }
+        try {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "SeriesFragment.onArchiveDataLoaded(): Series programs data loaded. Type: " + type);
+            }
 
-        this.addElements(jsonArray);
+            this.addElements(jsonArray);
+        }
+        catch(Exception e) {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "SeriesFragment.onArchiveDataLoaded(): Exception: " + e);
+            }
+
+            Context context = getContext();
+            if (context != null) {
+                String message = context.getString(R.string.toast_something_went_wrong);
+                Utils.showErrorToast(context, message);
+            }
+        }
     }
 
     /**
@@ -213,11 +235,23 @@ public class SeriesFragment extends Fragment implements ArchiveDataLoadedListene
      */
     @Override
     public void onArchiveDataLoadError(String message, String type) {
-        if (BuildConfig.DEBUG) {
-            Log.d(LOG_TAG, "Archive data load error. Type: " + type + " - Error message: " + message);
-        }
+        try {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "Archive data load error. Type: " + type + " - Error message: " + message);
+            }
 
-        Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
+            Context context = getContext();
+            if (context != null) {
+                message = context.getString(R.string.toast_something_went_wrong);
+
+                Utils.showErrorToast(context, message);
+            }
+        }
+        catch(Exception e) {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "SeriesFragment.onArchiveDataLoadError(): Exception: " + e);
+            }
+        }
     }
 
     /**
@@ -230,6 +264,10 @@ public class SeriesFragment extends Fragment implements ArchiveDataLoadedListene
         try {
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "SeriesFragment.onKeyDown(): keyCode: " + keyCode);
+            }
+
+            if (seriesScroll == null || seriesGridAdapter == null) {
+                return false;
             }
 
             if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
@@ -296,7 +334,7 @@ public class SeriesFragment extends Fragment implements ArchiveDataLoadedListene
                         this.setSelectedPosition(++pos);
 
                         // paging
-                        if (pos > 0 && offset > 0 && pos + SERIES_PROGRAMS_SEARCH_LIMIT / 2 == dataLength) {
+                        if (pos > 0 && offset != NO_MORE_PAGING_DATA && pos + SERIES_PROGRAMS_SEARCH_LIMIT / 2 == dataLength) {
                             loadingData = true;
 
                             int seriesId = this.getSeriesId();
@@ -445,4 +483,3 @@ public class SeriesFragment extends Fragment implements ArchiveDataLoadedListene
         return seriesId;
     }
 }
-
