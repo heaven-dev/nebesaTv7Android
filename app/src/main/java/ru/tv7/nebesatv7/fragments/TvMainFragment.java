@@ -1,5 +1,6 @@
 package ru.tv7.nebesatv7.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -31,6 +32,7 @@ import ru.tv7.nebesatv7.helpers.EpgItem;
 import ru.tv7.nebesatv7.helpers.GuideRowId;
 import ru.tv7.nebesatv7.helpers.Sidebar;
 import ru.tv7.nebesatv7.helpers.Utils;
+import ru.tv7.nebesatv7.interfaces.EpgDataLoadedListener;
 import ru.tv7.nebesatv7.model.ProgramScheduleViewModel;
 import ru.tv7.nebesatv7.model.SharedCacheViewModel;
 
@@ -44,6 +46,7 @@ import static ru.tv7.nebesatv7.helpers.Constants.HTTP;
 import static ru.tv7.nebesatv7.helpers.Constants.HTTPS;
 import static ru.tv7.nebesatv7.helpers.Constants.LOG_TAG;
 import static ru.tv7.nebesatv7.helpers.Constants.PIPE_WITH_SPACES;
+import static ru.tv7.nebesatv7.helpers.Constants.PROGRAM_LIST_MIN_SIZE;
 import static ru.tv7.nebesatv7.helpers.Constants.PROGRAM_VISIBLE_IMAGE_COUNT;
 import static ru.tv7.nebesatv7.helpers.Constants.SPACE;
 import static ru.tv7.nebesatv7.helpers.Constants.STREAM_URL;
@@ -53,11 +56,12 @@ import static ru.tv7.nebesatv7.helpers.Constants.TV_PLAYER_FRAGMENT;
 /**
  * Tv main fragment. Main view of application.
  */
-public class TvMainFragment extends Fragment implements FragmentManager.OnBackStackChangedListener {
+public class TvMainFragment extends Fragment implements EpgDataLoadedListener, FragmentManager.OnBackStackChangedListener {
 
     private View root = null;
     private ProgramScheduleViewModel viewModel = null;
     private SharedCacheViewModel sharedCacheViewModel = null;
+    private EpgDataLoadedListener epgDataLoadedListener = null;
 
     private String programStart = null;
     private int guideIndex = 0;
@@ -114,6 +118,8 @@ public class TvMainFragment extends Fragment implements FragmentManager.OnBackSt
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "TvMainFragment.onCreateView() called.");
             }
+
+            this.setEpgDataLoadedListener(this);
 
             root = inflater.inflate(R.layout.fragment_tv_main, container, false);
 
@@ -190,6 +196,57 @@ public class TvMainFragment extends Fragment implements FragmentManager.OnBackSt
     }
 
     /**
+     * Callback to success epg date load.
+     */
+    @Override
+    public void onEpgDataLoaded() {
+        try {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "TvMainFragment.onEpgDataLoaded(): EpgData load/parse ok.");
+            }
+
+            viewModel.removePastProgramItems();
+
+            this.createMainView(CallOrigin.Timer);
+        }
+        catch(Exception e) {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "TvMainFragment.onEpgDataLoaded(): Exception: " + e);
+            }
+
+            Context context = getContext();
+            if (context != null) {
+                String message = context.getString(R.string.toast_something_went_wrong);
+                Utils.showErrorToast(context, message);
+            }
+        }
+    }
+
+    /**
+     * Callback to error epg date load.
+     */
+    @Override
+    public void onEpgDataLoadError(String message) {
+        try {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "TvMainFragment.onEpgDataLoadError(): EpgData load/parse error: " + message);
+            }
+
+            Context context = getContext();
+            if (context != null) {
+                message = context.getString(R.string.toast_something_went_wrong);
+
+                Utils.showErrorToast(context, message);
+            }
+        }
+        catch(Exception e) {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "TvMainFragment.onEpgDataLoadError(): Exception: " + e);
+            }
+        }
+    }
+
+    /**
      * onDestroy() - Android lifecycle method.
      */
     @Override
@@ -203,7 +260,7 @@ public class TvMainFragment extends Fragment implements FragmentManager.OnBackSt
      * @param callOrigin
      * @throws Exception
      */
-    private void createMainView(CallOrigin callOrigin) throws Exception {
+    private synchronized void createMainView(CallOrigin callOrigin) throws Exception {
         if (BuildConfig.DEBUG) {
             Log.d(LOG_TAG, "TvMainFragment.createMainView() called.");
         }
@@ -248,7 +305,8 @@ public class TvMainFragment extends Fragment implements FragmentManager.OnBackSt
 
                     if (index == 0) {
                         this.addOngoingProgramImage(imageUrl, epgItem);
-                    } else {
+                    }
+                    else {
                         this.addComingProgramImages(index - 1, imageUrl, epgItem);
                     }
                 }
@@ -408,6 +466,12 @@ public class TvMainFragment extends Fragment implements FragmentManager.OnBackSt
             public void run() {
                 if (BuildConfig.DEBUG) {
                     Log.d(LOG_TAG, "Timer.run() called.");
+                }
+
+                int count = viewModel.getCountOfNextPrograms();
+                if (count <= PROGRAM_LIST_MIN_SIZE) {
+                    // get program data
+                    viewModel.getEpgData(TvMainFragment.this);
                 }
 
                 updateUiInMainThread();
@@ -583,5 +647,13 @@ public class TvMainFragment extends Fragment implements FragmentManager.OnBackSt
         Sidebar.setSelectedMenuItem(root, R.id.tvMenuContainer);
 
         Utils.requestFocus(startButton);
+    }
+
+    /**
+     * Creates epg data load listener.
+     * @param epgDataLoadedListener
+     */
+    private void setEpgDataLoadedListener(EpgDataLoadedListener epgDataLoadedListener) {
+        this.epgDataLoadedListener = epgDataLoadedListener;
     }
 }

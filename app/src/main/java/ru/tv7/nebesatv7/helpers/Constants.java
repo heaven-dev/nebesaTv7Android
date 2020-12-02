@@ -69,6 +69,8 @@ abstract public class Constants {
     public static final int ARCHIVE_MAIN_NO_SEL_POS = -1;
     public static final int NO_MORE_PAGING_DATA = -1;
 
+    public static final int PROGRAM_LIST_MIN_SIZE = 22;
+
     public static final String EPG_URL = "https://helsinki.tv7.fi/exodus-interfaces/xmltv.xml";
     public static final String EPG_DURATION = "2d";
     public static final String EPG_CHANNEL_PARAM = "channel";

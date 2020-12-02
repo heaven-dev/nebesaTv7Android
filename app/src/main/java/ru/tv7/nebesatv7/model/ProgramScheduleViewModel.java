@@ -107,6 +107,29 @@ public class ProgramScheduleViewModel extends ViewModel {
     }
 
     /**
+     * Returns count (from ongoing program) of next programs from the program list.
+     * @return
+     */
+    public int getCountOfNextPrograms() {
+        int size = 0;
+
+        try {
+            if (programmeList != null) {
+                size = programmeList.size() - this.getOngoingProgramIndex();
+            }
+        }
+        catch(Exception e) {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "ProgramScheduleViewModel.getCountOfNextPrograms(): Exception: " + e);
+            }
+
+            size = 0;
+        }
+
+        return size;
+    }
+
+    /**
      * Remove past epg program items from the epg list.
      * @return int - removed count
      */
@@ -226,33 +249,33 @@ public class ProgramScheduleViewModel extends ViewModel {
             }
 
             StringRequest jsonRequest = new StringRequest(
-                    Request.Method.GET,
-                    url,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            try {
-                                if (BuildConfig.DEBUG) {
-                                    Log.d(LOG_TAG, "ProgramScheduleViewModel.getEpgData(): onResponse()");
-                                }
-
-                                processEpgXmlData(response);
-                                epgDataLoadedListener.onEpgDataLoaded();
-                            }
-                            catch(Exception e) {
-                                epgDataLoadedListener.onEpgDataLoadError(e.getMessage());
-                            }
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
+                Request.Method.GET,
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
                             if (BuildConfig.DEBUG) {
-                                Log.d(LOG_TAG, "ProgramScheduleViewModel.getEpgData(): ErrorListener(): Error fetching json: " + error.toString());
+                                Log.d(LOG_TAG, "ProgramScheduleViewModel.getEpgData(): onResponse()");
                             }
-                            epgDataLoadedListener.onEpgDataLoadError(error.getMessage());
+
+                            processEpgXmlData(response);
+                            epgDataLoadedListener.onEpgDataLoaded();
+                        }
+                        catch(Exception e) {
+                            epgDataLoadedListener.onEpgDataLoadError(e.getMessage());
                         }
                     }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (BuildConfig.DEBUG) {
+                            Log.d(LOG_TAG, "ProgramScheduleViewModel.getEpgData(): ErrorListener(): Error fetching json: " + error.toString());
+                        }
+                        epgDataLoadedListener.onEpgDataLoadError(error.getMessage());
+                    }
+                }
             );
 
             jsonRequest.setRetryPolicy(new DefaultRetryPolicy(
