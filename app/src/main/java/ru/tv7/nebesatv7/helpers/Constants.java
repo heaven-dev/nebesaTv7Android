@@ -98,6 +98,7 @@ abstract public class Constants {
     public static final String DOT = ".";
     public static final String MS_STR = "000";
     public static final String ZERO_STR = "0";
+    public static final String NEGATIVE_ONE_STR = "-1";
     public static final String STR_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS";
     public static final String UTC = "UTC";
     public static final String HTTP = "http";

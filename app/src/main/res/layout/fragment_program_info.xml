@@ -93,9 +93,19 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
+                        android:layout_marginEnd="40dp"
                         android:text=""
                         android:textColor="@color/white"
                         android:textSize="18sp" />
+
+                    <ImageView
+                        android:id="@+id/archiveIcon"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:contentDescription="@string/tv7_logo"
+                        android:src="@drawable/archive_white" />
                 </RelativeLayout>
 
             </RelativeLayout>

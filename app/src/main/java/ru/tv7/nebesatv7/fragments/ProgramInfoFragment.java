@@ -45,9 +45,11 @@ import static ru.tv7.nebesatv7.helpers.Constants.ID;
 import static ru.tv7.nebesatv7.helpers.Constants.IMAGE_PATH;
 import static ru.tv7.nebesatv7.helpers.Constants.IS_VISIBLE_ON_VOD;
 import static ru.tv7.nebesatv7.helpers.Constants.LOG_TAG;
+import static ru.tv7.nebesatv7.helpers.Constants.NEGATIVE_ONE_STR;
 import static ru.tv7.nebesatv7.helpers.Constants.ONE_STR;
 import static ru.tv7.nebesatv7.helpers.Constants.PROGRAM_INFO_FRAGMENT;
 import static ru.tv7.nebesatv7.helpers.Constants.SERIES_AND_NAME;
+import static ru.tv7.nebesatv7.helpers.Constants.ZERO_STR;
 
 /**
  * Program info fragment. Shows info of program and possible play video button.
@@ -60,6 +62,7 @@ public class ProgramInfoFragment extends Fragment {
     private List<TextView> menuTexts = null;
 
     private boolean videoAvailable = false;
+    private boolean comingProgram = false;
 
     private ImageView startButton = null;
     private ImageView favoriteButton = null;
@@ -137,100 +140,121 @@ public class ProgramInfoFragment extends Fragment {
                 }
             }
 
-            videoAvailable = Utils.getValue(selectedProgram, IS_VISIBLE_ON_VOD).equals(ONE_STR);
-
-            startButton = root.findViewById(R.id.startButton);
-            if (startButton != null) {
-                if (videoAvailable) {
-                    // play button available
-                    Utils.requestFocus(startButton);
+            String isVisibleInVod = Utils.getValue(selectedProgram, IS_VISIBLE_ON_VOD);
+            if (isVisibleInVod != null) {
+                if (isVisibleInVod.equals(ZERO_STR)) {
+                    videoAvailable = false;
+                    comingProgram = true;
                 }
-                else {
-                    startButton.setVisibility(View.GONE);
+                else if (isVisibleInVod.equals(ONE_STR)) {
+                    videoAvailable = true;
+                    comingProgram = false;
+                }
+                else if (isVisibleInVod.equals(NEGATIVE_ONE_STR)) {
+                    videoAvailable = false;
+                    comingProgram = false;
+
+                    ImageView archiveIcon = root.findViewById(R.id.archiveIcon);
+                    if (archiveIcon != null) {
+                        archiveIcon.setVisibility(View.GONE);
+                    }
+                }
+
+                startButton = root.findViewById(R.id.startButton);
+                if (startButton != null) {
+                    if (videoAvailable) {
+                        // play button available
+                        Utils.requestFocus(startButton);
+                    }
+                    else {
+                        startButton.setVisibility(View.GONE);
+                    }
+                }
+
+                favoriteButton = root.findViewById(R.id.favoriteButton);
+                if (favoriteButton != null) {
+                    String programId = Utils.getValue(selectedProgram, ID);
+                    if (programId != null) {
+                        if (!videoAvailable) {
+                            Utils.requestFocus(favoriteButton);
+                        }
+
+                        programFavoritesIndex = Utils.isProgramInFavorites(getContext(), programId);
+
+                        if (programFavoritesIndex != -1) {
+                            this.setFavoritesButtonImage(R.drawable.favorites);
+                        }
+                    }
+                }
+
+                Resources resources = getResources();
+                if (resources != null) {
+                    String titleText;
+                    String valueText;
+
+                    TextView firstBroadcast = root.findViewById(R.id.firstBroadcast);
+                    if (firstBroadcast != null) {
+                        valueText = Utils.getValue(selectedProgram, BROADCAST_DATE_TIME);
+                        if (valueText != null && valueText.length() > 0) {
+                            titleText = resources.getString(comingProgram ? R.string.coming_on_channel : R.string.first_broadcast);
+                            valueText = titleText + COLON_WITH_SPACE + valueText;
+
+                            firstBroadcast.setText(valueText);
+                        }
+                        else {
+                            firstBroadcast.setVisibility(View.GONE);
+                        }
+                    }
+
+                    TextView duration = root.findViewById(R.id.duration);
+                    if (duration != null) {
+                        valueText = Utils.getValue(selectedProgram, DURATION);
+                        if (valueText != null && valueText.length() > 0) {
+                            titleText = resources.getString(R.string.duration);
+                            valueText = titleText + COLON_WITH_SPACE + valueText;
+
+                            duration.setText(valueText);
+                        }
+                        else {
+                            duration.setVisibility(View.GONE);
+                        }
+                    }
+
+                    TextView episodeNbr = root.findViewById(R.id.episode);
+                    if (episodeNbr != null) {
+                        valueText = Utils.getValue(selectedProgram, EPISODE_NUMBER);
+                        if (valueText != null && valueText.length() > 0) {
+                            titleText = resources.getString(R.string.episode);
+                            valueText = titleText + COLON_WITH_SPACE + valueText;
+
+                            episodeNbr.setText(valueText);
+                        } else {
+                            episodeNbr.setVisibility(View.GONE);
+                        }
+                    }
+
+                    TextView caption = root.findViewById(R.id.caption);
+                    if (caption != null) {
+                        valueText = Utils.getValue(selectedProgram, CAPTION);
+                        if (valueText != null && valueText.length() > 0) {
+                            caption.setText(valueText);
+                        }
+                        else {
+                            caption.setVisibility(View.GONE);
+                        }
+                    }
+
+                    TextView seriesAndName = root.findViewById(R.id.seriesAndName);
+                    if (seriesAndName != null) {
+                        valueText = Utils.getValue(selectedProgram, SERIES_AND_NAME);
+                        if (valueText != null) {
+                            seriesAndName.setText(valueText);
+                        }
+                    }
                 }
             }
-
-            favoriteButton = root.findViewById(R.id.favoriteButton);
-            if (favoriteButton != null) {
-                String programId = Utils.getValue(selectedProgram, ID);
-                if (programId != null) {
-                    if (!videoAvailable) {
-                        Utils.requestFocus(favoriteButton);
-                    }
-
-                    programFavoritesIndex = Utils.isProgramInFavorites(getContext(), programId);
-
-                    if (programFavoritesIndex != -1) {
-                        this.setFavoritesButtonImage(R.drawable.favorites);
-                    }
-                }
-            }
-
-            Resources resources = getResources();
-            if (resources != null) {
-                String titleText;
-                String valueText;
-
-                TextView firstBroadcast = root.findViewById(R.id.firstBroadcast);
-                if (firstBroadcast != null) {
-                    valueText = Utils.getValue(selectedProgram, BROADCAST_DATE_TIME);
-                    if (valueText != null && valueText.length() > 0) {
-                        titleText = resources.getString(videoAvailable ? R.string.first_broadcast : R.string.coming_on_channel);
-                        valueText = titleText + COLON_WITH_SPACE + valueText;
-
-                        firstBroadcast.setText(valueText);
-                    }
-                    else {
-                        firstBroadcast.setVisibility(View.GONE);
-                    }
-                }
-
-                TextView duration = root.findViewById(R.id.duration);
-                if (duration != null) {
-                    valueText = Utils.getValue(selectedProgram, DURATION);
-                    if (valueText != null && valueText.length() > 0) {
-                        titleText = resources.getString(R.string.duration);
-                        valueText = titleText + COLON_WITH_SPACE + valueText;
-
-                        duration.setText(valueText);
-                    }
-                    else {
-                        duration.setVisibility(View.GONE);
-                    }
-                }
-
-                TextView episodeNbr = root.findViewById(R.id.episode);
-                if (episodeNbr != null) {
-                    valueText = Utils.getValue(selectedProgram, EPISODE_NUMBER);
-                    if (valueText != null && valueText.length() > 0) {
-                        titleText = resources.getString(R.string.episode);
-                        valueText = titleText + COLON_WITH_SPACE + valueText;
-
-                        episodeNbr.setText(valueText);
-                    }
-                    else {
-                        episodeNbr.setVisibility(View.GONE);
-                    }
-                }
-
-                TextView caption = root.findViewById(R.id.caption);
-                if (caption != null) {
-                    valueText = Utils.getValue(selectedProgram, CAPTION);
-                    if (valueText != null && valueText.length() > 0) {
-                        caption.setText(valueText);
-                    }
-                    else {
-                        caption.setVisibility(View.GONE);
-                    }
-                }
-
-                TextView seriesAndName = root.findViewById(R.id.seriesAndName);
-                if (seriesAndName != null) {
-                    valueText = Utils.getValue(selectedProgram, SERIES_AND_NAME);
-                    if (valueText != null) {
-                        seriesAndName.setText(valueText);
-                    }
-                }
+            else {
+                throw new Exception("Invalid input parameters!");
             }
         }
         catch (Exception e) {
