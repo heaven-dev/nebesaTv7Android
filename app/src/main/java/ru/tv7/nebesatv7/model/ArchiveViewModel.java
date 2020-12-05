@@ -92,6 +92,7 @@ import static ru.tv7.nebesatv7.helpers.Constants.START_END_TIME;
 import static ru.tv7.nebesatv7.helpers.Constants.SUB_CATEGORIES_METHOD;
 import static ru.tv7.nebesatv7.helpers.Constants.TIME;
 import static ru.tv7.nebesatv7.helpers.Constants.TRANSLATION_METHOD;
+import static ru.tv7.nebesatv7.helpers.Constants.TWO_STR;
 import static ru.tv7.nebesatv7.helpers.Constants.TYPE;
 import static ru.tv7.nebesatv7.helpers.Constants.UTF_8;
 import static ru.tv7.nebesatv7.helpers.Constants.VISIBLE_ON_VOD_SINCE;
@@ -812,7 +813,16 @@ public class ArchiveViewModel extends ViewModel {
             setValue(respObj, DURATION, Utils.getTimeStampByDurationMs(duration), false);
 
             setValue(respObj, EPISODE_NUMBER, this.getValue(sourceObj, EPISODE_NUMBER), true);
-            setValue(respObj, IS_VISIBLE_ON_VOD, ZERO_STR, true);
+
+            String isVisibleOnVod = this.getValue(sourceObj, IS_VISIBLE_ON_VOD);
+            String visibleOnVodSince = this.getValue(sourceObj, VISIBLE_ON_VOD_SINCE);
+            if (isVisibleOnVod != null && visibleOnVodSince != null) {
+                String isVisibleValue = isPastTime(visibleOnVodSince) ? TWO_STR : ZERO_STR;
+                setValue(respObj, IS_VISIBLE_ON_VOD, isVisibleValue, true);
+            }
+            else {
+                setValue(respObj, IS_VISIBLE_ON_VOD, NEGATIVE_ONE_STR, true);
+            }
 
             // series and name
             String series = this.getValue(sourceObj, SERIES);

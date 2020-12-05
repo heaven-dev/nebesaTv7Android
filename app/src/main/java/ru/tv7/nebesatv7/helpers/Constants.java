@@ -114,6 +114,7 @@ abstract public class Constants {
     public static final String ICON = "icon";
     public static final String SRC = "src";
     public static final String ONE_STR = "1";
+    public static final String TWO_STR = "2";
 
     public static final String FAVORITES_SP_TAG = "favorites_shared_pref";
     public static final String FAVORITES_SP_DEFAULT = "[]";
