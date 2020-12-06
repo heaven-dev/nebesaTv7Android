@@ -63,10 +63,12 @@ public class ProgramInfoFragment extends Fragment {
     private List<TextView> menuTexts = null;
 
     private boolean videoAvailable = false;
+    private boolean showFavoriteButton = false;
     private boolean comingProgram = false;
 
     private ImageView startButton = null;
     private ImageView favoriteButton = null;
+    private ImageView backgroundImage = null;
 
     private JSONObject selectedProgram = null;
     private int programFavoritesIndex = -1;
@@ -130,7 +132,7 @@ public class ProgramInfoFragment extends Fragment {
             menuTexts = Sidebar.getMenuTextItems(root);
             Sidebar.setSelectedMenuItem(root, R.id.archiveMenuContainer);
 
-            ImageView backgroundImage = root.findViewById(R.id.backgroundImage);
+            backgroundImage = root.findViewById(R.id.backgroundImage);
             if (backgroundImage != null) {
                 String imagePath = Utils.getValue(selectedProgram, IMAGE_PATH);
                 if (imagePath != null) {
@@ -140,6 +142,8 @@ public class ProgramInfoFragment extends Fragment {
                     Glide.with(this).asBitmap().load(R.drawable.tv7_app_icon).into(backgroundImage);
                 }
             }
+
+            showFavoriteButton = true;
 
             String isVisibleInVod = Utils.getValue(selectedProgram, IS_VISIBLE_ON_VOD);
             if (isVisibleInVod != null) {
@@ -158,6 +162,7 @@ public class ProgramInfoFragment extends Fragment {
                 else if (isVisibleInVod.equals(NEGATIVE_ONE_STR)) {
                     videoAvailable = false;
                     comingProgram = false;
+                    showFavoriteButton = false;
 
                     ImageView archiveIcon = root.findViewById(R.id.archiveIcon);
                     if (archiveIcon != null) {
@@ -166,30 +171,35 @@ public class ProgramInfoFragment extends Fragment {
                 }
 
                 startButton = root.findViewById(R.id.startButton);
-                if (startButton != null) {
-                    if (videoAvailable) {
-                        // play button available
-                        Utils.requestFocus(startButton);
-                    }
-                    else {
-                        startButton.setVisibility(View.GONE);
-                    }
-                }
 
                 favoriteButton = root.findViewById(R.id.favoriteButton);
                 if (favoriteButton != null) {
                     String programId = Utils.getValue(selectedProgram, ID);
                     if (programId != null) {
-                        if (!videoAvailable) {
-                            Utils.requestFocus(favoriteButton);
-                        }
-
                         programFavoritesIndex = Utils.isProgramInFavorites(getContext(), programId);
 
                         if (programFavoritesIndex != -1) {
                             this.setFavoritesButtonImage(R.drawable.favorites);
                         }
                     }
+                }
+
+                if (videoAvailable) {
+                    Utils.requestFocus(startButton);
+                }
+                else if (showFavoriteButton) {
+                    Utils.requestFocus(favoriteButton);
+                }
+                else {
+                    Utils.requestFocus(backgroundImage);
+                }
+
+                if (!videoAvailable) {
+                    startButton.setVisibility(View.GONE);
+                }
+
+                if (!showFavoriteButton) {
+                    favoriteButton.setVisibility(View.GONE);
                 }
 
                 Resources resources = getResources();
@@ -228,12 +238,13 @@ public class ProgramInfoFragment extends Fragment {
                     TextView episodeNbr = root.findViewById(R.id.episode);
                     if (episodeNbr != null) {
                         valueText = Utils.getValue(selectedProgram, EPISODE_NUMBER);
-                        if (valueText != null && valueText.length() > 0) {
+                        if (valueText != null && valueText.length() > 0 && !valueText.equals(ZERO_STR)) {
                             titleText = resources.getString(R.string.episode);
                             valueText = titleText + COLON_WITH_SPACE + valueText;
 
                             episodeNbr.setText(valueText);
-                        } else {
+                        }
+                        else {
                             episodeNbr.setVisibility(View.GONE);
                         }
                     }
@@ -327,7 +338,7 @@ public class ProgramInfoFragment extends Fragment {
                 if (focusedId == R.id.favoriteButton && videoAvailable) {
                     Utils.requestFocus(startButton);
                 }
-                else if (focusedId == R.id.startButton || focusedId == R.id.favoriteButton && !videoAvailable) {
+                else if (focusedId == R.id.startButton || focusedId == R.id.favoriteButton && !videoAvailable || focusedId == R.id.backgroundImage) {
                     Sidebar.showMenuTexts(menuTexts);
                     Sidebar.setFocusToMenu(root, R.id.archiveMenuContainer);
                 }
@@ -400,8 +411,11 @@ public class ProgramInfoFragment extends Fragment {
         if (videoAvailable) {
             Utils.requestFocus(startButton);
         }
-        else {
+        else if (showFavoriteButton) {
             Utils.requestFocus(favoriteButton);
+        }
+        else {
+            Utils.requestFocus(backgroundImage);
         }
     }
 
