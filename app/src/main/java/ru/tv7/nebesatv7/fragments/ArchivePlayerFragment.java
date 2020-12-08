@@ -495,7 +495,10 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
         }
     }
 
-    private void toPreviousPage() {
+    /**
+     * Release the resources and opens the previous page.
+     */
+    private synchronized void toPreviousPage() {
         this.releasePlayer();
         this.cancelVideoProgressTimer();
         this.cancelVideoControlsTimer();
