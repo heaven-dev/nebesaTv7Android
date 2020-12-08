@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -257,6 +258,18 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
     }
 
     /**
+     * Handles video end event.
+     * @param playWhenReady
+     * @param state
+     */
+    @Override
+    public void onPlayerStateChanged(boolean playWhenReady, int state) {
+        if (state == ExoPlayer.STATE_ENDED) {
+            this.toPreviousPage();
+        }
+    }
+
+    /**
      * Handles keydown events.
      * @param keyCode
      * @param events
@@ -367,14 +380,7 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
                     this.play();
                 }
                 else {
-                    this.releasePlayer();
-                    this.cancelVideoProgressTimer();
-                    this.cancelVideoControlsTimer();
-
-                    String page = sharedCacheViewModel.getPageFromHistory();
-                    if (page != null) {
-                        Utils.toPage(page, getActivity(), true, false, null);
-                    }
+                    this.toPreviousPage();
                 }
             }
         }
@@ -486,6 +492,17 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "ArchivePlayerFragment.onArchiveDataLoadError(): Exception: " + e);
             }
+        }
+    }
+
+    private void toPreviousPage() {
+        this.releasePlayer();
+        this.cancelVideoProgressTimer();
+        this.cancelVideoControlsTimer();
+
+        String page = sharedCacheViewModel.getPageFromHistory();
+        if (page != null) {
+            Utils.toPage(page, getActivity(), true, false, null);
         }
     }
 
