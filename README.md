@@ -84,3 +84,6 @@ Guide of [Android TV](https://developer.android.com/training/tv).
 
 ### License
  - [MIT](https://github.com/heaven-dev/nebesaTv7Android/blob/master/LICENSE.md)
+
+### Last update
+ - 8.12.2020 11:00
