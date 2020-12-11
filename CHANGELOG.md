@@ -1,3 +1,14 @@
+# 11.12.2020 08:38
+
+### Bug Fixes
+
+* Added localized texts related to favorites and search.
+
+### Features
+
+* none
+
+
 # 10.12.2020 10:15
 
 ### Bug Fixes

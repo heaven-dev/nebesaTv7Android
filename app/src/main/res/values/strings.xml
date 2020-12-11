@@ -17,7 +17,7 @@
     <string name="archive">Видеоархив</string>
     <string name="guide">телепрограмму</string>
     <string name="search">Поиск</string>
-    <string name="favorites">Suosikit</string>
+    <string name="favorites">Избранные</string>
 
     <string name="we_recommend">Рекомендуемые</string>
     <string name="most_viewed">Самые популярные</string>
@@ -35,8 +35,8 @@
     <string name="clear">стере́ть</string>
     <string name="search_results">Результаты поиска</string>
 
-    <string name="no_hits">Ei hakuosumia</string>
-    <string name="no_favorites">Ei lisättyjä suosikkeja</string>
-    <string name="added_to_favorites">Lisätty suosikkeihin</string>
-    <string name="removed_from_favorites">Poistettu suosikeista</string>
+    <string name="no_hits">Ничего не найдено</string>
+    <string name="no_favorites">Список Избранных пуст</string>
+    <string name="added_to_favorites">Добавлено в Избранные</string>
+    <string name="removed_from_favorites">Удалено из Избранных</string>
 </resources>
