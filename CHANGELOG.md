@@ -1,3 +1,14 @@
+# 12.12.2020 17:48
+
+### Bug Fixes
+
+* Banner image changed.
+
+### Features
+
+* none
+
+
 # 11.12.2020 08:38
 
 ### Bug Fixes
