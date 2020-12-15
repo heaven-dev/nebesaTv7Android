@@ -18,6 +18,7 @@ import java.util.List;
 
 import ru.tv7.nebesatv7.BuildConfig;
 import ru.tv7.nebesatv7.R;
+import ru.tv7.nebesatv7.fragments.AboutFragment;
 import ru.tv7.nebesatv7.fragments.ArchiveMainFragment;
 import ru.tv7.nebesatv7.fragments.ArchivePlayerFragment;
 import ru.tv7.nebesatv7.fragments.CategoriesFragment;
@@ -109,51 +110,55 @@ public class MainActivity extends AppCompatActivity implements EpgDataLoadedList
             Fragment fragment = this.getVisibleFragment();
             if (fragment != null) {
                 if (fragment instanceof TvMainFragment) {
-                    // TV main fragment visible - event to main fragment
+                    // TV main fragment visible
                     return ((TvMainFragment) fragment).onKeyDown(keyCode, events);
                 }
                 else if (fragment instanceof ArchiveMainFragment) {
-                    // Archive main fragment visible - event to main fragment
+                    // Archive main fragment visible
                     return ((ArchiveMainFragment) fragment).onKeyDown(keyCode, events);
                 }
                 else if (fragment instanceof TvPlayerFragment) {
-                    // Video player fragment visible - event to video player fragment
+                    // Video player fragment visible
                     return ((TvPlayerFragment) fragment).onKeyDown(keyCode, events);
                 }
                 else if (fragment instanceof ArchivePlayerFragment) {
-                    // Archive player fragment visible - event to archive player fragment
+                    // Archive player fragment visible
                     return ((ArchivePlayerFragment) fragment).onKeyDown(keyCode, events);
                 }
                 else if (fragment instanceof ProgramInfoFragment) {
-                    // Program info fragment visible - event to program info fragment
+                    // Program info fragment visible
                     return ((ProgramInfoFragment) fragment).onKeyDown(keyCode, events);
                 }
                 else if (fragment instanceof CategoriesFragment) {
-                    // Categories fragment visible - event to program info fragment
+                    // Categories fragment visible
                     return ((CategoriesFragment) fragment).onKeyDown(keyCode, events);
                 }
                 else if (fragment instanceof SeriesFragment) {
-                    // Series fragment visible - event to program info fragment
+                    // Series fragment visible
                     return ((SeriesFragment) fragment).onKeyDown(keyCode, events);
                 }
                 else if (fragment instanceof GuideFragment) {
-                    // Guide fragment visible - event to program info fragment
+                    // Guide fragment visible
                     return ((GuideFragment) fragment).onKeyDown(keyCode, events);
                 }
                 else if (fragment instanceof SearchFragment) {
-                    // Search fragment visible - event to program info fragment
+                    // Search fragment visible
                     return ((SearchFragment) fragment).onKeyDown(keyCode, events);
                 }
                 else if (fragment instanceof SearchResultFragment) {
-                    // Search result fragment visible - event to program info fragment
+                    // Search result fragment visible
                     return ((SearchResultFragment) fragment).onKeyDown(keyCode, events);
                 }
                 else if (fragment instanceof FavoritesFragment) {
-                    // Favorites fragment visible - event to program info fragment
+                    // Favorites fragment visible
                     return ((FavoritesFragment) fragment).onKeyDown(keyCode, events);
                 }
+                else if (fragment instanceof AboutFragment) {
+                    // About fragment visible
+                    return ((AboutFragment) fragment).onKeyDown(keyCode, events);
+                }
                 else if (fragment instanceof ExitFragment) {
-                    // Exit overlay fragment visible - event to exit overlay fragment
+                    // Exit overlay fragment visible
                     return ((ExitFragment) fragment).onKeyDown(keyCode, events);
                 }
             }

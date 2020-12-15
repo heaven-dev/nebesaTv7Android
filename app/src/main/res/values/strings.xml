@@ -18,6 +18,7 @@
     <string name="guide">телепрограмму</string>
     <string name="search">Поиск</string>
     <string name="favorites">Избранные</string>
+    <string name="about">Информация</string>
 
     <string name="we_recommend">Рекомендуемые</string>
     <string name="most_viewed">Самые популярные</string>
@@ -39,4 +40,11 @@
     <string name="no_favorites">Список Избранных пуст</string>
     <string name="added_to_favorites">Добавлено в Избранные</string>
     <string name="removed_from_favorites">Удалено из Избранных</string>
+
+    <string name="app_package_title">App package:</string>
+    <string name="app_version_title">App version:</string>
+    <string name="os_version_title">OS version:</string>
+    <string name="os_api_level_title">OS API level:</string>
+    <string name="device_title">Device:</string>
+    <string name="model_and_product_title">Model (Product):</string>
 </resources>

@@ -52,6 +52,7 @@ abstract public class Constants {
     public static final String SEARCH_FRAGMENT = "search_fragment";
     public static final String SEARCH_RESULT_FRAGMENT = "search_result_fragment";
     public static final String FAVORITES_FRAGMENT = "favorites_fragment";
+    public static final String ABOUT_FRAGMENT = "about_fragment";
     public static final String EXIT_OVERLAY_FRAGMENT = "exit_overlay_fragment";
 
     public static final String CHANNEL_URL_PARAM = "channel_url";
@@ -82,6 +83,10 @@ abstract public class Constants {
     public static final String AUDIO_INDEX_ENABLE_LANG = "RU1";
 
     public static final String TV_BRAND = "Android";
+
+    public static final String OS_VERSION = "os.version";
+    public static final String LEFT_BRACKET = "(";
+    public static final String RIGHT_BRACKET = ")";
 
     public static final String QUESTION_MARK = "?";
     public static final String AMPERSAND = "&";
@@ -207,54 +212,55 @@ abstract public class Constants {
     public static final int CATEGORIES_ROW_ID = 3;
 
     public static final List<ComingProgramImageAndTextId> COMING_PROGRAM_IMAGE_AND_TEXT = new ArrayList<>(Arrays.asList(
-            new ComingProgramImageAndTextId(R.id.image1, R.id.image1Text),
-            new ComingProgramImageAndTextId(R.id.image2, R.id.image2Text),
-            new ComingProgramImageAndTextId(R.id.image3, R.id.image3Text),
-            new ComingProgramImageAndTextId(R.id.image4, R.id.image4Text),
-            new ComingProgramImageAndTextId(R.id.image5, R.id.image5Text),
-            new ComingProgramImageAndTextId(R.id.image6, R.id.image6Text),
-            new ComingProgramImageAndTextId(R.id.image7, R.id.image7Text),
-            new ComingProgramImageAndTextId(R.id.image8, R.id.image8Text),
-            new ComingProgramImageAndTextId(R.id.image9, R.id.image9Text),
-            new ComingProgramImageAndTextId(R.id.image10, R.id.image10Text)
+        new ComingProgramImageAndTextId(R.id.image1, R.id.image1Text),
+        new ComingProgramImageAndTextId(R.id.image2, R.id.image2Text),
+        new ComingProgramImageAndTextId(R.id.image3, R.id.image3Text),
+        new ComingProgramImageAndTextId(R.id.image4, R.id.image4Text),
+        new ComingProgramImageAndTextId(R.id.image5, R.id.image5Text),
+        new ComingProgramImageAndTextId(R.id.image6, R.id.image6Text),
+        new ComingProgramImageAndTextId(R.id.image7, R.id.image7Text),
+        new ComingProgramImageAndTextId(R.id.image8, R.id.image8Text),
+        new ComingProgramImageAndTextId(R.id.image9, R.id.image9Text),
+        new ComingProgramImageAndTextId(R.id.image10, R.id.image10Text)
     ));
 
     public static final List<GuideRowId> GUIDE_ROWS = new ArrayList<>(Arrays.asList(
-            new GuideRowId(R.id.row1, R.id.row1Time, R.id.row1Title, R.id.row1Desc),
-            new GuideRowId(R.id.row2, R.id.row2Time, R.id.row2Title, R.id.row2Desc),
-            new GuideRowId(R.id.row3, R.id.row3Time, R.id.row3Title, R.id.row3Desc),
-            new GuideRowId(R.id.row4, R.id.row4Time, R.id.row4Title, R.id.row4Desc),
-            new GuideRowId(R.id.row5, R.id.row5Time, R.id.row5Title, R.id.row5Desc),
-            new GuideRowId(R.id.row6, R.id.row6Time, R.id.row6Title, R.id.row6Desc),
-            new GuideRowId(R.id.row7, R.id.row7Time, R.id.row7Title, R.id.row7Desc),
-            new GuideRowId(R.id.row8, R.id.row8Time, R.id.row8Title, R.id.row8Desc),
-            new GuideRowId(R.id.row9, R.id.row9Time, R.id.row9Title, R.id.row9Desc),
-            new GuideRowId(R.id.row10, R.id.row10Time, R.id.row10Title, R.id.row10Desc)
+        new GuideRowId(R.id.row1, R.id.row1Time, R.id.row1Title, R.id.row1Desc),
+        new GuideRowId(R.id.row2, R.id.row2Time, R.id.row2Title, R.id.row2Desc),
+        new GuideRowId(R.id.row3, R.id.row3Time, R.id.row3Title, R.id.row3Desc),
+        new GuideRowId(R.id.row4, R.id.row4Time, R.id.row4Title, R.id.row4Desc),
+        new GuideRowId(R.id.row5, R.id.row5Time, R.id.row5Title, R.id.row5Desc),
+        new GuideRowId(R.id.row6, R.id.row6Time, R.id.row6Title, R.id.row6Desc),
+        new GuideRowId(R.id.row7, R.id.row7Time, R.id.row7Title, R.id.row7Desc),
+        new GuideRowId(R.id.row8, R.id.row8Time, R.id.row8Title, R.id.row8Desc),
+        new GuideRowId(R.id.row9, R.id.row9Time, R.id.row9Title, R.id.row9Desc),
+        new GuideRowId(R.id.row10, R.id.row10Time, R.id.row10Title, R.id.row10Desc)
     ));
 
     public static final List<MenuItem> MENU_ITEM_IDS = new ArrayList<>(Arrays.asList(
-            new MenuItem(R.id.tvMenuContainer, R.id.tvMenuText),
-            new MenuItem(R.id.archiveMenuContainer, R.id.archiveMenuText),
-            new MenuItem(R.id.guideMenuContainer, R.id.guideMenuText),
-            new MenuItem(R.id.searchMenuContainer, R.id.searchMenuText),
-            new MenuItem(R.id.favoritesMenuContainer, R.id.favoritesMenuText)
+        new MenuItem(R.id.tvMenuContainer, R.id.tvMenuText),
+        new MenuItem(R.id.archiveMenuContainer, R.id.archiveMenuText),
+        new MenuItem(R.id.guideMenuContainer, R.id.guideMenuText),
+        new MenuItem(R.id.searchMenuContainer, R.id.searchMenuText),
+        new MenuItem(R.id.favoritesMenuContainer, R.id.favoritesMenuText),
+        new MenuItem(R.id.aboutMenuContainer, R.id.aboutMenuText)
     ));
 
     public static final List<Integer> ARCHIVE_MAIN_CONTENT_ROW_IDS = new ArrayList<>(Arrays.asList(
-            R.id.recommendContainer,
-            R.id.mostViewedContainer,
-            R.id.newestContainer,
-            R.id.categoriesContainer
+        R.id.recommendContainer,
+        R.id.mostViewedContainer,
+        R.id.newestContainer,
+        R.id.categoriesContainer
     ));
 
     public static final List<Integer> GUIDE_DATE_IDS = new ArrayList<>(Arrays.asList(
-            R.id.date_0,
-            R.id.date_1,
-            R.id.date_2,
-            R.id.date_3,
-            R.id.date_4,
-            R.id.date_5,
-            R.id.date_6
+        R.id.date_0,
+        R.id.date_1,
+        R.id.date_2,
+        R.id.date_3,
+        R.id.date_4,
+        R.id.date_5,
+        R.id.date_6
     ));
 
     public static final int SPACE_BUTTON = 1;

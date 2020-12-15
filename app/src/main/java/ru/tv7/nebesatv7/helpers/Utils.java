@@ -31,6 +31,7 @@ import java.util.TimeZone;
 
 import ru.tv7.nebesatv7.BuildConfig;
 import ru.tv7.nebesatv7.R;
+import ru.tv7.nebesatv7.fragments.AboutFragment;
 import ru.tv7.nebesatv7.fragments.ArchiveMainFragment;
 import ru.tv7.nebesatv7.fragments.ArchivePlayerFragment;
 import ru.tv7.nebesatv7.fragments.CategoriesFragment;
@@ -44,6 +45,7 @@ import ru.tv7.nebesatv7.fragments.SeriesFragment;
 import ru.tv7.nebesatv7.fragments.TvMainFragment;
 import ru.tv7.nebesatv7.fragments.TvPlayerFragment;
 
+import static ru.tv7.nebesatv7.helpers.Constants.ABOUT_FRAGMENT;
 import static ru.tv7.nebesatv7.helpers.Constants.ARCHIVE_MAIN_FRAGMENT;
 import static ru.tv7.nebesatv7.helpers.Constants.ARCHIVE_PLAYER_FRAGMENT;
 import static ru.tv7.nebesatv7.helpers.Constants.CATEGORIES_FRAGMENT;
@@ -206,6 +208,9 @@ public abstract class Utils {
                 }
                 else if (page.equals(FAVORITES_FRAGMENT)) {
                     fragment = FavoritesFragment.newInstance();
+                }
+                else if (page.equals(ABOUT_FRAGMENT)) {
+                    fragment = AboutFragment.newInstance();
                 }
                 else if (page.equals(EXIT_OVERLAY_FRAGMENT)) {
                     fragment = ExitFragment.newInstance();

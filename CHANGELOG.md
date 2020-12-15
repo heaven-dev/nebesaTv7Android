@@ -1,3 +1,14 @@
+# 15.12.2020 14:06
+
+### Bug Fixes
+
+* none
+
+### Features
+
+* Added app and platform info page.
+
+
 # 12.12.2020 17:48
 
 ### Bug Fixes
