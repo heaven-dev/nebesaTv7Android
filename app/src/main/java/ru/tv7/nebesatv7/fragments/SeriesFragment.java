@@ -306,7 +306,7 @@ public class SeriesFragment extends Fragment implements ArchiveDataLoadedListene
                 }
 
                 if (!Sidebar.isSideMenuOpen(menuTexts)) {
-                    Sidebar.showMenuTexts(menuTexts);
+                    Sidebar.showMenuTexts(menuTexts, root);
                     Sidebar.setFocusToMenu(root, R.id.archiveMenuContainer);
                 }
             }
@@ -391,7 +391,7 @@ public class SeriesFragment extends Fragment implements ArchiveDataLoadedListene
      * Handles focus out from side menu.
      */
     private void focusOutFromSideMenu() {
-        Sidebar.hideMenuTexts(menuTexts);
+        Sidebar.hideMenuTexts(menuTexts, root);
         Sidebar.setSelectedMenuItem(root, R.id.archiveMenuContainer);
 
         Utils.requestFocus(seriesScroll);

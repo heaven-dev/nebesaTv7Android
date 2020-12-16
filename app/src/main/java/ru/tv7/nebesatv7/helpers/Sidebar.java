@@ -13,6 +13,7 @@ import ru.tv7.nebesatv7.R;
 import ru.tv7.nebesatv7.model.SharedCacheViewModel;
 
 import static ru.tv7.nebesatv7.helpers.Constants.MENU_ITEM_IDS;
+import static ru.tv7.nebesatv7.helpers.Constants.SIDEBAR_MENU_ICON_WIDTH;
 
 public class Sidebar {
     public static boolean isSideMenuOpen(List<TextView> menuTexts) {
@@ -31,15 +32,23 @@ public class Sidebar {
         return menuTexts;
     }
 
-    public static void showMenuTexts(List<TextView> menuTexts) {
-        for (TextView tv: menuTexts) {
-            tv.setVisibility(View.VISIBLE);
+    public static void showMenuTexts(List<TextView> menuTexts, View root) {
+        if (menuTexts != null) {
+            for (TextView tv: menuTexts) {
+                tv.setVisibility(View.VISIBLE);
+            }
+
+            setSidebarMenuItemMinWidth(root, true);
         }
     }
 
-    public static void hideMenuTexts(List<TextView> menuTexts) {
-        for (TextView tv: menuTexts) {
-            tv.setVisibility(View.GONE);
+    public static void hideMenuTexts(List<TextView> menuTexts, View root) {
+        if (menuTexts != null) {
+            for (TextView tv : menuTexts) {
+                tv.setVisibility(View.GONE);
+            }
+
+            setSidebarMenuItemMinWidth(root, false);
         }
     }
 
@@ -182,6 +191,27 @@ public class Sidebar {
             }
 
             Utils.toPage(fragmentTag, activity, true, false,null);
+        }
+    }
+
+    private static void setSidebarMenuItemMinWidth(View root, boolean menuOpen) {
+        if (root != null) {
+            LinearLayout sidebar = root.findViewById(R.id.sidebar);
+            if (sidebar != null) {
+                sidebar.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        int width = menuOpen ? width = sidebar.getWidth() : Utils.dpToPx(SIDEBAR_MENU_ICON_WIDTH);
+
+                        for (MenuItem m: MENU_ITEM_IDS) {
+                            LinearLayout menu = root.findViewById(m.getMenuContainerId());
+                            if (menu != null) {
+                                menu.setMinimumWidth(width);
+                            }
+                        }
+                    }
+                });
+            }
         }
     }
 }

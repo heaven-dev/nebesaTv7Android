@@ -228,26 +228,20 @@ public class SearchFragment extends Fragment {
                                 }
 
                                 this.initializeButtons();
-
-                                Utils.requestFocusById(root, id);
                             }
                             else if (buttonId == SPECIAL_CHARS_BUTTON) {
-                                int focusedId = 0;
                                 if (searchKeyboardType == SearchKeyboardType.LOWERCASE || searchKeyboardType == SearchKeyboardType.UPPERCASE) {
                                     searchKeyboardType = SearchKeyboardType.SPECIAL;
-                                    focusedId = R.id.k_2_10;
                                 }
                                 else {
                                     searchKeyboardType = SearchKeyboardType.LOWERCASE;
-                                    focusedId = R.id.k_2_11;
                                 }
 
                                 this.initializeButtons();
-
-                                Utils.requestFocusById(root, focusedId);
                             }
                         }
                     }
+                    Utils.requestFocusById(root, id);
                 }
             }
             else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
@@ -258,7 +252,7 @@ public class SearchFragment extends Fragment {
                 int focusedId = focusedView.getId();
 
                 if (focusedId == R.id.k_0_0 || focusedId == R.id.k_1_0 || focusedId == R.id.k_2_0) {
-                    Sidebar.showMenuTexts(menuTexts);
+                    Sidebar.showMenuTexts(menuTexts, root);
                     Sidebar.setFocusToMenu(root, R.id.searchMenuContainer);
                 }
                 else {
@@ -341,7 +335,7 @@ public class SearchFragment extends Fragment {
      * Handles focus out from side menu.
      */
     private void focusOutFromSideMenu() {
-        Sidebar.hideMenuTexts(menuTexts);
+        Sidebar.hideMenuTexts(menuTexts, root);
         Sidebar.setSelectedMenuItem(root, R.id.searchMenuContainer);
 
         Utils.requestFocusById(root, R.id.k_0_0);
@@ -354,10 +348,6 @@ public class SearchFragment extends Fragment {
         boolean visibility = true;
         if (searchKeyboardType == SearchKeyboardType.SPECIAL) {
             visibility = false;
-            this.hideColumns(true);
-        }
-        else {
-            this.hideColumns(false);
         }
 
         this.setRow3Visibility(visibility);
@@ -393,28 +383,6 @@ public class SearchFragment extends Fragment {
                     tv.setText(character);
                 }
             }
-        }
-    }
-
-    /**
-     * Hide/show some buttons.
-     */
-    private void hideColumns(boolean hide) {
-        int operation = hide ? View.GONE : View.VISIBLE;
-
-        TextView tv = root.findViewById(R.id.k_0_11);
-        if (tv != null) {
-            tv.setVisibility(operation);
-        }
-
-        tv = root.findViewById(R.id.k_0_12);
-        if (tv != null) {
-            tv.setVisibility(operation);
-        }
-
-        tv = root.findViewById(R.id.k_1_11);
-        if (tv != null) {
-            tv.setVisibility(operation);
         }
     }
 

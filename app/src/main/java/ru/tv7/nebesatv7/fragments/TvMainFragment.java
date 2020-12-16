@@ -563,7 +563,7 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
                     Utils.requestFocus(startButton);
                 }
                 else if (focusedView == startButton) {
-                    Sidebar.showMenuTexts(menuTexts);
+                    Sidebar.showMenuTexts(menuTexts, root);
                     Sidebar.setFocusToMenu(root, R.id.tvMenuContainer);
                 }
             }
@@ -643,7 +643,7 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
      * Handles focus out from side menu.
      */
     private void focusOutFromSideMenu() {
-        Sidebar.hideMenuTexts(menuTexts);
+        Sidebar.hideMenuTexts(menuTexts, root);
         Sidebar.setSelectedMenuItem(root, R.id.tvMenuContainer);
 
         Utils.requestFocus(startButton);

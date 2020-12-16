@@ -339,12 +339,12 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
                         Utils.requestFocusById(root, previousId);
                     }
                     else {
-                        Sidebar.showMenuTexts(menuTexts);
+                        Sidebar.showMenuTexts(menuTexts, root);
                         Sidebar.setFocusToMenu(root, R.id.guideMenuContainer);
                     }
                 }
                 else {
-                    Sidebar.showMenuTexts(menuTexts);
+                    Sidebar.showMenuTexts(menuTexts, root);
                     Sidebar.setFocusToMenu(root, R.id.guideMenuContainer);
                 }
             }
@@ -432,7 +432,7 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
      * Handles focus out from side menu.
      */
     private void focusOutFromSideMenu() {
-        Sidebar.hideMenuTexts(menuTexts);
+        Sidebar.hideMenuTexts(menuTexts, root);
         Sidebar.setSelectedMenuItem(root, R.id.guideMenuContainer);
 
         int index = GUIDE_DATE_IDS.indexOf(toSideMenuItemId);

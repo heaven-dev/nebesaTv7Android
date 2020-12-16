@@ -1,3 +1,14 @@
+# 16.12.2020 11:23
+
+### Bug Fixes
+
+* none
+
+### Features
+
+* About menu item of sidebar moved to bottom.
+
+
 # 15.12.2020 14:06
 
 ### Bug Fixes

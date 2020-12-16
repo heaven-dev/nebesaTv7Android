@@ -307,7 +307,7 @@ public class FavoritesFragment extends Fragment implements ArchiveDataLoadedList
                 int focusedId = focusedView.getId();
 
                 if (focusedId == R.id.favoriteContainer || focusedId == R.id.favoritesTitle) {
-                    Sidebar.showMenuTexts(menuTexts);
+                    Sidebar.showMenuTexts(menuTexts, root);
                     Sidebar.setFocusToMenu(root, R.id.favoritesMenuContainer);
                 }
             }
@@ -377,7 +377,7 @@ public class FavoritesFragment extends Fragment implements ArchiveDataLoadedList
      * Handles focus out from side menu.
      */
     private void focusOutFromSideMenu() {
-        Sidebar.hideMenuTexts(menuTexts);
+        Sidebar.hideMenuTexts(menuTexts, root);
         Sidebar.setSelectedMenuItem(root, R.id.favoritesMenuContainer);
 
         if (hitCount > 0)  {

@@ -6,181 +6,193 @@
     android:orientation="vertical"
     android:background="@color/sidebar">
 
-    <LinearLayout
-        android:id="@+id/tvMenuContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:focusable="true"
-        android:orientation="horizontal"
-        android:background="@drawable/menu_item_container">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/tvMenuIcon"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
-            android:src="@drawable/tv" />
-
-        <TextView
-            android:id="@+id/tvMenuText"
+        <LinearLayout
+            android:id="@+id/tvMenuContainer"
             android:layout_width="wrap_content"
-            android:layout_height="38dp"
-            android:gravity="center_vertical"
-            android:textSize="22sp"
-            android:visibility="gone"
-            android:paddingStart="0dp"
-            android:paddingEnd="10dp"
-            android:textColor="@color/sidebar_text"
-            android:text="@string/net_tv" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:orientation="horizontal"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/menu_item_container">
+
+            <ImageView
+                android:id="@+id/tvMenuIcon"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:src="@drawable/tv" />
+
+            <TextView
+                android:id="@+id/tvMenuText"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:gravity="center_vertical"
+                android:textSize="22sp"
+                android:visibility="gone"
+                android:paddingStart="0dp"
+                android:paddingEnd="10dp"
+                android:textColor="@color/sidebar_text"
+                android:text="@string/net_tv" />
+        </LinearLayout>
 
 
-    <LinearLayout
-        android:id="@+id/archiveMenuContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:focusable="true"
-        android:orientation="horizontal"
-        android:background="@drawable/menu_item_container">
-
-        <ImageView
-            android:id="@+id/archiveMenuIcon"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
-            android:src="@drawable/archive" />
-
-        <TextView
-            android:id="@+id/archiveMenuText"
+        <LinearLayout
+            android:id="@+id/archiveMenuContainer"
             android:layout_width="wrap_content"
-            android:layout_height="38dp"
-            android:gravity="center_vertical"
-            android:textSize="22sp"
-            android:visibility="gone"
-            android:paddingStart="0dp"
-            android:paddingEnd="10dp"
-            android:textColor="@color/sidebar_text"
-            android:text="@string/archive" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:orientation="horizontal"
+            android:layout_below="@+id/tvMenuContainer"
+            android:background="@drawable/menu_item_container">
+
+            <ImageView
+                android:id="@+id/archiveMenuIcon"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:src="@drawable/archive" />
+
+            <TextView
+                android:id="@+id/archiveMenuText"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:gravity="center_vertical"
+                android:textSize="22sp"
+                android:visibility="gone"
+                android:paddingStart="0dp"
+                android:paddingEnd="10dp"
+                android:textColor="@color/sidebar_text"
+                android:text="@string/archive" />
+        </LinearLayout>
 
 
-    <LinearLayout
-        android:id="@+id/guideMenuContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:focusable="true"
-        android:orientation="horizontal"
-        android:background="@drawable/menu_item_container">
-
-        <ImageView
-            android:id="@+id/guideMenuIcon"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
-            android:src="@drawable/guide" />
-
-        <TextView
-            android:id="@+id/guideMenuText"
+        <LinearLayout
+            android:id="@+id/guideMenuContainer"
             android:layout_width="wrap_content"
-            android:layout_height="38dp"
-            android:gravity="center_vertical"
-            android:textSize="22sp"
-            android:visibility="gone"
-            android:paddingStart="0dp"
-            android:paddingEnd="10dp"
-            android:textColor="@color/sidebar_text"
-            android:text="@string/guide" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:orientation="horizontal"
+            android:layout_below="@+id/archiveMenuContainer"
+            android:background="@drawable/menu_item_container">
+
+            <ImageView
+                android:id="@+id/guideMenuIcon"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:src="@drawable/guide" />
+
+            <TextView
+                android:id="@+id/guideMenuText"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:gravity="center_vertical"
+                android:textSize="22sp"
+                android:visibility="gone"
+                android:paddingStart="0dp"
+                android:paddingEnd="10dp"
+                android:textColor="@color/sidebar_text"
+                android:text="@string/guide" />
+        </LinearLayout>
 
 
-    <LinearLayout
-        android:id="@+id/searchMenuContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/menu_item_container"
-        android:focusable="true"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/searchMenuIcon"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
-            android:src="@drawable/search" />
-
-        <TextView
-            android:id="@+id/searchMenuText"
+        <LinearLayout
+            android:id="@+id/searchMenuContainer"
             android:layout_width="wrap_content"
-            android:layout_height="38dp"
-            android:gravity="center_vertical"
-            android:paddingStart="0dp"
-            android:paddingEnd="10dp"
-            android:text="@string/search"
-            android:textColor="@color/sidebar_text"
-            android:textSize="22sp"
-            android:visibility="gone" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:background="@drawable/menu_item_container"
+            android:focusable="true"
+            android:layout_below="@+id/guideMenuContainer"
+            android:orientation="horizontal">
 
-    <LinearLayout
-        android:id="@+id/favoritesMenuContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:focusable="true"
-        android:orientation="horizontal"
-        android:background="@drawable/menu_item_container">
+            <ImageView
+                android:id="@+id/searchMenuIcon"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:src="@drawable/search" />
 
-        <ImageView
-            android:id="@+id/favoritesMenuIcon"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
-            android:src="@drawable/favorites" />
+            <TextView
+                android:id="@+id/searchMenuText"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:gravity="center_vertical"
+                android:paddingStart="0dp"
+                android:paddingEnd="10dp"
+                android:text="@string/search"
+                android:textColor="@color/sidebar_text"
+                android:textSize="22sp"
+                android:visibility="gone" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/favoritesMenuText"
+        <LinearLayout
+            android:id="@+id/favoritesMenuContainer"
             android:layout_width="wrap_content"
-            android:layout_height="38dp"
-            android:gravity="center_vertical"
-            android:textSize="22sp"
-            android:visibility="gone"
-            android:paddingStart="0dp"
-            android:paddingEnd="10dp"
-            android:textColor="@color/sidebar_text"
-            android:text="@string/favorites" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:orientation="horizontal"
+            android:layout_below="@+id/searchMenuContainer"
+            android:background="@drawable/menu_item_container">
 
-    <LinearLayout
-        android:id="@+id/aboutMenuContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:focusable="true"
-        android:orientation="horizontal"
-        android:background="@drawable/menu_item_container">
+            <ImageView
+                android:id="@+id/favoritesMenuIcon"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:src="@drawable/favorites" />
 
-        <ImageView
-            android:id="@+id/aboutMenuIcon"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
-            android:src="@drawable/settings" />
+            <TextView
+                android:id="@+id/favoritesMenuText"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:gravity="center_vertical"
+                android:textSize="22sp"
+                android:visibility="gone"
+                android:paddingStart="0dp"
+                android:paddingEnd="10dp"
+                android:textColor="@color/sidebar_text"
+                android:text="@string/favorites" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/aboutMenuText"
+        <LinearLayout
+            android:id="@+id/aboutMenuContainer"
             android:layout_width="wrap_content"
-            android:layout_height="38dp"
-            android:gravity="center_vertical"
-            android:textSize="22sp"
-            android:visibility="gone"
-            android:paddingStart="0dp"
-            android:paddingEnd="10dp"
-            android:textColor="@color/sidebar_text"
-            android:text="@string/about" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/menu_item_container">
+
+            <ImageView
+                android:id="@+id/aboutMenuIcon"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:src="@drawable/settings" />
+
+            <TextView
+                android:id="@+id/aboutMenuText"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:gravity="center_vertical"
+                android:textSize="22sp"
+                android:visibility="gone"
+                android:paddingStart="0dp"
+                android:paddingEnd="10dp"
+                android:textColor="@color/sidebar_text"
+                android:text="@string/about" />
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </LinearLayout>

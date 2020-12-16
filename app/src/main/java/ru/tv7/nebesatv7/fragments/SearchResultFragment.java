@@ -303,7 +303,7 @@ public class SearchResultFragment extends Fragment implements ArchiveDataLoadedL
                 int focusedId = focusedView.getId();
 
                 if (focusedId == R.id.searchResultContainer || focusedId == R.id.searchResultTitle) {
-                    Sidebar.showMenuTexts(menuTexts);
+                    Sidebar.showMenuTexts(menuTexts, root);
                     Sidebar.setFocusToMenu(root, R.id.searchMenuContainer);
                 }
             }
@@ -376,7 +376,7 @@ public class SearchResultFragment extends Fragment implements ArchiveDataLoadedL
      * Handles focus out from side menu.
      */
     private void focusOutFromSideMenu() {
-        Sidebar.hideMenuTexts(menuTexts);
+        Sidebar.hideMenuTexts(menuTexts, root);
         Sidebar.setSelectedMenuItem(root, R.id.searchMenuContainer);
 
         if (hitCount > 0)  {

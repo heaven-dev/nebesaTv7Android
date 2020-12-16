@@ -480,7 +480,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                     colFocusWas.put(focusedRow, pos);
                 }
                 else {
-                    Sidebar.showMenuTexts(menuTexts);
+                    Sidebar.showMenuTexts(menuTexts, root);
                     Sidebar.setFocusToMenu(root, R.id.archiveMenuContainer);
                 }
             }
@@ -574,7 +574,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
      * Handles focus out from side menu.
      */
     private void focusOutFromSideMenu() {
-        Sidebar.hideMenuTexts(menuTexts);
+        Sidebar.hideMenuTexts(menuTexts, root);
         Sidebar.setSelectedMenuItem(root, R.id.archiveMenuContainer);
 
         setFocusToColumn(0);

@@ -311,7 +311,7 @@ public class CategoriesFragment extends Fragment implements ArchiveDataLoadedLis
                 }
 
                 if (!Sidebar.isSideMenuOpen(menuTexts)) {
-                    Sidebar.showMenuTexts(menuTexts);
+                    Sidebar.showMenuTexts(menuTexts, root);
                     Sidebar.setFocusToMenu(root, R.id.archiveMenuContainer);
                 }
             }
@@ -393,7 +393,7 @@ public class CategoriesFragment extends Fragment implements ArchiveDataLoadedLis
      * Handles focus out from side menu.
      */
     private void focusOutFromSideMenu() {
-        Sidebar.hideMenuTexts(menuTexts);
+        Sidebar.hideMenuTexts(menuTexts, root);
         Sidebar.setSelectedMenuItem(root, R.id.archiveMenuContainer);
 
         Utils.requestFocus(categoriesScroll);

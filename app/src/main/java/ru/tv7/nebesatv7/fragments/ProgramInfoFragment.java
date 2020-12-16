@@ -339,7 +339,7 @@ public class ProgramInfoFragment extends Fragment {
                     Utils.requestFocus(startButton);
                 }
                 else if (focusedId == R.id.startButton || focusedId == R.id.favoriteButton && !videoAvailable || focusedId == R.id.backgroundImage) {
-                    Sidebar.showMenuTexts(menuTexts);
+                    Sidebar.showMenuTexts(menuTexts, root);
                     Sidebar.setFocusToMenu(root, R.id.archiveMenuContainer);
                 }
             }
@@ -405,7 +405,7 @@ public class ProgramInfoFragment extends Fragment {
      * Handles focus out from side menu.
      */
     private void focusOutFromSideMenu() {
-        Sidebar.hideMenuTexts(menuTexts);
+        Sidebar.hideMenuTexts(menuTexts, root);
         Sidebar.setSelectedMenuItem(root, R.id.archiveMenuContainer);
 
         if (videoAvailable) {
