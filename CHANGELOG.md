@@ -1,3 +1,14 @@
+# 17.12.2020 11:56
+
+### Bug Fixes
+
+* none
+
+### Features
+
+* App package name changed from ru.tv7.nebesatv7 to ru.tv7.nebesa.
+
+
 # 16.12.2020 11:56
 
 ### Bug Fixes
