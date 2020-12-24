@@ -41,6 +41,11 @@ abstract public class Constants {
     public static final float FAVORITES_TEXT_ANIMATION_END = 0.0f;
     public static final long FAVORITES_TEXT_ANIMATION_START_OFFSET = 500;
 
+    public static final int PAUSE_START_ICON_ANIMATION_DURATION = 1100;
+    public static final float PAUSE_START_ICON_ANIMATION_START = 1.0f;
+    public static final float PAUSE_START_ICON_ANIMATION_END = 0.0f;
+    public static final long PAUSE_START_ICON_ANIMATION_START_OFFSET = 250;
+
     public static final String TV_MAIN_FRAGMENT = "tv_main_fragment";
     public static final String ARCHIVE_MAIN_FRAGMENT = "archive_main_fragment";
     public static final String TV_PLAYER_FRAGMENT = "tv_player_fragment";

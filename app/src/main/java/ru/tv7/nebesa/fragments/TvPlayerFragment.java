@@ -8,6 +8,10 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -43,6 +47,10 @@ import static ru.tv7.nebesa.helpers.Constants.DASH_WITH_SPACES;
 import static ru.tv7.nebesa.helpers.Constants.DOT;
 import static ru.tv7.nebesa.helpers.Constants.GUIDE_TIMER_TIMEOUT;
 import static ru.tv7.nebesa.helpers.Constants.LOG_TAG;
+import static ru.tv7.nebesa.helpers.Constants.PAUSE_START_ICON_ANIMATION_DURATION;
+import static ru.tv7.nebesa.helpers.Constants.PAUSE_START_ICON_ANIMATION_END;
+import static ru.tv7.nebesa.helpers.Constants.PAUSE_START_ICON_ANIMATION_START;
+import static ru.tv7.nebesa.helpers.Constants.PAUSE_START_ICON_ANIMATION_START_OFFSET;
 import static ru.tv7.nebesa.helpers.Constants.PIPE_WITH_SPACES;
 import static ru.tv7.nebesa.helpers.Constants.SPACE;
 import static ru.tv7.nebesa.helpers.Constants.TV_MAIN_FRAGMENT;
@@ -476,6 +484,8 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
     private void play() {
         paused = false;
         exoPlayer.setPlayWhenReady(true);
+
+        this.animatePauseStartIcon(false);
     }
 
     /**
@@ -485,6 +495,8 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
         if (!paused) {
             paused = true;
             exoPlayer.setPlayWhenReady(!exoPlayer.getPlayWhenReady());
+
+            this.animatePauseStartIcon(true);
         }
     }
 
@@ -495,6 +507,38 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
         if (exoPlayer != null) {
             exoPlayer.release();
             exoPlayer = null;
+        }
+    }
+
+    /**
+     * Show, hides and animates pause/start icon.
+     * @param pause
+     */
+    private void animatePauseStartIcon(boolean pause) {
+        ImageView pauseStartIcon = root.findViewById(R.id.pauseStartIcon);
+        if (pauseStartIcon != null) {
+            pauseStartIcon.setImageResource(pause ? R.drawable.pause : R.drawable.start);
+            pauseStartIcon.setVisibility(View.VISIBLE);
+
+            Animation animation = new AlphaAnimation(PAUSE_START_ICON_ANIMATION_START, PAUSE_START_ICON_ANIMATION_END);
+            animation.setInterpolator(new AccelerateInterpolator());
+            animation.setStartOffset(PAUSE_START_ICON_ANIMATION_START_OFFSET);
+            animation.setDuration(PAUSE_START_ICON_ANIMATION_DURATION);
+
+            animation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {}
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    pauseStartIcon.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {}
+            });
+
+            pauseStartIcon.startAnimation(animation);
         }
     }
 }

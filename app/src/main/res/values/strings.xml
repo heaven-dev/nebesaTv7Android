@@ -3,6 +3,7 @@
     <string name="tv7_logo" translatable="false">TV7</string>
     <string name="toast_something_went_wrong" translatable="false">Something went wrong :-(</string>
     <string name="start_stream">Start</string>
+    <string name="pause_start_stream">Pause/Start</string>
     <string name="arrows">Arrows</string>
     <string name="arrow">Arrow</string>
 

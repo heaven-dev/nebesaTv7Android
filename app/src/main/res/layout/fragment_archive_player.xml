@@ -23,71 +23,81 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-        <RelativeLayout
-            android:id="@+id/controls"
+    <RelativeLayout
+        android:id="@+id/controls"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="match_parent">
+
+        <View
+            android:id="@+id/gradient"
             android:layout_width="match_parent"
-            android:visibility="gone"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:alpha="0.8"
+            android:background="@drawable/gradient_background"/>
 
-            <View
-                android:id="@+id/gradient"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:alpha="0.8"
-                android:background="@drawable/gradient_background"/>
+        <TextView
+            android:id="@+id/seriesAndName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/episode"
+            android:layout_marginBottom="8dp"
+            android:text=""
+            android:textColor="@color/player_text"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:textSize="22sp" />
 
-            <TextView
-                android:id="@+id/seriesAndName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/episode"
-                android:layout_marginBottom="8dp"
-                android:text=""
-                android:textColor="@color/player_text"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:textSize="22sp" />
+        <TextView
+            android:id="@+id/episode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/positionAndDurationTimes"
+            android:text=""
+            android:textColor="@color/player_text"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/episode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/positionAndDurationTimes"
-                android:text=""
-                android:textColor="@color/player_text"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:textSize="18sp" />
+        <TextView
+            android:id="@+id/positionAndDurationTimes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="20sp"
+            android:layout_alignParentEnd="true"
+            android:layout_above="@id/videoProgressBar"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:textColor="@color/player_text" />
 
-            <TextView
-                android:id="@+id/positionAndDurationTimes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textSize="20sp"
-                android:layout_alignParentEnd="true"
-                android:layout_above="@id/videoProgressBar"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:textColor="@color/player_text" />
+        <ProgressBar
+            android:id="@+id/videoProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:max="100"
+            android:layout_marginTop="10dp"
+            android:layout_centerInParent="true"
+            android:indeterminateTintMode="src_atop"
+            android:indeterminateTint="@color/tv7_default"
+            android:progressBackgroundTint="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="18dp"
+            android:scaleY="2.5"/>
 
-            <ProgressBar
-                android:id="@+id/videoProgressBar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:max="100"
-                android:layout_marginTop="10dp"
-                android:layout_centerInParent="true"
-                android:indeterminateTintMode="src_atop"
-                android:indeterminateTint="@color/tv7_default"
-                android:progressBackgroundTint="@color/white"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="18dp"
-                android:scaleY="2.5"/>
+    </RelativeLayout>
 
-        </RelativeLayout>
+    <ImageView
+        android:id="@+id/pauseStartIcon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:background="@drawable/pause_start_icon_background"
+        android:contentDescription="@string/pause_start_stream"
+        android:src="@drawable/pause" />
 
 </RelativeLayout>

@@ -10,6 +10,10 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -65,6 +69,10 @@ import static ru.tv7.nebesa.helpers.Constants.LINK_PATH;
 import static ru.tv7.nebesa.helpers.Constants.LOG_TAG;
 import static ru.tv7.nebesa.helpers.Constants.ONE_STR;
 import static ru.tv7.nebesa.helpers.Constants.PATH;
+import static ru.tv7.nebesa.helpers.Constants.PAUSE_START_ICON_ANIMATION_DURATION;
+import static ru.tv7.nebesa.helpers.Constants.PAUSE_START_ICON_ANIMATION_END;
+import static ru.tv7.nebesa.helpers.Constants.PAUSE_START_ICON_ANIMATION_START;
+import static ru.tv7.nebesa.helpers.Constants.PAUSE_START_ICON_ANIMATION_START_OFFSET;
 import static ru.tv7.nebesa.helpers.Constants.PNID_PARAM;
 import static ru.tv7.nebesa.helpers.Constants.QUESTION_MARK;
 import static ru.tv7.nebesa.helpers.Constants.SERIES_AND_NAME;
@@ -415,7 +423,12 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
                         this.cancelVideoControlsTimer();
                     }
 
-                    this.play();
+                    if (paused) {
+                        this.play();
+                    }
+                    else {
+                        this.hideControls();
+                    }
                 }
                 else {
                     this.toPreviousPage();
@@ -810,6 +823,8 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
     private void play() {
         this.hideControls();
         exoPlayer.setPlayWhenReady(true);
+
+        this.animatePauseStartIcon(false);
     }
 
     /**
@@ -819,6 +834,8 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
         if (!paused) {
             paused = true;
             exoPlayer.setPlayWhenReady(!exoPlayer.getPlayWhenReady());
+
+            this.animatePauseStartIcon(true);
         }
     }
 
@@ -827,5 +844,37 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
      */
     private void seekTo() {
         exoPlayer.seekTo(videoPosition * 1000);
+    }
+
+    /**
+     * Show, hides and animates pause/start icon.
+     * @param pause
+     */
+    private void animatePauseStartIcon(boolean pause) {
+        ImageView pauseStartIcon = root.findViewById(R.id.pauseStartIcon);
+        if (pauseStartIcon != null) {
+            pauseStartIcon.setImageResource(pause ? R.drawable.pause : R.drawable.start);
+            pauseStartIcon.setVisibility(View.VISIBLE);
+
+            Animation animation = new AlphaAnimation(PAUSE_START_ICON_ANIMATION_START, PAUSE_START_ICON_ANIMATION_END);
+            animation.setInterpolator(new AccelerateInterpolator());
+            animation.setStartOffset(PAUSE_START_ICON_ANIMATION_START_OFFSET);
+            animation.setDuration(PAUSE_START_ICON_ANIMATION_DURATION);
+
+            animation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {}
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    pauseStartIcon.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {}
+            });
+
+            pauseStartIcon.startAnimation(animation);
+        }
     }
 }

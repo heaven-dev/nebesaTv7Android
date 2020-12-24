@@ -131,4 +131,15 @@
         </LinearLayout>
 
     </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/pauseStartIcon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:background="@drawable/pause_start_icon_background"
+        android:contentDescription="@string/pause_start_stream"
+        android:src="@drawable/pause" />
+
 </RelativeLayout>
