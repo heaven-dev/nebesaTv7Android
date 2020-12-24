@@ -45,6 +45,7 @@ import static ru.tv7.nebesa.helpers.Constants.GUIDE_TIMER_TIMEOUT;
 import static ru.tv7.nebesa.helpers.Constants.LOG_TAG;
 import static ru.tv7.nebesa.helpers.Constants.PIPE_WITH_SPACES;
 import static ru.tv7.nebesa.helpers.Constants.SPACE;
+import static ru.tv7.nebesa.helpers.Constants.TV_MAIN_FRAGMENT;
 
 /**
  * TV player fragment. Uses the ExoPlayer to show HLS stream.
@@ -63,6 +64,7 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
 
     private SimpleExoPlayer exoPlayer = null;
     private boolean isPlaying = false;
+    private boolean paused = false;
 
     /**
      * Default constructor.
@@ -151,6 +153,17 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
     }
 
     /**
+     * Home button pressed - release player and timer.
+     */
+    public void onHomeButtonPressed() {
+        this.releasePlayer();
+        this.cancelTimer();
+
+        sharedCacheViewModel.clearPageHistory();
+        Utils.toPage(TV_MAIN_FRAGMENT, getActivity(), true, false,null);
+    }
+
+    /**
      * Handles keydown events.
      * @param keyCode
      * @param events
@@ -213,6 +226,24 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
                     Log.d(LOG_TAG, "TvPlayerFragment.onKeyDown(): KEYCODE_DPAD_UP: keyCode: " + keyCode);
                 }
             }
+            else if (keyCode == KeyEvent.KEYCODE_MEDIA_PAUSE) {
+                if (BuildConfig.DEBUG) {
+                    Log.d(LOG_TAG, "TvPlayerFragment.onKeyDown(): KEYCODE_MEDIA_PAUSE: keyCode: " + keyCode);
+                }
+
+                if (!paused) {
+                    this.pause();
+                }
+            }
+            else if (keyCode == KeyEvent.KEYCODE_MEDIA_PLAY) {
+                if (BuildConfig.DEBUG) {
+                    Log.d(LOG_TAG, "TvPlayerFragment.onKeyDown(): KEYCODE_MEDIA_PLAY: keyCode: " + keyCode);
+                }
+
+                if (paused) {
+                    this.play();
+                }
+            }
             else if (keyCode == KeyEvent.KEYCODE_BACK) {
                 if (BuildConfig.DEBUG) {
                     Log.d(LOG_TAG, "TvPlayerFragment.onKeyDown(): KEYCODE_BACK: keyCode: " + keyCode);
@@ -225,6 +256,8 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
                 else {
                     // exit from video player fragment
                     this.releasePlayer();
+                    this.cancelTimer();
+
                     String page = sharedCacheViewModel.getPageFromHistory();
                     if (page != null) {
                         Utils.toPage(page, getActivity(), true, false,null);
@@ -435,6 +468,24 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
                 }
             }
         });
+    }
+
+    /**
+     * Starts stream.
+     */
+    private void play() {
+        paused = false;
+        exoPlayer.setPlayWhenReady(true);
+    }
+
+    /**
+     * Pause stream.
+     */
+    private void pause() {
+        if (!paused) {
+            paused = true;
+            exoPlayer.setPlayWhenReady(!exoPlayer.getPlayWhenReady());
+        }
     }
 
     /**

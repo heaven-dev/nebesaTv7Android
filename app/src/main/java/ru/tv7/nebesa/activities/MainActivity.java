@@ -174,6 +174,26 @@ public class MainActivity extends AppCompatActivity implements EpgDataLoadedList
     }
 
     /**
+     * Remote home button pressed. If playback ongoing - stop it.
+     */
+    @Override
+    public void onUserLeaveHint()
+    {
+        super.onUserLeaveHint();
+
+        Fragment fragment = this.getVisibleFragment();
+        if (fragment != null) {
+            if (fragment instanceof TvPlayerFragment) {
+                ((TvPlayerFragment) fragment).onHomeButtonPressed();
+            }
+            else if (fragment instanceof ArchivePlayerFragment) {
+                // Archive player fragment visible
+                ((ArchivePlayerFragment) fragment).onHomeButtonPressed();
+            }
+        }
+    }
+
+    /**
      * Callback to success epg date load.
      */
     @Override
@@ -254,7 +274,7 @@ public class MainActivity extends AppCompatActivity implements EpgDataLoadedList
             }
         }
 
-        return visibleFragments.get(0);
+        return visibleFragments.size() > 0 ? visibleFragments.get(0) : null;
     }
 
     /**

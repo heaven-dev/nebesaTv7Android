@@ -38,7 +38,13 @@ public class SharedCacheViewModel extends ViewModel {
 
     public void setPageToHistory(String page) {
         if (pageHistory != null) {
-            this.pageHistory.push(page);
+            pageHistory.push(page);
+        }
+    }
+
+    public void clearPageHistory() {
+        if (pageHistory != null) {
+            pageHistory.clear();
         }
     }
 
