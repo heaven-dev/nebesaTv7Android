@@ -352,6 +352,9 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
 
                     this.updateControls(videoPosition);
                 }
+                else {
+                    this.showControls();
+                }
             }
             else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
                 if (BuildConfig.DEBUG) {
@@ -374,15 +377,26 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
 
                     this.updateControls(videoPosition);
                 }
+                else {
+                    this.showControls();
+                }
             }
             else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
                 if (BuildConfig.DEBUG) {
                     Log.d(LOG_TAG, "ArchivePlayerFragment.onKeyDown(): KEYCODE_DPAD_DOWN: keyCode: " + keyCode);
                 }
+
+                if (!controlsVisible) {
+                    this.showControls();
+                }
             }
             else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
                 if (BuildConfig.DEBUG) {
                     Log.d(LOG_TAG, "ArchivePlayerFragment.onKeyDown(): KEYCODE_DPAD_UP: keyCode: " + keyCode);
+                }
+
+                if (!controlsVisible) {
+                    this.showControls();
                 }
             }
             else if (keyCode == KeyEvent.KEYCODE_MEDIA_PAUSE) {

@@ -209,9 +209,18 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
                     Log.d(LOG_TAG, "TvPlayerFragment.onKeyDown(): KEYCODE_DPAD_LEFT: keyCode: " + keyCode);
                 }
 
-                if (guideIndex > 0 && isTopGuideBarVisible()) {
-                    guideIndex--;
+                if (isTopGuideBarVisible()) {
+                    if (guideIndex > 0) {
+                        guideIndex--;
+                        this.setTopBarContent(viewModel.getEpgItemByIndex(guideIndex));
+                    }
+                }
+                else {
+                    // show top bar
+                    guideIndex = 0;
+
                     this.setTopBarContent(viewModel.getEpgItemByIndex(guideIndex));
+                    this.showGuideTopBar();
                 }
             }
             else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
@@ -219,19 +228,44 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
                     Log.d(LOG_TAG, "TvPlayerFragment.onKeyDown(): KEYCODE_DPAD_RIGHT: keyCode: " + keyCode);
                 }
 
-                if (viewModel.isListItemInIndex(guideIndex + 1) && isTopGuideBarVisible()) {
-                    guideIndex++;
+                if (isTopGuideBarVisible()) {
+                    if (viewModel.isListItemInIndex(guideIndex + 1)) {
+                        guideIndex++;
+                        this.setTopBarContent(viewModel.getEpgItemByIndex(guideIndex));
+                    }
+                }
+                else {
+                    // show top bar
+                    guideIndex = 0;
+
                     this.setTopBarContent(viewModel.getEpgItemByIndex(guideIndex));
+                    this.showGuideTopBar();
                 }
             }
             else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
                 if (BuildConfig.DEBUG) {
                     Log.d(LOG_TAG, "TvPlayerFragment.onKeyDown(): KEYCODE_DPAD_DOWN: keyCode: " + keyCode);
                 }
+
+                if (!isTopGuideBarVisible()) {
+                    // show top bar
+                    guideIndex = 0;
+
+                    this.setTopBarContent(viewModel.getEpgItemByIndex(guideIndex));
+                    this.showGuideTopBar();
+                }
             }
             else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
                 if (BuildConfig.DEBUG) {
                     Log.d(LOG_TAG, "TvPlayerFragment.onKeyDown(): KEYCODE_DPAD_UP: keyCode: " + keyCode);
+                }
+
+                if (!isTopGuideBarVisible()) {
+                    // show top bar
+                    guideIndex = 0;
+
+                    this.setTopBarContent(viewModel.getEpgItemByIndex(guideIndex));
+                    this.showGuideTopBar();
                 }
             }
             else if (keyCode == KeyEvent.KEYCODE_MEDIA_PAUSE) {

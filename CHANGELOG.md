@@ -1,10 +1,11 @@
-# 24.12.2020 09:45
+# 25.12.2020 11:17
 
 ### Bug Fixes
 
-* When home button of the remote control is pressed and video is playing the application stops the video and release the video player so now
-  playing of the application is not shown on the home screen of the TV.
+* When home button of the remote control is pressed and video is playing the application stops the video and release the video player. That is why the NOW
+  PLAYING of the application is not shown on the home screen of the TV.
 * Added support to pause and play buttons of the remote control.
+* Added DPAD buttons functionality to the video views.
 
 ### Features
 
