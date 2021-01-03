@@ -80,7 +80,6 @@ import static ru.tv7.nebesa.helpers.Constants.SLASH_WITH_SPACES;
 import static ru.tv7.nebesa.helpers.Constants.SUBTITLES_URL;
 import static ru.tv7.nebesa.helpers.Constants.TRANSLATION_LANG_ID;
 import static ru.tv7.nebesa.helpers.Constants.TV_BRAND;
-import static ru.tv7.nebesa.helpers.Constants.TV_MAIN_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.VIDEO_CONTROLS_TIMEOUT;
 import static ru.tv7.nebesa.helpers.Constants.VIDEO_POSITION_TIMEOUT;
 import static ru.tv7.nebesa.helpers.Constants.VIDEO_SEEK_STEP_SECONDS;
@@ -279,15 +278,22 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
     }
 
     /**
-     * Home button pressed - release player and timers.
+     * Home button pressed => pause.
      */
     public void onHomeButtonPressed() {
-        this.releasePlayer();
-        this.cancelVideoProgressTimer();
+        if (!controlsVisible) {
+            this.showControls();
+        }
+
         this.cancelVideoControlsTimer();
 
-        sharedCacheViewModel.clearPageHistory();
-        Utils.toPage(TV_MAIN_FRAGMENT, getActivity(), true, false,null);
+        if (seeking) {
+            this.seekTo();
+        }
+
+        if (!paused) {
+            this.pause();
+        }
     }
 
     /**
