@@ -430,6 +430,25 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
                     this.play();
                 }
             }
+            else if (keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE) {
+                if (BuildConfig.DEBUG) {
+                    Log.d(LOG_TAG, "ArchivePlayerFragment.onKeyDown(): KEYCODE_MEDIA_PLAY_PAUSE: keyCode: " + keyCode);
+                }
+
+                if (paused) {
+                    if (seeking) {
+                        this.seekTo();
+                    }
+
+                    this.play();
+                }
+                else {
+                    this.showControls();
+                    this.cancelVideoControlsTimer();
+
+                    this.pause();
+                }
+            }
             else if (keyCode == KeyEvent.KEYCODE_BACK) {
                 if (BuildConfig.DEBUG) {
                     Log.d(LOG_TAG, "ArchivePlayerFragment.onKeyDown(): KEYCODE_BACK: keyCode: " + keyCode);

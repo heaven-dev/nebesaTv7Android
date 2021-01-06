@@ -286,6 +286,18 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
                     this.play();
                 }
             }
+            else if (keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE) {
+                if (BuildConfig.DEBUG) {
+                    Log.d(LOG_TAG, "TvPlayerFragment.onKeyDown(): KEYCODE_MEDIA_PLAY_PAUSE: keyCode: " + keyCode);
+                }
+
+                if (paused) {
+                    this.play();
+                }
+                else {
+                    this.pause();
+                }
+            }
             else if (keyCode == KeyEvent.KEYCODE_BACK) {
                 if (BuildConfig.DEBUG) {
                     Log.d(LOG_TAG, "TvPlayerFragment.onKeyDown(): KEYCODE_BACK: keyCode: " + keyCode);
