@@ -34,12 +34,14 @@ import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ID;
 import static ru.tv7.nebesa.helpers.Constants.CATEGORY_NAME;
 import static ru.tv7.nebesa.helpers.Constants.CATEGORY_PROGRAMS_SEARCH_LIMIT;
 import static ru.tv7.nebesa.helpers.Constants.COLON_WITH_SPACE;
+import static ru.tv7.nebesa.helpers.Constants.ID;
 import static ru.tv7.nebesa.helpers.Constants.LOG_TAG;
 import static ru.tv7.nebesa.helpers.Constants.NO_MORE_PAGING_DATA;
 import static ru.tv7.nebesa.helpers.Constants.PARENT_NAME;
 import static ru.tv7.nebesa.helpers.Constants.PIPE_WITH_SPACES;
 import static ru.tv7.nebesa.helpers.Constants.PLAY;
 import static ru.tv7.nebesa.helpers.Constants.PROGRAM_INFO_FRAGMENT;
+import static ru.tv7.nebesa.helpers.Constants.PROGRAM_INFO_METHOD;
 import static ru.tv7.nebesa.helpers.Constants.SERIES_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.ZERO_STR;
 import static ru.tv7.nebesa.helpers.PageStateItem.DATA;
@@ -213,7 +215,21 @@ public class CategoriesFragment extends Fragment implements ArchiveDataLoadedLis
                 Log.d(LOG_TAG, "CategoriesFragment.onArchiveDataLoaded(): Archive data loaded. Type: " + type);
             }
 
-            this.addElements(jsonArray);
+            if (type.equals(PROGRAM_INFO_METHOD)) {
+                Utils.hideProgressBar(root, R.id.categoriesProgress);
+
+                if (jsonArray != null && jsonArray.length() == 1) {
+                    JSONObject obj = jsonArray.getJSONObject(0);
+                    if (obj != null) {
+                        sharedCacheViewModel.setSelectedProgram(obj);
+
+                        Utils.toPage(PROGRAM_INFO_FRAGMENT, getActivity(), true, false, null);
+                    }
+                }
+            }
+            else {
+                this.addElements(jsonArray);
+            }
         }
         catch(Exception e) {
             if (BuildConfig.DEBUG) {
@@ -288,7 +304,6 @@ public class CategoriesFragment extends Fragment implements ArchiveDataLoadedLis
                         }
 
                         sharedCacheViewModel.setPageToHistory(CATEGORIES_FRAGMENT);
-                        sharedCacheViewModel.setSelectedProgram(obj);
 
                         sharedCacheViewModel.setCategoriesPageStateItem(new PageStateItem(
                                 categoryGridAdapter.getElements(),
@@ -296,12 +311,13 @@ public class CategoriesFragment extends Fragment implements ArchiveDataLoadedLis
                                 dataLength,
                                 offset));
 
-                        String toPage = PROGRAM_INFO_FRAGMENT;
                         if (this.isSeries(obj)) {
-                            toPage = SERIES_FRAGMENT;
+                            sharedCacheViewModel.setSelectedProgram(obj);
+                            Utils.toPage(SERIES_FRAGMENT, getActivity(), true, false,null);
                         }
-
-                        Utils.toPage(toPage, getActivity(), true, false,null);
+                        else {
+                            this.loadProgramInfo(obj);
+                        }
                     }
                 }
             }
@@ -410,6 +426,19 @@ public class CategoriesFragment extends Fragment implements ArchiveDataLoadedLis
 
         Utils.showProgressBar(root, R.id.categoriesProgress);
         archiveViewModel.getCategoryPrograms(categoryId, CATEGORY_PROGRAMS_SEARCH_LIMIT, offset, this);
+    }
+
+    /**
+     * Calls get program info method.
+     * @param obj
+     * @throws Exception
+     */
+    private void loadProgramInfo(JSONObject obj) throws Exception {
+        Utils.showProgressBar(root, R.id.categoriesProgress);
+        String programId = Utils.getValue(obj, ID);
+        if (programId != null) {
+            archiveViewModel.getProgramInfo(programId, this);
+        }
     }
 
     /**

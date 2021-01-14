@@ -32,6 +32,8 @@ import ru.tv7.nebesa.helpers.Utils;
 import ru.tv7.nebesa.model.SharedCacheViewModel;
 
 import static ru.tv7.nebesa.helpers.Constants.ARCHIVE_PLAYER_FRAGMENT;
+import static ru.tv7.nebesa.helpers.Constants.ASPECT_RATIO;
+import static ru.tv7.nebesa.helpers.Constants.ASPECT_RATIO_16_9;
 import static ru.tv7.nebesa.helpers.Constants.BROADCAST_DATE_TIME;
 import static ru.tv7.nebesa.helpers.Constants.CAPTION;
 import static ru.tv7.nebesa.helpers.Constants.COLON_WITH_SPACE;
@@ -246,6 +248,20 @@ public class ProgramInfoFragment extends Fragment {
                         }
                         else {
                             episodeNbr.setVisibility(View.GONE);
+                        }
+                    }
+
+                    TextView aspectRatio = root.findViewById(R.id.aspectRatio);
+                    if (aspectRatio != null) {
+                        valueText = Utils.getValue(selectedProgram, ASPECT_RATIO);
+                        if (valueText != null && valueText.length() > 0 && !valueText.equals(ZERO_STR) && !valueText.equals(ASPECT_RATIO_16_9)) {
+                            titleText = resources.getString(R.string.aspect_ratio);
+                            valueText = titleText + COLON_WITH_SPACE + valueText;
+
+                            aspectRatio.setText(valueText);
+                        }
+                        else {
+                            aspectRatio.setVisibility(View.GONE);
                         }
                     }
 

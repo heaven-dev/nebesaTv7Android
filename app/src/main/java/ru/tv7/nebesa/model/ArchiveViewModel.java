@@ -26,6 +26,7 @@ import ru.tv7.nebesa.interfaces.ArchiveDataLoadedListener;
 import static ru.tv7.nebesa.helpers.Constants.AMPERSAND;
 import static ru.tv7.nebesa.helpers.Constants.ARCHIVE_BASE_URL;
 import static ru.tv7.nebesa.helpers.Constants.ARCHIVE_LANGUAGE;
+import static ru.tv7.nebesa.helpers.Constants.ASPECT_RATIO;
 import static ru.tv7.nebesa.helpers.Constants.BROADCAST_DATE;
 import static ru.tv7.nebesa.helpers.Constants.BROADCAST_DATE_TIME;
 import static ru.tv7.nebesa.helpers.Constants.BROADCAST_RECOMMENDATIONS_METHOD;
@@ -537,44 +538,44 @@ public class ArchiveViewModel extends ViewModel {
         }
 
         JsonObjectRequest jsonRequest = new JsonObjectRequest(
-                Request.Method.GET,
-                url,
-                null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            if (BuildConfig.DEBUG) {
-                                Log.d(LOG_TAG, "ArchiveViewModel.runQuery(): onResponse(): " + response.toString());
+            Request.Method.GET,
+            url,
+            null,
+            new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+                        if (BuildConfig.DEBUG) {
+                            Log.d(LOG_TAG, "ArchiveViewModel.runQuery(): onResponse(): " + response.toString());
+                        }
+
+                        if (archiveDataLoadedListener != null) {
+                            if (type.equals(PARENT_CATEGORIES_METHOD) || type.equals(SUB_CATEGORIES_METHOD)) {
+                                JSONArray filtered = filterCategoryResponse(response, type);
+                                if (type.equals(PARENT_CATEGORIES_METHOD)) {
+                                    parentCategories = new ArchiveDataCacheItem(filtered);
+                                }
+                                else {
+                                    subCategories = new ArchiveDataCacheItem(filtered);
+                                }
+
+                                archiveDataLoadedListener.onArchiveDataLoaded(filtered, type);
                             }
+                            else if (type.equals(TRANSLATION_METHOD) || type.equals(SERIES_INFO_METHOD)) {
+                                JSONArray filtered = response.getJSONArray(type);
 
-                            if (archiveDataLoadedListener != null) {
-                                if (type.equals(PARENT_CATEGORIES_METHOD) || type.equals(SUB_CATEGORIES_METHOD)) {
-                                    JSONArray filtered = filterCategoryResponse(response, type);
-                                    if (type.equals(PARENT_CATEGORIES_METHOD)) {
-                                        parentCategories = new ArchiveDataCacheItem(filtered);
-                                    }
-                                    else {
-                                        subCategories = new ArchiveDataCacheItem(filtered);
-                                    }
+                                archiveDataLoadedListener.onArchiveDataLoaded(filtered, type);
+                            }
+                            else if (type.equals(GUIDE_DATE_METHOD)) {
+                                JSONArray filtered = filterGuideByDateResponse(response, type, (Integer)data);
 
-                                    archiveDataLoadedListener.onArchiveDataLoaded(filtered, type);
-                                }
-                                else if (type.equals(TRANSLATION_METHOD) || type.equals(SERIES_INFO_METHOD)) {
-                                    JSONArray filtered = response.getJSONArray(type);
+                                archiveDataLoadedListener.onArchiveDataLoaded(filtered, type);
+                            }
+                            else if (type.equals(SEARCH_METHOD)) {
+                                JSONArray filtered = filterResponse(response, RESULTS);
 
-                                    archiveDataLoadedListener.onArchiveDataLoaded(filtered, type);
-                                }
-                                else if (type.equals(GUIDE_DATE_METHOD)) {
-                                    JSONArray filtered = filterGuideByDateResponse(response, type, (Integer)data);
-
-                                    archiveDataLoadedListener.onArchiveDataLoaded(filtered, type);
-                                }
-                                else if (type.equals(SEARCH_METHOD)) {
-                                    JSONArray filtered = filterResponse(response, RESULTS);
-
-                                    archiveDataLoadedListener.onArchiveDataLoaded(filtered, type);
-                                }
+                                archiveDataLoadedListener.onArchiveDataLoaded(filtered, type);
+                            }
                                 else {
                                     JSONArray filtered = filterResponse(response, type);
 
@@ -654,14 +655,16 @@ public class ArchiveViewModel extends ViewModel {
             setValue(respObj, SERIES_NAME, this.getValue(sourceObj, SERIES_NAME), false);
             setValue(respObj, SNAME, this.getValue(sourceObj, SNAME), false);
 
-            String firstBroadcast = getValue(sourceObj, FIRST_BROADCAST);
+            String firstBroadcast = this.getValue(sourceObj, FIRST_BROADCAST);
             if (firstBroadcast == null) {
-                firstBroadcast = getValue(sourceObj, START_DATE);
+                firstBroadcast = this.getValue(sourceObj, START_DATE);
             }
 
-            setValue(respObj, BROADCAST_DATE_TIME, getDateTimeByTimeInMs(firstBroadcast), false);
-            setValue(respObj, BROADCAST_DATE, getDateByTimeInMs(firstBroadcast), false);
+            setValue(respObj, BROADCAST_DATE_TIME, this.getDateTimeByTimeInMs(firstBroadcast), false);
+            setValue(respObj, BROADCAST_DATE, this.getDateByTimeInMs(firstBroadcast), false);
             setValue(respObj, DURATION, Utils.getTimeStampByDurationMs(this.getValue(sourceObj, DURATION)), false);
+
+            setValue(respObj, ASPECT_RATIO, this.getValue(sourceObj, ASPECT_RATIO), false);
 
             String seriesName = this.getValue(respObj, SERIES_NAME);
             if (seriesName == null) {

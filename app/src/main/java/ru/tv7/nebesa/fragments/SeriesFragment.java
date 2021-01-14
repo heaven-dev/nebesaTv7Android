@@ -31,9 +31,11 @@ import ru.tv7.nebesa.model.ArchiveViewModel;
 import ru.tv7.nebesa.model.SharedCacheViewModel;
 
 import static ru.tv7.nebesa.helpers.Constants.COLON_WITH_SPACE;
+import static ru.tv7.nebesa.helpers.Constants.ID;
 import static ru.tv7.nebesa.helpers.Constants.LOG_TAG;
 import static ru.tv7.nebesa.helpers.Constants.NO_MORE_PAGING_DATA;
 import static ru.tv7.nebesa.helpers.Constants.PROGRAM_INFO_FRAGMENT;
+import static ru.tv7.nebesa.helpers.Constants.PROGRAM_INFO_METHOD;
 import static ru.tv7.nebesa.helpers.Constants.SERIES_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.SERIES_ID;
 import static ru.tv7.nebesa.helpers.Constants.SERIES_NAME;
@@ -213,7 +215,21 @@ public class SeriesFragment extends Fragment implements ArchiveDataLoadedListene
                 Log.d(LOG_TAG, "SeriesFragment.onArchiveDataLoaded(): Series programs data loaded. Type: " + type);
             }
 
-            this.addElements(jsonArray);
+            if (type.equals(PROGRAM_INFO_METHOD)) {
+                Utils.hideProgressBar(root, R.id.seriesProgress);
+
+                if (jsonArray != null && jsonArray.length() == 1) {
+                    JSONObject obj = jsonArray.getJSONObject(0);
+                    if (obj != null) {
+                        sharedCacheViewModel.setSelectedProgram(obj);
+
+                        Utils.toPage(PROGRAM_INFO_FRAGMENT, getActivity(), true, false, null);
+                    }
+                }
+            }
+            else {
+                this.addElements(jsonArray);
+            }
         }
         catch(Exception e) {
             if (BuildConfig.DEBUG) {
@@ -288,7 +304,6 @@ public class SeriesFragment extends Fragment implements ArchiveDataLoadedListene
                         }
 
                         sharedCacheViewModel.setPageToHistory(SERIES_FRAGMENT);
-                        sharedCacheViewModel.setSelectedProgram(obj);
 
                         sharedCacheViewModel.setSeriesPageStateItem(new PageStateItem(
                                 seriesGridAdapter.getElements(),
@@ -296,7 +311,7 @@ public class SeriesFragment extends Fragment implements ArchiveDataLoadedListene
                                 dataLength,
                                 offset));
 
-                        Utils.toPage(PROGRAM_INFO_FRAGMENT, getActivity(), true, false,null);
+                        this.loadProgramInfo(obj);
                     }
                 }
             }
@@ -408,6 +423,19 @@ public class SeriesFragment extends Fragment implements ArchiveDataLoadedListene
 
         Utils.showProgressBar(root, R.id.seriesProgress);
         archiveViewModel.getSeriesPrograms(seriesId, SERIES_PROGRAMS_SEARCH_LIMIT, offset, this);
+    }
+
+    /**
+     * Calls get program info method.
+     * @param obj
+     * @throws Exception
+     */
+    private void loadProgramInfo(JSONObject obj) throws Exception {
+        Utils.showProgressBar(root, R.id.seriesProgress);
+        String programId = Utils.getValue(obj, ID);
+        if (programId != null) {
+            archiveViewModel.getProgramInfo(programId, this);
+        }
     }
 
     /**

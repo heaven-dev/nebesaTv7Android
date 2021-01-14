@@ -32,8 +32,8 @@
         android:configChanges="keyboard|keyboardHidden|navigation"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:versionCode="3"
-        android:versionName="0.0.3"
+        android:versionCode="4"
+        android:versionName="0.0.4"
         android:minSdkVersion="23"
         android:targetSdkVersion="29">
         <activity

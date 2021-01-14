@@ -205,6 +205,8 @@ abstract public class Constants {
     public static final String GUIDE_DATA = "guide_data";
     public static final String BACK_TEXT = "back_text";
     public static final String RESULTS = "results";
+    public static final String ASPECT_RATIO = "aspect_ratio";
+    public static final String ASPECT_RATIO_16_9 = "16:9";
 
     public static final long CACHE_EXPIRATION_TIME = 1800000;
 

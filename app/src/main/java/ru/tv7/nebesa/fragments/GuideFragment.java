@@ -39,9 +39,11 @@ import static ru.tv7.nebesa.helpers.Constants.DATE_INDEX;
 import static ru.tv7.nebesa.helpers.Constants.GUIDE_DATA;
 import static ru.tv7.nebesa.helpers.Constants.GUIDE_DATE_IDS;
 import static ru.tv7.nebesa.helpers.Constants.GUIDE_FRAGMENT;
+import static ru.tv7.nebesa.helpers.Constants.ID;
 import static ru.tv7.nebesa.helpers.Constants.LOG_TAG;
 import static ru.tv7.nebesa.helpers.Constants.ONGOING_PROGRAM_INDEX;
 import static ru.tv7.nebesa.helpers.Constants.PROGRAM_INFO_FRAGMENT;
+import static ru.tv7.nebesa.helpers.Constants.PROGRAM_INFO_METHOD;
 import static ru.tv7.nebesa.helpers.PageStateItem.DATA;
 import static ru.tv7.nebesa.helpers.PageStateItem.SELECTED_DATE_ID;
 import static ru.tv7.nebesa.helpers.PageStateItem.SELECTED_POS;
@@ -213,7 +215,21 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
                 Log.d(LOG_TAG, "GuideFragment.onArchiveDataLoaded(): Archive data loaded. Type: " + type);
             }
 
-            this.addElements(jsonArray, true);
+            if (type.equals(PROGRAM_INFO_METHOD)) {
+                Utils.hideProgressBar(root, R.id.guideProgress);
+
+                if (jsonArray != null && jsonArray.length() == 1) {
+                    JSONObject obj = jsonArray.getJSONObject(0);
+                    if (obj != null) {
+                        sharedCacheViewModel.setSelectedProgram(obj);
+
+                        Utils.toPage(PROGRAM_INFO_FRAGMENT, getActivity(), true, false, null);
+                    }
+                }
+            }
+            else {
+                this.addElements(jsonArray, true);
+            }
         }
         catch(Exception e) {
             if (BuildConfig.DEBUG) {
@@ -305,8 +321,6 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
 
                     JSONObject obj = guideGridAdapter.getElementByIndex(pos);
                     if (obj != null) {
-                        sharedCacheViewModel.setSelectedProgram(obj);
-
                         JSONObject jsonObj = new JSONObject();
                         jsonObj.put(ONGOING_PROGRAM_INDEX, ongoingProgramIndex);
                         jsonObj.put(GUIDE_DATA, guideGridAdapter.getElements());
@@ -321,7 +335,7 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
 
                         sharedCacheViewModel.setPageToHistory(GUIDE_FRAGMENT);
 
-                        Utils.toPage(PROGRAM_INFO_FRAGMENT, getActivity(), true, false,null);
+                        this.loadProgramInfo(obj);
                     }
                 }
             }
@@ -451,6 +465,19 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
     private void loadGuideByDate(String date, Integer dateIndex) {
         Utils.showProgressBar(root, R.id.guideProgress);
         archiveViewModel.getGuideByDate(date, dateIndex, this);
+    }
+
+    /**
+     * Calls get program info method.
+     * @param obj
+     * @throws Exception
+     */
+    private void loadProgramInfo(JSONObject obj) throws Exception {
+        Utils.showProgressBar(root, R.id.guideProgress);
+        String programId = Utils.getValue(obj, ID);
+        if (programId != null) {
+            archiveViewModel.getProgramInfo(programId, this);
+        }
     }
 
     /**
