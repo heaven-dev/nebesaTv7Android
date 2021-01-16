@@ -108,31 +108,48 @@ import static ru.tv7.nebesa.helpers.Constants.ZERO_STR;
  */
 public class ArchiveViewModel extends ViewModel {
 
-    private ArchiveDataCacheItem recommendations = null;
+    private ArchiveDataCacheItem recommended = null;
+    private ArchiveDataCacheItem broadcastRecommendations = null;
     private ArchiveDataCacheItem mostViewed = null;
     private ArchiveDataCacheItem newest = null;
 
     private ArchiveDataCacheItem parentCategories = null;
     private ArchiveDataCacheItem subCategories = null;
 
-    public JSONObject getRecommendationsByIndex(int index) throws Exception {
+    public JSONObject getRecommendedByIndex(int index) throws Exception {
         JSONObject jsonObject = null;
+        JSONArray jsonArray = null;
 
-        if (recommendations != null) {
-            if (!recommendations.isDataInIndex(index)) {
+        if (broadcastRecommendations != null) {
+            if (!broadcastRecommendations.isDataInIndex(index)) {
                 if (BuildConfig.DEBUG) {
-                    Log.d(LOG_TAG, "*** ArchiveViewModel.getRecommendationsByIndex(): Not recommend data in index!");
+                    Log.d(LOG_TAG, "*** ArchiveViewModel.getRecommendedByIndex(): No broadcast recommendations data in index!");
+                }
+                throw new Exception("Not broadcast recommendations data in index!");
+            }
+
+            jsonArray = broadcastRecommendations.getData();
+        }
+        else if (recommended != null) {
+            if (!recommended.isDataInIndex(index)) {
+                if (BuildConfig.DEBUG) {
+                    Log.d(LOG_TAG, "*** ArchiveViewModel.getRecommendedByIndex(): No recommend data in index!");
                 }
                 throw new Exception("Not recommend data in index!");
             }
 
-            JSONArray jsonArray = recommendations.getData();
-            if (jsonArray != null) {
-                jsonObject = jsonArray.getJSONObject(index);
-            }
+            jsonArray = recommended.getData();
+        }
+
+        if (jsonArray != null) {
+            jsonObject = jsonArray.getJSONObject(index);
         }
 
         return jsonObject;
+    }
+
+    public void clearBroadcastRecommendations() {
+        broadcastRecommendations = null;
     }
 
     public JSONObject getMostViewedByIndex(int index) throws Exception {
@@ -141,9 +158,9 @@ public class ArchiveViewModel extends ViewModel {
         if (mostViewed != null) {
             if (!mostViewed.isDataInIndex(index)) {
                 if (BuildConfig.DEBUG) {
-                    Log.d(LOG_TAG, "*** ArchiveViewModel.getMostViewedByIndex(): Not most viewed data in index!");
+                    Log.d(LOG_TAG, "*** ArchiveViewModel.getMostViewedByIndex(): No most viewed data in index!");
                 }
-                throw new Exception("Not most viewed data in index!");
+                throw new Exception("No most viewed data in index!");
             }
 
             JSONArray jsonArray = mostViewed.getData();
@@ -161,9 +178,9 @@ public class ArchiveViewModel extends ViewModel {
         if (newest != null) {
             if (!newest.isDataInIndex(index)) {
                 if (BuildConfig.DEBUG) {
-                    Log.d(LOG_TAG, "*** ArchiveViewModel.getNewestByIndex(): Not newest data in index!");
+                    Log.d(LOG_TAG, "*** ArchiveViewModel.getNewestByIndex(): No newest data in index!");
                 }
-                throw new Exception("Not newest data in index!");
+                throw new Exception("No newest data in index!");
             }
 
             JSONArray jsonArray = newest.getData();
@@ -261,12 +278,12 @@ public class ArchiveViewModel extends ViewModel {
     public void getBroadcastRecommendationPrograms(final String date, int limit, int offset, final ArchiveDataLoadedListener archiveDataLoadedListener) {
         String type = BROADCAST_RECOMMENDATIONS_METHOD;
 
-        if (recommendations != null && recommendations.isCacheValid()) {
+        if (broadcastRecommendations != null && broadcastRecommendations.isCacheValid()) {
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "*** ArchiveViewModel.getBroadcastRecommendationPrograms(): Return data from cache.");
             }
 
-            archiveDataLoadedListener.onArchiveDataLoaded(recommendations.getData(), type);
+            archiveDataLoadedListener.onArchiveDataLoaded(broadcastRecommendations.getData(), type);
         }
         else {
             String url = ARCHIVE_BASE_URL + GET_ + type + QUESTION_MARK + DATE_PARAM + EQUAL + date + AMPERSAND + LIMIT_PARAM + EQUAL + limit + AMPERSAND + OFFSET_PARAM + EQUAL + offset;
@@ -288,12 +305,21 @@ public class ArchiveViewModel extends ViewModel {
     public void getRecommendPrograms(final String date, int limit, int offset, final ArchiveDataLoadedListener archiveDataLoadedListener) {
         String type = RECOMMENDATIONS_METHOD;
 
-        String url = ARCHIVE_BASE_URL + GET_ + type + QUESTION_MARK + DATE_PARAM + EQUAL + date + AMPERSAND + LIMIT_PARAM + EQUAL + limit + AMPERSAND + OFFSET_PARAM + EQUAL + offset;
-        if (BuildConfig.DEBUG) {
-            Log.d(LOG_TAG, "ArchiveViewModel.getRecommendPrograms(): URL" + url);
-        }
+        if (recommended != null && recommended.isCacheValid()) {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "*** ArchiveViewModel.getBroadcastRecommendationPrograms(): Return data from cache.");
+            }
 
-        this.runQuery(url, type, null, archiveDataLoadedListener);
+            archiveDataLoadedListener.onArchiveDataLoaded(recommended.getData(), type);
+        }
+        else {
+            String url = ARCHIVE_BASE_URL + GET_ + type + QUESTION_MARK + DATE_PARAM + EQUAL + date + AMPERSAND + LIMIT_PARAM + EQUAL + limit + AMPERSAND + OFFSET_PARAM + EQUAL + offset;
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "ArchiveViewModel.getRecommendPrograms(): URL" + url);
+            }
+
+            this.runQuery(url, type, null, archiveDataLoadedListener);
+        }
     }
 
     /**
@@ -576,49 +602,52 @@ public class ArchiveViewModel extends ViewModel {
 
                                 archiveDataLoadedListener.onArchiveDataLoaded(filtered, type);
                             }
-                                else {
-                                    JSONArray filtered = filterResponse(response, type);
+                            else {
+                                JSONArray filtered = filterResponse(response, type);
 
-                                    if (type.equals(BROADCAST_RECOMMENDATIONS_METHOD) || type.equals(RECOMMENDATIONS_METHOD)) {
-                                        recommendations = new ArchiveDataCacheItem(filtered);
-                                    }
-                                    else if (type.equals(MOST_VIEWED_METHOD)) {
-                                        mostViewed = new ArchiveDataCacheItem(filtered);
-                                    }
-                                    else if (type.equals(NEWEST_METHOD)) {
-                                        newest = new ArchiveDataCacheItem(filtered);
-                                    }
-
-                                    archiveDataLoadedListener.onArchiveDataLoaded(filtered, type);
+                                if (type.equals(RECOMMENDATIONS_METHOD)) {
+                                    recommended = new ArchiveDataCacheItem(filtered);
                                 }
-                            }
-                        }
-                        catch (Exception e) {
-                            if (BuildConfig.DEBUG) {
-                                Log.d(LOG_TAG, "ArchiveViewModel.onResponse(): Error fetching json: " + e.getMessage());
+                                else if (type.equals(BROADCAST_RECOMMENDATIONS_METHOD)) {
+                                    broadcastRecommendations = new ArchiveDataCacheItem(filtered);
+                                }
+                                else if (type.equals(MOST_VIEWED_METHOD)) {
+                                    mostViewed = new ArchiveDataCacheItem(filtered);
+                                }
+                                else if (type.equals(NEWEST_METHOD)) {
+                                    newest = new ArchiveDataCacheItem(filtered);
+                                }
+
+                                archiveDataLoadedListener.onArchiveDataLoaded(filtered, type);
                             }
                         }
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        try {
-                            if (BuildConfig.DEBUG) {
-                                Log.d(LOG_TAG, "ArchiveViewModel.onErrorResponse(): Error fetching json: " + error.toString());
-                            }
-
-                            if (archiveDataLoadedListener != null) {
-                                archiveDataLoadedListener.onArchiveDataLoadError(error.getMessage(), type);
-                            }
-                        }
-                        catch(Exception e) {
-                            if (BuildConfig.DEBUG) {
-                                Log.d(LOG_TAG, "ArchiveViewModel.onErrorResponse(): Error fetching json: " + e.getMessage());
-                            }
+                    catch (Exception e) {
+                        if (BuildConfig.DEBUG) {
+                            Log.d(LOG_TAG, "ArchiveViewModel.onResponse(): Error fetching json: " + e.getMessage());
                         }
                     }
                 }
+            },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    try {
+                        if (BuildConfig.DEBUG) {
+                            Log.d(LOG_TAG, "ArchiveViewModel.onErrorResponse(): Error fetching json: " + error.toString());
+                        }
+
+                        if (archiveDataLoadedListener != null) {
+                            archiveDataLoadedListener.onArchiveDataLoadError(error.getMessage(), type);
+                        }
+                    }
+                    catch(Exception e) {
+                        if (BuildConfig.DEBUG) {
+                            Log.d(LOG_TAG, "ArchiveViewModel.onErrorResponse(): Error fetching json: " + e.getMessage());
+                        }
+                    }
+                }
+            }
         );
 
         jsonRequest.setRetryPolicy(new DefaultRetryPolicy(

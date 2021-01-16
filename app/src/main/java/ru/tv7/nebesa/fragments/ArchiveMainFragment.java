@@ -41,7 +41,7 @@ import static ru.tv7.nebesa.helpers.Constants.ARCHIVE_MAIN_NO_SEL_POS;
 import static ru.tv7.nebesa.helpers.Constants.ARCHIVE_MAIN_ROW_COUNT;
 import static ru.tv7.nebesa.helpers.Constants.ARCHIVE_MAIN_TITLE_HEIGHT;
 import static ru.tv7.nebesa.helpers.Constants.BACK_TEXT;
-import static ru.tv7.nebesa.helpers.Constants.BROADCAST_RECOMMENDATIONS_LIMIT;
+import static ru.tv7.nebesa.helpers.Constants.RECOMMENDED_PROGRAMS_LIMIT;
 import static ru.tv7.nebesa.helpers.Constants.BROADCAST_RECOMMENDATIONS_METHOD;
 import static ru.tv7.nebesa.helpers.Constants.CATEGORIES_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.CATEGORIES_ROW_ID;
@@ -332,11 +332,12 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                     }
                 }
             }
-            if (type.equals(BROADCAST_RECOMMENDATIONS_METHOD)) {
-                if (jsonArray != null && jsonArray.length() < 4) {
-                    archiveViewModel.getRecommendPrograms(Utils.getTodayUtcFormattedLocalDate(), 30, 0, this);
+            else if (type.equals(RECOMMENDATIONS_METHOD)) {
+                if (jsonArray != null && jsonArray.length() <= 4) {
+                    archiveViewModel.getBroadcastRecommendationPrograms(Utils.getTodayUtcFormattedLocalDate(), RECOMMENDED_PROGRAMS_LIMIT, 0, this);
                 }
                 else {
+                    archiveViewModel.clearBroadcastRecommendations();
                     this.addElements(jsonArray, type);
                 }
             }
@@ -619,7 +620,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
      */
     private void loadRecommendedPrograms() {
         Utils.showProgressBar(root, R.id.recommendProgress);
-        archiveViewModel.getBroadcastRecommendationPrograms(Utils.getTodayUtcFormattedLocalDate(), BROADCAST_RECOMMENDATIONS_LIMIT, 0, this);
+        archiveViewModel.getRecommendPrograms(Utils.getTodayUtcFormattedLocalDate(), RECOMMENDED_PROGRAMS_LIMIT, 0, this);
     }
 
     /**
@@ -881,7 +882,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
         JSONObject program = null;
 
         if (focusedRow == RECOMMENDATIONS_ROW_ID) {
-            program = archiveViewModel.getRecommendationsByIndex(index);
+            program = archiveViewModel.getRecommendedByIndex(index);
         }
         else if (focusedRow == MOST_VIEWED_ROW_ID) {
             program = archiveViewModel.getMostViewedByIndex(index);

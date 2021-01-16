@@ -161,7 +161,7 @@ abstract public class Constants {
     public static final String SERIES_ID_PARAM = "series_id";
     public static final String QUERY_PARAM = "query";
 
-    public static final int BROADCAST_RECOMMENDATIONS_LIMIT = 30;
+    public static final int RECOMMENDED_PROGRAMS_LIMIT = 30;
     public static final int NEWEST_LIMIT = 20;
     public static final int CATEGORY_PROGRAMS_SEARCH_LIMIT = 30;
     public static final int SERIES_PROGRAMS_SEARCH_LIMIT = 30;

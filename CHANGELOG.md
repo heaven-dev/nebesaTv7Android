@@ -1,4 +1,4 @@
-# 14.01.2021 15:10
+# 16.01.2021 15:10
 
 ### Bug Fixes
 
@@ -7,6 +7,7 @@
 ### Features
 
 * Added info about aspect ratio to program info page if aspect ratio isn't 16:9.
+* Order of recommendations methods call changed in the archive main fragment.
 
 
 # 06.01.2021 18:02
