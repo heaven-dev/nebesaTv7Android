@@ -17,6 +17,7 @@ import ru.tv7.nebesa.R;
 import ru.tv7.nebesa.helpers.Utils;
 
 import static ru.tv7.nebesa.helpers.Constants.BACK_TEXT;
+import static ru.tv7.nebesa.helpers.Constants.CATEGORY_IMAGE_SIZE_IN_PERCENT;
 import static ru.tv7.nebesa.helpers.Constants.CATEGORY_NAME;
 import static ru.tv7.nebesa.helpers.Constants.NAME;
 
@@ -92,6 +93,9 @@ public class ArchiveMainCategoryGridAdapter extends RecyclerView.Adapter<Archive
 
                     int elementWidth = Utils.dpToPx(calculateItemWidth());
                     setElementWidth(holder, elementWidth);
+
+                    int imageWidth = Math.round(CATEGORY_IMAGE_SIZE_IN_PERCENT * elementWidth);
+                    setImageWidth(holder, imageWidth);
                 }
                 else {
                     holder.backText.setText(categoryText);
@@ -124,6 +128,14 @@ public class ArchiveMainCategoryGridAdapter extends RecyclerView.Adapter<Archive
             ViewGroup.LayoutParams params = holder.categoryContainer.getLayoutParams();
             params.width = width;
             holder.categoryContainer.setLayoutParams(params);
+        }
+    }
+
+    private static void setImageWidth(final SimpleViewHolder holder, int width) {
+        if (holder.categoryImage != null) {
+            ViewGroup.LayoutParams params = holder.categoryImage.getLayoutParams();
+            params.width = width;
+            holder.categoryImage.setLayoutParams(params);
         }
     }
 

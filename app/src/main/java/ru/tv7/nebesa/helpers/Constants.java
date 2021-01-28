@@ -218,6 +218,8 @@ abstract public class Constants {
     public static final int NEWEST_ROW_ID = 2;
     public static final int CATEGORIES_ROW_ID = 3;
 
+    public static final float CATEGORY_IMAGE_SIZE_IN_PERCENT = 0.6f;
+
     public static final List<ComingProgramImageAndTextId> COMING_PROGRAM_IMAGE_AND_TEXT = new ArrayList<>(Arrays.asList(
         new ComingProgramImageAndTextId(R.id.image1, R.id.image1Text),
         new ComingProgramImageAndTextId(R.id.image2, R.id.image2Text),

@@ -55,7 +55,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="6dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -70,7 +70,7 @@
                         android:text=""
                         android:textSize="22sp"
                         android:textColor="@color/content_area_text"
-                        android:background="@drawable/list_item"/>
+                        android:background="@drawable/keyboard_item"/>
 
                     <TextView
                         android:id="@+id/k_0_1"
@@ -86,7 +86,7 @@
                         android:text=""
                         android:textSize="22sp"
                         android:textColor="@color/content_area_text"
-                        android:background="@drawable/list_item"/>
+                        android:background="@drawable/keyboard_item"/>
 
                     <TextView
                         android:id="@+id/k_0_2"
@@ -102,7 +102,7 @@
                         android:text=""
                         android:textSize="22sp"
                         android:textColor="@color/content_area_text"
-                        android:background="@drawable/list_item"/>
+                        android:background="@drawable/keyboard_item"/>
 
                     <TextView
                         android:id="@+id/k_0_3"
@@ -118,7 +118,7 @@
                         android:text=""
                         android:textSize="22sp"
                         android:textColor="@color/content_area_text"
-                        android:background="@drawable/list_item"/>
+                        android:background="@drawable/keyboard_item"/>
 
                     <TextView
                         android:id="@+id/k_0_4"
@@ -134,7 +134,7 @@
                         android:text=""
                         android:textSize="22sp"
                         android:textColor="@color/content_area_text"
-                        android:background="@drawable/list_item"/>
+                        android:background="@drawable/keyboard_item"/>
 
                     <TextView
                         android:id="@+id/k_0_5"
@@ -150,7 +150,7 @@
                         android:text=""
                         android:textSize="22sp"
                         android:textColor="@color/content_area_text"
-                        android:background="@drawable/list_item"/>
+                        android:background="@drawable/keyboard_item"/>
 
                     <TextView
                         android:id="@+id/k_0_6"
@@ -166,7 +166,7 @@
                         android:text=""
                         android:textSize="22sp"
                         android:textColor="@color/content_area_text"
-                        android:background="@drawable/list_item"/>
+                        android:background="@drawable/keyboard_item"/>
 
                     <TextView
                         android:id="@+id/k_0_7"
@@ -182,7 +182,7 @@
                         android:text=""
                         android:textSize="22sp"
                         android:textColor="@color/content_area_text"
-                        android:background="@drawable/list_item"/>
+                        android:background="@drawable/keyboard_item"/>
 
                     <TextView
                         android:id="@+id/k_0_8"
@@ -198,7 +198,7 @@
                         android:text=""
                         android:textSize="22sp"
                         android:textColor="@color/content_area_text"
-                        android:background="@drawable/list_item"/>
+                        android:background="@drawable/keyboard_item"/>
 
                     <TextView
                         android:id="@+id/k_0_9"
@@ -214,7 +214,7 @@
                         android:text=""
                         android:textSize="22sp"
                         android:textColor="@color/content_area_text"
-                        android:background="@drawable/list_item"/>
+                        android:background="@drawable/keyboard_item"/>
 
                     <TextView
                         android:id="@+id/k_0_10"
@@ -230,7 +230,7 @@
                         android:text=""
                         android:textSize="22sp"
                         android:textColor="@color/content_area_text"
-                        android:background="@drawable/list_item"/>
+                        android:background="@drawable/keyboard_item"/>
 
                     <TextView
                         android:id="@+id/k_0_11"
@@ -246,7 +246,7 @@
                         android:text=""
                         android:textSize="22sp"
                         android:textColor="@color/content_area_text"
-                        android:background="@drawable/list_item"/>
+                        android:background="@drawable/keyboard_item"/>
 
                     <TextView
                         android:id="@+id/k_0_12"
@@ -260,7 +260,7 @@
                         android:text=""
                         android:textSize="22sp"
                         android:textColor="@color/content_area_text"
-                        android:background="@drawable/list_item"/>
+                        android:background="@drawable/keyboard_item"/>
 
                 </LinearLayout>
 
@@ -269,7 +269,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="6dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -285,7 +285,7 @@
                         android:text=""
                         android:textSize="22sp"
                         android:textColor="@color/content_area_text"
-                        android:background="@drawable/list_item"/>
+                        android:background="@drawable/keyboard_item"/>
 
                     <TextView
                         android:id="@+id/k_1_1"
@@ -302,7 +302,7 @@
                         android:text=""
                         android:textSize="22sp"
                         android:textColor="@color/content_area_text"
-                        android:background="@drawable/list_item"/>
+                        android:background="@drawable/keyboard_item"/>
 
                     <TextView
                         android:id="@+id/k_1_2"
@@ -319,7 +319,7 @@
                         android:text=""
                         android:textSize="22sp"
                         android:textColor="@color/content_area_text"
-                        android:background="@drawable/list_item"/>
+                        android:background="@drawable/keyboard_item"/>
 
                     <TextView
                         android:id="@+id/k_1_3"
@@ -336,7 +336,7 @@
                         android:text=""
                         android:textSize="22sp"
                         android:textColor="@color/content_area_text"
-                        android:background="@drawable/list_item"/>
+                        android:background="@drawable/keyboard_item"/>
 
                     <TextView
                         android:id="@+id/k_1_4"
@@ -353,7 +353,7 @@
                         android:text=""
                         android:textSize="22sp"
                         android:textColor="@color/content_area_text"
-                        android:background="@drawable/list_item"/>
+                        android:background="@drawable/keyboard_item"/>
 
                     <TextView
                         android:id="@+id/k_1_5"
@@ -370,7 +370,7 @@
                         android:text=""
                         android:textSize="22sp"
                         android:textColor="@color/content_area_text"
-                        android:background="@drawable/list_item"/>
+                        android:background="@drawable/keyboard_item"/>
 
                     <TextView
                         android:id="@+id/k_1_6"
@@ -387,7 +387,7 @@
                         android:text=""
                         android:textSize="22sp"
                         android:textColor="@color/content_area_text"
-                        android:background="@drawable/list_item"/>
+                        android:background="@drawable/keyboard_item"/>
 
                     <TextView
                         android:id="@+id/k_1_7"
@@ -404,7 +404,7 @@
                         android:text=""
                         android:textSize="22sp"
                         android:textColor="@color/content_area_text"
-                        android:background="@drawable/list_item"/>
+                        android:background="@drawable/keyboard_item"/>
 
                     <TextView
                         android:id="@+id/k_1_8"
@@ -421,7 +421,7 @@
                         android:text=""
                         android:textSize="22sp"
                         android:textColor="@color/content_area_text"
-                        android:background="@drawable/list_item"/>
+                        android:background="@drawable/keyboard_item"/>
 
                     <TextView
                         android:id="@+id/k_1_9"
@@ -438,7 +438,7 @@
                         android:text=""
                         android:textSize="22sp"
                         android:textColor="@color/content_area_text"
-                        android:background="@drawable/list_item"/>
+                        android:background="@drawable/keyboard_item"/>
 
                     <TextView
                         android:id="@+id/k_1_10"
@@ -455,7 +455,7 @@
                         android:text=""
                         android:textSize="22sp"
                         android:textColor="@color/content_area_text"
-                        android:background="@drawable/list_item"/>
+                        android:background="@drawable/keyboard_item"/>
 
                     <TextView
                         android:id="@+id/k_1_11"
@@ -470,7 +470,7 @@
                         android:text=""
                         android:textSize="22sp"
                         android:textColor="@color/content_area_text"
-                        android:background="@drawable/list_item"/>
+                        android:background="@drawable/keyboard_item"/>
                 </LinearLayout>
 
 
@@ -485,7 +485,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="6dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -502,7 +502,7 @@
                         android:text=""
                         android:textSize="22sp"
                         android:textColor="@color/content_area_text"
-                        android:background="@drawable/list_item"/>
+                        android:background="@drawable/keyboard_item"/>
 
                     <TextView
                         android:id="@+id/clearKey"
@@ -518,7 +518,7 @@
                         android:text=""
                         android:textSize="22sp"
                         android:textColor="@color/content_area_text"
-                        android:background="@drawable/list_item"/>
+                        android:background="@drawable/keyboard_item"/>
                 </LinearLayout>
 
             </LinearLayout>

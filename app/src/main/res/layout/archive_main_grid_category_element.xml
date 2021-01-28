@@ -23,7 +23,7 @@
             android:layout_height="0dp"
             android:contentDescription="@string/tv7_logo"
             android:layout_weight="0.5"
-            android:src="@drawable/logo" />
+            android:src="@drawable/category_logo" />
 
         <TextView
             android:id="@+id/categoryText"
@@ -67,4 +67,3 @@
     </LinearLayout>
 
 </LinearLayout>
-
