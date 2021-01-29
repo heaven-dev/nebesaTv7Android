@@ -1,4 +1,4 @@
-# 28.01.2021 16:45
+# 29.01.2021 16:45
 
 ### Bug Fixes
 
@@ -8,6 +8,7 @@
 
 * Category item logo changed to channel logo on archive main page.
 * Border of keys of virtual keyboard changed.
+* Prevent a screensaver to appear when the application is running.
 * Version number to 5.
 
 
