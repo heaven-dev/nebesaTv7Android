@@ -837,10 +837,15 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
      * Shows video controls.
      */
     private void showControls() {
-        controlsVisible = true;
-        controls.setVisibility(View.VISIBLE);
+        if (exoPlayer != null) {
+            long pos = exoPlayer.getContentPosition() / 1000;
+            this.updateControls(pos);
 
-        this.addVideoControlsTimer();
+            controlsVisible = true;
+            controls.setVisibility(View.VISIBLE);
+
+            this.addVideoControlsTimer();
+        }
     }
 
     /**

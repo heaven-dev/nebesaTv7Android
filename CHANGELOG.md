@@ -2,7 +2,7 @@
 
 ### Bug Fixes
 
-* none
+* Fixed progressbar bug in archive player view.
 
 ### Features
 
