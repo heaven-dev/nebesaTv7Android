@@ -1,5 +1,6 @@
 package ru.tv7.nebesa.fragments;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,6 +40,7 @@ import static ru.tv7.nebesa.helpers.Constants.ARCHIVE_MAIN_CONTENT_ROW_IDS;
 import static ru.tv7.nebesa.helpers.Constants.ARCHIVE_MAIN_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.ARCHIVE_MAIN_NO_SEL_POS;
 import static ru.tv7.nebesa.helpers.Constants.ARCHIVE_MAIN_ROW_COUNT;
+import static ru.tv7.nebesa.helpers.Constants.ARCHIVE_MAIN_SCROLL_Y_DURATION;
 import static ru.tv7.nebesa.helpers.Constants.ARCHIVE_MAIN_TITLE_HEIGHT;
 import static ru.tv7.nebesa.helpers.Constants.BACK_TEXT;
 import static ru.tv7.nebesa.helpers.Constants.RECOMMENDED_PROGRAMS_LIMIT;
@@ -60,6 +62,7 @@ import static ru.tv7.nebesa.helpers.Constants.PROGRAM_INFO_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.PROGRAM_INFO_METHOD;
 import static ru.tv7.nebesa.helpers.Constants.RECOMMENDATIONS_METHOD;
 import static ru.tv7.nebesa.helpers.Constants.RECOMMENDATIONS_ROW_ID;
+import static ru.tv7.nebesa.helpers.Constants.SCROLL_Y;
 import static ru.tv7.nebesa.helpers.Constants.SUB_CATEGORIES_METHOD;
 import static ru.tv7.nebesa.helpers.Constants.TOOLBAR_HEIGHT;
 
@@ -755,7 +758,15 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
             }
 
             int value = Utils.dpToPx(getContentRowHeight() + ARCHIVE_MAIN_TITLE_HEIGHT) * multiplier;
-            contentContainer.scrollTo(0, value);
+
+            ObjectAnimator animator = ObjectAnimator.ofInt(contentContainer, SCROLL_Y, value);
+            if (animator != null) {
+                animator.setDuration(ARCHIVE_MAIN_SCROLL_Y_DURATION);
+                animator.start();
+            }
+            else {
+                contentContainer.scrollTo(0, value);
+            }
         }
     }
 

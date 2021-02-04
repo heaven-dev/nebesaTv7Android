@@ -9,6 +9,8 @@
 * Category item logo changed to channel logo on archive main page.
 * Border of keys of virtual keyboard changed.
 * Prevent a screensaver to appear when the application is running.
+* App label changed to Небеса ТВ7.
+* Smooth vertical scroll to archive main page.
 * Version number to 5.
 
 

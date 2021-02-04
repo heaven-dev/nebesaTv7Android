@@ -46,6 +46,9 @@ abstract public class Constants {
     public static final float PAUSE_START_ICON_ANIMATION_END = 0.0f;
     public static final long PAUSE_START_ICON_ANIMATION_START_OFFSET = 250;
 
+    public static final String SCROLL_Y = "scrollY";
+    public static final long ARCHIVE_MAIN_SCROLL_Y_DURATION = 150;
+
     public static final String TV_MAIN_FRAGMENT = "tv_main_fragment";
     public static final String ARCHIVE_MAIN_FRAGMENT = "archive_main_fragment";
     public static final String TV_PLAYER_FRAGMENT = "tv_player_fragment";
