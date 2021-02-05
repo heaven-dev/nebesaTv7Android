@@ -209,7 +209,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                 }
 
                 if (row == focusedRow) {
-                    this.scrollTo(focusedRow);
+                    this.scrollTo(focusedRow, false);
 
                     int pos = pageStateItem.getSelectedPos();
                     this.setFocusToColumn(pos);
@@ -532,7 +532,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                         focusedRow++;
 
                         if (focusedRow > 1) {
-                            this.scrollTo(focusedRow);
+                            this.scrollTo(focusedRow, true);
                         }
 
                         Integer col = colFocusWas.get(focusedRow);
@@ -553,7 +553,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                         focusedRow--;
 
                         if (focusedRow > 0) {
-                            this.scrollTo(focusedRow);
+                            this.scrollTo(focusedRow, true);
                         }
 
                         Integer col = colFocusWas.get(focusedRow);
@@ -747,8 +747,9 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
     /**
      * Scrolls vertically.
      * @param row
+     * @param smoothScroll
      */
-    private void scrollTo(int row) {
+    private void scrollTo(int row, boolean smoothScroll) {
         RelativeLayout contentContainer = root.findViewById(R.id.contentContainer);
         if (contentContainer != null) {
             int multiplier = row - 1;
@@ -759,10 +760,15 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
 
             int value = Utils.dpToPx(getContentRowHeight() + ARCHIVE_MAIN_TITLE_HEIGHT) * multiplier;
 
-            ObjectAnimator animator = ObjectAnimator.ofInt(contentContainer, SCROLL_Y, value);
-            if (animator != null) {
-                animator.setDuration(ARCHIVE_MAIN_SCROLL_Y_DURATION);
-                animator.start();
+            if (smoothScroll) {
+                ObjectAnimator animator = ObjectAnimator.ofInt(contentContainer, SCROLL_Y, value);
+                if (animator != null) {
+                    animator.setDuration(ARCHIVE_MAIN_SCROLL_Y_DURATION);
+                    animator.start();
+                }
+                else {
+                    contentContainer.scrollTo(0, value);
+                }
             }
             else {
                 contentContainer.scrollTo(0, value);
