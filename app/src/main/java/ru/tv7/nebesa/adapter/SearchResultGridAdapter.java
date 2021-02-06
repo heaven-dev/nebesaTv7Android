@@ -19,6 +19,7 @@ import ru.tv7.nebesa.R;
 import ru.tv7.nebesa.helpers.Utils;
 
 import static ru.tv7.nebesa.helpers.Constants.CAPTION;
+import static ru.tv7.nebesa.helpers.Constants.EMPTY;
 import static ru.tv7.nebesa.helpers.Constants.IMAGE_PATH;
 import static ru.tv7.nebesa.helpers.Constants.SERIES;
 import static ru.tv7.nebesa.helpers.Constants.SERIES_AND_NAME;
@@ -118,8 +119,11 @@ public class SearchResultGridAdapter extends RecyclerView.Adapter<SearchResultGr
                 }
 
                 value = Utils.getValue(obj, CAPTION);
-                if (value != null) {
+                if (value != null && value.length() > 0) {
                     holder.caption.setText(value);
+                }
+                else {
+                    holder.caption.setText(EMPTY);
                 }
             }
         }
