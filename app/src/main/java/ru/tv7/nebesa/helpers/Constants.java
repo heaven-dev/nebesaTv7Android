@@ -249,7 +249,7 @@ abstract public class Constants {
         new GuideRowId(R.id.row10, R.id.row10Time, R.id.row10Title, R.id.row10Desc)
     ));
 
-    public static final int SIDEBAR_MENU_ICON_WIDTH = 46;
+    public static final int SIDEBAR_MENU_ICON_WIDTH = 38;
 
     public static final List<MenuItem> MENU_ITEM_IDS = new ArrayList<>(Arrays.asList(
         new MenuItem(R.id.tvMenuContainer, R.id.tvMenuText),

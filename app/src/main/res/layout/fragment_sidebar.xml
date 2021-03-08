@@ -21,7 +21,7 @@
 
             <ImageView
                 android:id="@+id/tvMenuIcon"
-                android:layout_width="38dp"
+                android:layout_width="30dp"
                 android:layout_height="38dp"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
@@ -32,7 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="38dp"
                 android:gravity="center_vertical"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:visibility="gone"
                 android:paddingStart="0dp"
                 android:paddingEnd="10dp"
@@ -52,7 +52,7 @@
 
             <ImageView
                 android:id="@+id/archiveMenuIcon"
-                android:layout_width="38dp"
+                android:layout_width="30dp"
                 android:layout_height="38dp"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
@@ -63,7 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="38dp"
                 android:gravity="center_vertical"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:visibility="gone"
                 android:paddingStart="0dp"
                 android:paddingEnd="10dp"
@@ -83,7 +83,7 @@
 
             <ImageView
                 android:id="@+id/guideMenuIcon"
-                android:layout_width="38dp"
+                android:layout_width="30dp"
                 android:layout_height="38dp"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
@@ -94,7 +94,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="38dp"
                 android:gravity="center_vertical"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:visibility="gone"
                 android:paddingStart="0dp"
                 android:paddingEnd="10dp"
@@ -114,7 +114,7 @@
 
             <ImageView
                 android:id="@+id/searchMenuIcon"
-                android:layout_width="38dp"
+                android:layout_width="30dp"
                 android:layout_height="38dp"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
@@ -129,7 +129,7 @@
                 android:paddingEnd="10dp"
                 android:text="@string/search"
                 android:textColor="@color/sidebar_text"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:visibility="gone" />
         </LinearLayout>
 
@@ -144,7 +144,7 @@
 
             <ImageView
                 android:id="@+id/favoritesMenuIcon"
-                android:layout_width="38dp"
+                android:layout_width="30dp"
                 android:layout_height="38dp"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
@@ -155,7 +155,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="38dp"
                 android:gravity="center_vertical"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:visibility="gone"
                 android:paddingStart="0dp"
                 android:paddingEnd="10dp"
@@ -174,7 +174,7 @@
 
             <ImageView
                 android:id="@+id/aboutMenuIcon"
-                android:layout_width="38dp"
+                android:layout_width="30dp"
                 android:layout_height="38dp"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
@@ -185,7 +185,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="38dp"
                 android:gravity="center_vertical"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:visibility="gone"
                 android:paddingStart="0dp"
                 android:paddingEnd="10dp"
