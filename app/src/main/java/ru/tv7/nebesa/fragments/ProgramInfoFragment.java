@@ -11,6 +11,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -39,6 +40,8 @@ import static ru.tv7.nebesa.helpers.Constants.CAPTION;
 import static ru.tv7.nebesa.helpers.Constants.COLON_WITH_SPACE;
 import static ru.tv7.nebesa.helpers.Constants.DURATION;
 import static ru.tv7.nebesa.helpers.Constants.EPISODE_NUMBER;
+import static ru.tv7.nebesa.helpers.Constants.FAVORITES_SP_DEFAULT;
+import static ru.tv7.nebesa.helpers.Constants.FAVORITES_SP_TAG;
 import static ru.tv7.nebesa.helpers.Constants.FAVORITES_TEXT_ANIMATION_DURATION;
 import static ru.tv7.nebesa.helpers.Constants.FAVORITES_TEXT_ANIMATION_END;
 import static ru.tv7.nebesa.helpers.Constants.FAVORITES_TEXT_ANIMATION_START;
@@ -49,6 +52,7 @@ import static ru.tv7.nebesa.helpers.Constants.IS_VISIBLE_ON_VOD;
 import static ru.tv7.nebesa.helpers.Constants.LOG_TAG;
 import static ru.tv7.nebesa.helpers.Constants.NEGATIVE_ONE_STR;
 import static ru.tv7.nebesa.helpers.Constants.ONE_STR;
+import static ru.tv7.nebesa.helpers.Constants.PERCENT;
 import static ru.tv7.nebesa.helpers.Constants.PROGRAM_INFO_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.SERIES_AND_NAME;
 import static ru.tv7.nebesa.helpers.Constants.TWO_STR;
@@ -142,6 +146,16 @@ public class ProgramInfoFragment extends Fragment {
                 }
                 else {
                     Glide.with(this).asBitmap().load(R.drawable.tv7_app_icon).into(backgroundImage);
+                }
+            }
+
+            JSONObject videoStatus = this.getVideoStatus();
+            if (videoStatus != null) {
+                int percent = videoStatus.getInt(PERCENT);
+
+                ProgressBar progressBar = root.findViewById(R.id.programWatchStatusBar);
+                if (progressBar != null) {
+                    progressBar.setProgress(percent);
                 }
             }
 
@@ -418,6 +432,27 @@ public class ProgramInfoFragment extends Fragment {
     }
 
     /**
+     * Returns video status object from shared preferences.
+     * @return JSONObject
+     */
+    private JSONObject getVideoStatus() {
+        JSONObject statusItem = null;
+        try {
+            String value = Utils.getValue(selectedProgram, ID);
+            if (value != null) {
+                statusItem = Utils.getVideoStatus(Utils.stringToInt(value), getContext());
+            }
+        }
+        catch(Exception e) {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "ArchivePlayerFragment.getVideoStatus(): Exception: " + e);
+            }
+        }
+
+        return statusItem;
+    }
+
+    /**
      * Handles focus out from side menu.
      */
     private void focusOutFromSideMenu() {
@@ -440,11 +475,11 @@ public class ProgramInfoFragment extends Fragment {
      * @throws Exception
      */
     private void addToSavedFavorites() throws Exception {
-        JSONArray jsonArray = Utils.getSavedFavorites(getContext());
+        JSONArray jsonArray = Utils.getSavedPrefs(FAVORITES_SP_TAG, FAVORITES_SP_DEFAULT, getContext());
         if (jsonArray != null) {
             jsonArray.put(selectedProgram);
 
-            Utils.saveFavorites(getContext(), jsonArray);
+            Utils.savePrefs(FAVORITES_SP_TAG, getContext(), jsonArray);
 
             programFavoritesIndex = jsonArray.length() - 1;
         }
@@ -455,11 +490,11 @@ public class ProgramInfoFragment extends Fragment {
      * @throws Exception
      */
     private void removeFromSavedFavorites() throws Exception {
-        JSONArray jsonArray = Utils.getSavedFavorites(getContext());
+        JSONArray jsonArray = Utils.getSavedPrefs(FAVORITES_SP_TAG, FAVORITES_SP_DEFAULT, getContext());
         if (jsonArray != null && programFavoritesIndex != -1) {
             jsonArray.remove(programFavoritesIndex);
 
-            Utils.saveFavorites(getContext(), jsonArray);
+            Utils.savePrefs(FAVORITES_SP_TAG, getContext(), jsonArray);
 
             programFavoritesIndex = - 1;
         }

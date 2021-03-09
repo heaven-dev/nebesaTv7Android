@@ -128,9 +128,14 @@ abstract public class Constants {
     public static final String SRC = "src";
     public static final String ONE_STR = "1";
     public static final String TWO_STR = "2";
+    public static final String POSITION = "position";
+    public static final String PERCENT = "percent";
 
     public static final String FAVORITES_SP_TAG = "favorites_shared_pref";
     public static final String FAVORITES_SP_DEFAULT = "[]";
+
+    public static final String VIDEO_STATUSES_SP_TAG = "video_statuses_shared_pref";
+    public static final String VIDEO_STATUSES_SP_DEFAULT = "[]";
 
     public static final int TOOLBAR_HEIGHT = 60;
     public static final int ARCHIVE_MAIN_TITLE_HEIGHT = 30;

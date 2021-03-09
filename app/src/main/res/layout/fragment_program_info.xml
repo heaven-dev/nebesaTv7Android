@@ -48,7 +48,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:layout_marginTop="20dp"
-                    android:layout_marginBottom="16dp">
+                    android:layout_marginBottom="22dp">
 
                     <TextView
                         android:id="@+id/seriesAndName"
@@ -125,6 +125,23 @@
                         android:textSize="18sp" />
 
                 </RelativeLayout>
+
+                <ProgressBar
+                    android:id="@+id/programWatchStatusBar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:max="100"
+                    android:progress="0"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_marginBottom="2dp"
+                    android:indeterminateTint="@color/tv7_default"
+                    android:indeterminateTintMode="src_atop"
+                    android:background="@android:color/transparent"
+                    android:progressBackgroundTint="@android:color/transparent"
+                    android:scaleY="2.0"
+                    android:layout_alignParentBottom="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="17dp" />
 
             </RelativeLayout>
 

@@ -72,6 +72,8 @@ import static ru.tv7.nebesa.helpers.Constants.TIME_STAMP_FORMAT;
 import static ru.tv7.nebesa.helpers.Constants.TV_MAIN_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.TV_PLAYER_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.UTC;
+import static ru.tv7.nebesa.helpers.Constants.VIDEO_STATUSES_SP_DEFAULT;
+import static ru.tv7.nebesa.helpers.Constants.VIDEO_STATUSES_SP_TAG;
 import static ru.tv7.nebesa.helpers.Constants.ZERO_DURATION;
 import static ru.tv7.nebesa.helpers.Constants.ZERO_STR;
 
@@ -342,7 +344,7 @@ public abstract class Utils {
         return Long.parseLong(value);
     }
 
-    public static JSONArray getSavedFavorites(Context context) throws Exception {
+    public static JSONArray getSavedPrefs(String tag, String defaultValue, Context context) throws Exception {
         JSONArray jsonArray = null;
 
         if (context != null) {
@@ -351,12 +353,13 @@ public abstract class Utils {
                 return null;
             }
 
-            String jsonStr = sharedPref.getString(FAVORITES_SP_TAG, FAVORITES_SP_DEFAULT);
+            String jsonStr = sharedPref.getString(tag, defaultValue);
             if (jsonStr != null) {
                 jsonArray = new JSONArray(jsonStr);
 
                 if (BuildConfig.DEBUG) {
-                    Log.d(LOG_TAG, "Utils.getSavedFavorites(): Shared prefs: " + jsonStr);
+                    Log.d(LOG_TAG, "Utils.getSavedPrefs(): Tag: " + tag);
+                    Log.d(LOG_TAG, "Utils.getSavedPrefs(): Shared prefs: " + jsonStr);
                 }
             }
         }
@@ -364,7 +367,7 @@ public abstract class Utils {
         return jsonArray;
     }
 
-    public static void saveFavorites(Context context, JSONArray jsonArray) throws Exception {
+    public static void savePrefs(String tag, Context context, JSONArray jsonArray) throws Exception {
         if (context != null) {
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
             if (sharedPref != null) {
@@ -373,10 +376,11 @@ public abstract class Utils {
                 String jsonStr = jsonArray.toString();
 
                 if (BuildConfig.DEBUG) {
-                    Log.d(LOG_TAG, "Utils.saveFavorites(): Shared prefs: " + jsonStr);
+                    Log.d(LOG_TAG, "Utils.savePrefs(): Tag: " + tag);
+                    Log.d(LOG_TAG, "Utils.savePrefs(): Shared prefs: " + jsonStr);
                 }
 
-                editor.putString(FAVORITES_SP_TAG, jsonStr);
+                editor.putString(tag, jsonStr);
                 editor.commit();
             }
         }
@@ -413,5 +417,32 @@ public abstract class Utils {
         }
 
         return notFound;
+    }
+
+    public static JSONObject getVideoStatus(int programId, Context context) throws Exception {
+        JSONObject result = null;
+
+        JSONArray jsonArray = getSavedPrefs(VIDEO_STATUSES_SP_TAG, VIDEO_STATUSES_SP_DEFAULT, context);
+        if (jsonArray != null) {
+            for(int i = 0; i < jsonArray.length(); i++) {
+                JSONObject obj = jsonArray.getJSONObject(i);
+                if (obj == null) {
+                    continue;
+                }
+
+                String value = getValue(obj, ID);
+                if (value == null) {
+                    continue;
+                }
+
+                int id = Utils.stringToInt(value);
+                if (id == programId) {
+                    result = jsonArray.getJSONObject(i);
+                    break;
+                }
+            }
+        }
+
+        return result;
     }
 }

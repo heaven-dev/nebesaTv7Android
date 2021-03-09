@@ -40,13 +40,25 @@
             android:id="@+id/seriesAndName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@id/episode"
+            android:layout_above="@id/caption"
             android:layout_marginBottom="8dp"
             android:text=""
             android:textColor="@color/player_text"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/episode"
+            android:layout_marginBottom="8dp"
+            android:text=""
+            android:textColor="@color/player_text"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/episode"

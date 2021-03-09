@@ -58,6 +58,7 @@ import static ru.tv7.nebesa.helpers.Constants.ARCHIVE_LANGUAGE;
 import static ru.tv7.nebesa.helpers.Constants.ARCHIVE_VIDEO_URL;
 import static ru.tv7.nebesa.helpers.Constants.AUDIO_INDEX_ENABLE_LANG;
 import static ru.tv7.nebesa.helpers.Constants.AUDIO_INDEX_PARAM;
+import static ru.tv7.nebesa.helpers.Constants.CAPTION;
 import static ru.tv7.nebesa.helpers.Constants.COLON_WITH_SPACE;
 import static ru.tv7.nebesa.helpers.Constants.DASH;
 import static ru.tv7.nebesa.helpers.Constants.EPISODE_NUMBER;
@@ -73,7 +74,9 @@ import static ru.tv7.nebesa.helpers.Constants.PAUSE_START_ICON_ANIMATION_DURATIO
 import static ru.tv7.nebesa.helpers.Constants.PAUSE_START_ICON_ANIMATION_END;
 import static ru.tv7.nebesa.helpers.Constants.PAUSE_START_ICON_ANIMATION_START;
 import static ru.tv7.nebesa.helpers.Constants.PAUSE_START_ICON_ANIMATION_START_OFFSET;
+import static ru.tv7.nebesa.helpers.Constants.PERCENT;
 import static ru.tv7.nebesa.helpers.Constants.PNID_PARAM;
+import static ru.tv7.nebesa.helpers.Constants.POSITION;
 import static ru.tv7.nebesa.helpers.Constants.QUESTION_MARK;
 import static ru.tv7.nebesa.helpers.Constants.SERIES_AND_NAME;
 import static ru.tv7.nebesa.helpers.Constants.SLASH_WITH_SPACES;
@@ -83,6 +86,8 @@ import static ru.tv7.nebesa.helpers.Constants.TV_BRAND;
 import static ru.tv7.nebesa.helpers.Constants.VIDEO_CONTROLS_TIMEOUT;
 import static ru.tv7.nebesa.helpers.Constants.VIDEO_POSITION_TIMEOUT;
 import static ru.tv7.nebesa.helpers.Constants.VIDEO_SEEK_STEP_SECONDS;
+import static ru.tv7.nebesa.helpers.Constants.VIDEO_STATUSES_SP_DEFAULT;
+import static ru.tv7.nebesa.helpers.Constants.VIDEO_STATUSES_SP_TAG;
 import static ru.tv7.nebesa.helpers.Constants.VOD_PARAM;
 import static ru.tv7.nebesa.helpers.Constants.ZERO_STR;
 import static ru.tv7.nebesa.helpers.Constants._LINK_PATH_;
@@ -185,6 +190,17 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
                 }
             }
 
+            TextView caption = root.findViewById(R.id.caption);
+            if (caption != null) {
+                String captionText = Utils.getValue(selectedProgram, CAPTION);
+                if (captionText != null && captionText.length() > 0) {
+                    caption.setText(captionText);
+                }
+                else {
+                    caption.setVisibility(View.GONE);
+                }
+            }
+
             TextView seriesAndName = root.findViewById(R.id.seriesAndName);
             if (seriesAndName != null) {
                 String name = Utils.getValue(selectedProgram, SERIES_AND_NAME);
@@ -253,6 +269,13 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
             exoPlayer.addListener(this);
             exoPlayer.prepare(hasSubtitles ? mergedMediaSource : hlsMediaSource);
             exoPlayer.setPlayWhenReady(true);
+
+            JSONObject videoStatus = this.getVideoStatus();
+            if (videoStatus != null && videoStatus.getInt(PERCENT) < 100) {
+                // Start video from position
+                videoPosition = videoStatus.getInt(POSITION);
+                this.seekTo();
+            }
 
             this.hideProgressBar();
             this.addVideoProgressTimer();
@@ -586,9 +609,103 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
     }
 
     /**
+     * Returns video status object from shared preferences.
+     * @return JSONObject
+     */
+    private JSONObject getVideoStatus() {
+        JSONObject statusItem = null;
+        try {
+            String value = Utils.getValue(selectedProgram, ID);
+            if (value != null) {
+                statusItem = Utils.getVideoStatus(Utils.stringToInt(value), getContext());
+            }
+        }
+        catch(Exception e) {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "ArchivePlayerFragment.getVideoStatus(): Exception: " + e);
+            }
+        }
+
+        return statusItem;
+    }
+
+    /**
+     * Saves video watch status to shared preferences.
+     */
+    private void saveVideoStatus() {
+        try {
+            JSONArray jsonArray = Utils.getSavedPrefs(VIDEO_STATUSES_SP_TAG, VIDEO_STATUSES_SP_DEFAULT, getContext());
+            if (jsonArray != null) {
+                int programId = 0;
+                String value = Utils.getValue(selectedProgram, ID);
+                if (value != null) {
+                    programId = Utils.stringToInt(value);
+                }
+
+                // Remove existing value
+                for(int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject obj = jsonArray.getJSONObject(i);
+                    if (obj == null) {
+                        continue;
+                    }
+
+                    value = Utils.getValue(obj, ID);
+                    if (value == null) {
+                        continue;
+                    }
+
+                    int id = Utils.stringToInt(value);
+                    if (id == programId) {
+                        jsonArray.remove(i);
+                        break;
+                    }
+                }
+
+                long position = exoPlayer.getContentPosition() / 1000;
+                long duration = exoPlayer.getDuration() / 1000;
+
+                int percent = 0;
+                if (duration - position <= 60) {
+                    percent = 100;
+                }
+                else {
+                    percent = Math.round((float)position / (float)duration * (float)100);
+                    if (percent < 0) {
+                        percent = 0;
+                    }
+                    if (percent > 100) {
+                        percent = 100;
+                    }
+                }
+
+                // Add new value
+                JSONObject obj = new JSONObject();
+                obj.put(ID, programId);
+                obj.put(POSITION, position);
+                obj.put(PERCENT, percent);
+
+                jsonArray.put(obj);
+
+                if (BuildConfig.DEBUG) {
+                    Log.d(LOG_TAG, "ArchivePlayerFragment.saveVideoStatus(): Save status: " + obj.toString());
+                }
+
+                Utils.savePrefs(VIDEO_STATUSES_SP_TAG, getContext(), jsonArray);
+            }
+        }
+        catch(Exception e) {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "ArchivePlayerFragment.saveVideoStatus(): Exception: " + e);
+            }
+        }
+    }
+
+    /**
      * Release the resources and opens the previous page.
      */
     private synchronized void toPreviousPage() {
+        this.saveVideoStatus();
+
         this.releasePlayer();
         this.cancelVideoProgressTimer();
         this.cancelVideoControlsTimer();

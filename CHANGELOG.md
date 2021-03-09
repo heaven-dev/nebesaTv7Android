@@ -1,3 +1,17 @@
+# 09.03.2021 09:43
+
+### Bug Fixes
+
+* Fix to virtual keyboard.
+
+### Features
+
+* Smaller toolbar and sidebar.
+* Added video watch status bar to the program info page.
+* Added caption text to controls of archive player page.
+* New version number.
+
+
 # 06.02.2021 12:20
 
 ### Bug Fixes
