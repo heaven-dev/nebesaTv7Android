@@ -42,12 +42,14 @@
                         android:layout_marginBottom="20dp"
                         android:layout_weight="0.7"
                         android:text=""
+                        android:ellipsize="end"
+                        android:maxLines="1"
                         android:gravity="center_vertical"
                         android:textColor="@color/content_area_text"
                         android:textSize="24sp"
                         android:paddingStart="10dp"
                         android:paddingEnd="10dp"
-                        android:background="@color/search_text_box_bg"/>
+                        android:background="@drawable/search_box"/>
                 </LinearLayout>
 
                 <LinearLayout

@@ -1,7 +1,8 @@
-# 10.03.2021 08:32
+# 10.03.2021 13:04
 
 ### Bug Fixes
 
+* Fix to search text box.
 * Fix to virtual keyboard.
 
 ### Features
@@ -9,6 +10,7 @@
 * Smaller toolbar and sidebar.
 * Added video watch status bar to the program info page.
 * Added caption text to controls of archive player page.
+* Invalid search set text box background to red.
 * Error page and new error handling.
 * New version number.
 

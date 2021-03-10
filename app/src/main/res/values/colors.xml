@@ -27,6 +27,7 @@
     <color name="ongoing_program_icon_bg_start">#b00b1e</color>
     <color name="ongoing_program_icon_bg_end">#df9da5</color>
     <color name="search_text_box_bg">#eeeeee</color>
+    <color name="search_text_box_invalid_bg">#fadbd8</color>
     <color name="button_stroke">#444444</color>
     <color name="added_removed_favorites_text_bg">#444444</color>
     <color name="page_text">#444444</color>

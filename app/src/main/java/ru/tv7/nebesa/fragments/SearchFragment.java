@@ -181,6 +181,9 @@ public class SearchFragment extends Fragment {
 
                             Utils.toPage(SEARCH_RESULT_FRAGMENT, getActivity(), true, false,null);
                         }
+                        else {
+                            searchText.setBackgroundResource(R.drawable.search_box_invalid);
+                        }
                     }
                     else if (id == R.id.clearKey) {
                         if (searchText != null) {
@@ -195,6 +198,8 @@ public class SearchFragment extends Fragment {
                             if (text != null && view != null) {
                                 String newChar = view.getText().toString();
                                 if (newChar != null) {
+                                    searchText.setBackgroundResource(R.drawable.search_box);
+
                                     text += newChar;
                                     searchText.setText(text);
                                 }
@@ -215,6 +220,8 @@ public class SearchFragment extends Fragment {
                             if (buttonId == SPACE_BUTTON) {
                                 String text = searchText.getText().toString();
                                 if (text != null) {
+                                    searchText.setBackgroundResource(R.drawable.search_box);
+
                                     text += SPACE;
                                     searchText.setText(text);
                                 }

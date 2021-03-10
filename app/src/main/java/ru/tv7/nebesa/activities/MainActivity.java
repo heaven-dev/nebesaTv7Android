@@ -212,9 +212,7 @@ public class MainActivity extends AppCompatActivity implements EpgDataLoadedList
                 Log.d(LOG_TAG, "MainActivity.onEpgDataLoaded(): EpgData load/parse ok.");
             }
 
-            startupLogo.setVisibility(View.GONE);
-            progressBar.setVisibility(View.GONE);
-            fragmentContainer.setVisibility(View.VISIBLE);
+            this.prepareUi();
 
             Utils.toPage(TV_MAIN_FRAGMENT, this, false, false, null);
         }
@@ -236,6 +234,8 @@ public class MainActivity extends AppCompatActivity implements EpgDataLoadedList
             Log.d(LOG_TAG, "MainActivity.onEpgDataLoadError(): EpgData load/parse error: " + message);
         }
 
+        this.prepareUi();
+
         Utils.toErrorPage(this);
     }
 
@@ -248,7 +248,18 @@ public class MainActivity extends AppCompatActivity implements EpgDataLoadedList
             Log.d(LOG_TAG, "MainActivity.onNoNetwork(): ***No network connection!***");
         }
 
+        this.prepareUi();
+
         Utils.toErrorPage(this);
+    }
+
+    /**
+     * Hides logo and progressbar. Shows fragment container.
+     */
+    private void prepareUi() {
+        startupLogo.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
+        fragmentContainer.setVisibility(View.VISIBLE);
     }
 
     /**
