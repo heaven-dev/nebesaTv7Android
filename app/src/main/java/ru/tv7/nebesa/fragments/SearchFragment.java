@@ -69,14 +69,21 @@ public class SearchFragment extends Fragment {
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        try {
+            super.onCreate(savedInstanceState);
 
-        if (BuildConfig.DEBUG) {
-            Log.d(LOG_TAG, "SearchFragment.onCreate() called.");
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "SearchFragment.onCreate() called.");
+            }
+
+            sharedCacheViewModel = ViewModelProviders.of(requireActivity()).get(SharedCacheViewModel.class);
         }
-
-
-        sharedCacheViewModel = ViewModelProviders.of(requireActivity()).get(SharedCacheViewModel.class);
+        catch (Exception e) {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "SearchFragment.onCreate(): Exception: " + e);
+            }
+            Utils.toErrorPage(getActivity());
+        }
     }
 
     /**
@@ -118,7 +125,7 @@ public class SearchFragment extends Fragment {
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "SearchFragment.onCreateView(): Exception: " + e);
             }
-            Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
+            Utils.toErrorPage(getActivity());
         }
         return root;
     }
@@ -331,7 +338,7 @@ public class SearchFragment extends Fragment {
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "SearchFragment.onKeyDown(): Exception: " + e);
             }
-            Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
+            Utils.toErrorPage(getActivity());
         }
 
         return true;

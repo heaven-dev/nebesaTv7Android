@@ -91,14 +91,22 @@ public class CategoriesFragment extends Fragment implements ArchiveDataLoadedLis
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        try {
+            super.onCreate(savedInstanceState);
 
-        if (BuildConfig.DEBUG) {
-            Log.d(LOG_TAG, "CategoriesFragment.onCreate() called.");
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "CategoriesFragment.onCreate() called.");
+            }
+
+            archiveViewModel = ViewModelProviders.of(requireActivity()).get(ArchiveViewModel.class);
+            sharedCacheViewModel = ViewModelProviders.of(requireActivity()).get(SharedCacheViewModel.class);
         }
-
-        archiveViewModel = ViewModelProviders.of(requireActivity()).get(ArchiveViewModel.class);
-        sharedCacheViewModel = ViewModelProviders.of(requireActivity()).get(SharedCacheViewModel.class);
+        catch (Exception e) {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "CategoriesFragment.onCreate(): Exception: " + e);
+            }
+            Utils.toErrorPage(getActivity());
+        }
     }
 
     /**
@@ -146,7 +154,7 @@ public class CategoriesFragment extends Fragment implements ArchiveDataLoadedLis
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "CategoriesFragment.onCreateView(): Exception: " + e);
             }
-            Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
+            Utils.toErrorPage(getActivity());
         }
         return root;
     }
@@ -168,7 +176,7 @@ public class CategoriesFragment extends Fragment implements ArchiveDataLoadedLis
             if (dataLength == 0) {
                 // first load
                 categoriesScroll = root.findViewById(R.id.categoriesScroll);
-                categoryGridAdapter = new CategoryGridAdapter(getContext(), jsonArray);
+                categoryGridAdapter = new CategoryGridAdapter(getActivity(), getContext(), jsonArray);
 
                 categoriesScroll.setAdapter(categoryGridAdapter);
             }
@@ -199,7 +207,7 @@ public class CategoriesFragment extends Fragment implements ArchiveDataLoadedLis
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "CategoriesFragment.addElements(): Exception: " + e);
             }
-            Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
+            Utils.toErrorPage(getActivity());
         }
     }
 
@@ -236,11 +244,7 @@ public class CategoriesFragment extends Fragment implements ArchiveDataLoadedLis
                 Log.d(LOG_TAG, "CategoriesFragment.onArchiveDataLoaded(): Exception: " + e);
             }
 
-            Context context = getContext();
-            if (context != null) {
-                String message = context.getString(R.string.toast_something_went_wrong);
-                Utils.showErrorToast(context, message);
-            }
+            Utils.toErrorPage(getActivity());
         }
     }
 
@@ -251,23 +255,24 @@ public class CategoriesFragment extends Fragment implements ArchiveDataLoadedLis
      */
     @Override
     public void onArchiveDataLoadError(String message, String type) {
-        try {
-            if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "Archive data load error. Type: " + type + " - Error message: " + message);
-            }
-
-            Context context = getContext();
-            if (context != null) {
-                message = context.getString(R.string.toast_something_went_wrong);
-
-                Utils.showErrorToast(context, message);
-            }
+        if (BuildConfig.DEBUG) {
+            Log.d(LOG_TAG, "Archive data load error. Type: " + type + " - Error message: " + message);
         }
-        catch(Exception e) {
-            if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "CategoriesFragment.onArchiveDataLoadError(): Exception: " + e);
-            }
+
+        Utils.toErrorPage(getActivity());
+    }
+
+    /**
+     * Archive data load no network error response.
+     * @param type
+     */
+    @Override
+    public void onNoNetwork(String type) {
+        if (BuildConfig.DEBUG) {
+            Log.d(LOG_TAG, "Archive data load error. Type: " + type + " - ***No network connection!***");
         }
+
+        Utils.toErrorPage(getActivity());
     }
 
     /**
@@ -399,7 +404,7 @@ public class CategoriesFragment extends Fragment implements ArchiveDataLoadedLis
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "CategoriesFragment.onKeyDown(): Exception: " + e);
             }
-            Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
+            Utils.toErrorPage(getActivity());
         }
 
         return true;

@@ -1,5 +1,6 @@
 package ru.tv7.nebesa;
 
+import android.app.Activity;
 import android.app.Application;
 import android.util.Log;
 
@@ -19,6 +20,8 @@ public class NebesaTv7 extends Application {
 
     private RequestQueue requestQueue = null;
     private static NebesaTv7 nebesaTv7 = null;
+    private boolean connectedToNet = true;
+    private Activity activity = null;
 
     /**
      * onCreate() - Android lifecycle method.
@@ -90,5 +93,37 @@ public class NebesaTv7 extends Application {
         if (requestQueue != null) {
             requestQueue.cancelAll(tag);
         }
+    }
+
+    /**
+     * Returns is connected to network value.
+     * @return
+     */
+    public boolean getConnectedToNet() {
+        return connectedToNet;
+    }
+
+    /**
+     * Sets is connected to network value.
+     * @param value
+     */
+    public void setConnectedToNet(boolean value) {
+        connectedToNet = value;
+    }
+
+    /**
+     * Returns activity.
+     * @return
+     */
+    public Activity getActivity() {
+        return activity;
+    }
+
+    /**
+     * Sets activity.
+     * @param value
+     */
+    public void setActivity(Activity value) {
+        activity = value;
     }
 }

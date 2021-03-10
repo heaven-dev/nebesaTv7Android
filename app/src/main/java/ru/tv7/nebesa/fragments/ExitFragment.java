@@ -55,13 +55,21 @@ public class ExitFragment extends Fragment {
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        try {
+            super.onCreate(savedInstanceState);
 
-        if (BuildConfig.DEBUG) {
-            Log.d(LOG_TAG, "ExitFragment.onCreate() called.");
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "ExitFragment.onCreate() called.");
+            }
+
+            sharedCacheViewModel = ViewModelProviders.of(requireActivity()).get(SharedCacheViewModel.class);
         }
-
-        sharedCacheViewModel = ViewModelProviders.of(requireActivity()).get(SharedCacheViewModel.class);
+        catch (Exception e) {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "ExitFragment.onCreate(): Exception: " + e);
+            }
+            Utils.toErrorPage(getActivity());
+        }
     }
 
     /**
@@ -93,14 +101,14 @@ public class ExitFragment extends Fragment {
                 yesButton.requestFocus();
             }
             else {
-                Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
+                Utils.toErrorPage(getActivity());
             }
         }
         catch (Exception e) {
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "ExitFragment.onCreateView(): Exception: " + e);
             }
-            Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
+            Utils.toErrorPage(getActivity());
         }
         return root;
     }
@@ -170,7 +178,7 @@ public class ExitFragment extends Fragment {
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "ExitFragment.onKeyDown(): Exception: " + e);
             }
-            Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
+            Utils.toErrorPage(getActivity());
         }
 
         return true;

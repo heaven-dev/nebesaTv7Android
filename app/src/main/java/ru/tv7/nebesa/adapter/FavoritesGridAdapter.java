@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -30,10 +31,12 @@ import static ru.tv7.nebesa.helpers.Constants.TYPE;
  */
 public class FavoritesGridAdapter extends RecyclerView.Adapter<FavoritesGridAdapter.SimpleViewHolder> {
 
+    private FragmentActivity activity = null;
     private Context context = null;
     private JSONArray elements = null;
 
-    public FavoritesGridAdapter(Context context, JSONArray jsonArray) {
+    public FavoritesGridAdapter(FragmentActivity activity, Context context, JSONArray jsonArray) {
+        this.activity = activity;
         this.context = context;
         this.elements = jsonArray;
     }
@@ -124,7 +127,7 @@ public class FavoritesGridAdapter extends RecyclerView.Adapter<FavoritesGridAdap
             }
         }
         catch (Exception e) {
-            Utils.showErrorToast(context, context.getResources().getString(R.string.toast_something_went_wrong));
+            Utils.toErrorPage(activity);
         }
     }
 

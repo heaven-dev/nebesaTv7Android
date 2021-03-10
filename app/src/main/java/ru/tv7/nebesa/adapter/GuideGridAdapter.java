@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -35,10 +36,12 @@ import static ru.tv7.nebesa.helpers.Constants.START_END_TIME;
  */
 public class GuideGridAdapter extends RecyclerView.Adapter<GuideGridAdapter.SimpleViewHolder> {
 
+    private FragmentActivity activity = null;
     private Context context = null;
     private JSONArray elements = null;
 
-    public GuideGridAdapter(Context context, JSONArray jsonArray) {
+    public GuideGridAdapter(FragmentActivity activity, Context context, JSONArray jsonArray) {
+        this.activity = activity;
         this.context = context;
         this.elements = jsonArray;
     }
@@ -158,7 +161,7 @@ public class GuideGridAdapter extends RecyclerView.Adapter<GuideGridAdapter.Simp
             }
         }
         catch (Exception e) {
-            Utils.showErrorToast(context, context.getResources().getString(R.string.toast_something_went_wrong));
+            Utils.toErrorPage(activity);
         }
     }
 

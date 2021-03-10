@@ -100,13 +100,21 @@ public class ProgramInfoFragment extends Fragment {
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        try {
+            super.onCreate(savedInstanceState);
 
-        if (BuildConfig.DEBUG) {
-            Log.d(LOG_TAG, "ProgramInfoFragment.onCreate() called.");
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "ProgramInfoFragment.onCreate() called.");
+            }
+
+            sharedCacheViewModel = ViewModelProviders.of(requireActivity()).get(SharedCacheViewModel.class);
         }
-
-        sharedCacheViewModel = ViewModelProviders.of(requireActivity()).get(SharedCacheViewModel.class);
+        catch (Exception e) {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "ProgramInfoFragment.onCreate(): Exception: " + e);
+            }
+            Utils.toErrorPage(getActivity());
+        }
     }
 
     /**
@@ -307,7 +315,7 @@ public class ProgramInfoFragment extends Fragment {
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "ProgramInfoFragment.onCreateView(): Exception: " + e);
             }
-            Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
+            Utils.toErrorPage(getActivity());
         }
         return root;
     }
@@ -425,7 +433,7 @@ public class ProgramInfoFragment extends Fragment {
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "ProgramInfoFragment.onKeyDown(): Exception: " + e);
             }
-            Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
+            Utils.toErrorPage(getActivity());
         }
 
         return true;
@@ -447,6 +455,7 @@ public class ProgramInfoFragment extends Fragment {
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "ArchivePlayerFragment.getVideoStatus(): Exception: " + e);
             }
+            Utils.toErrorPage(getActivity());
         }
 
         return statusItem;

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/errorFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/default_background">
+
+    <RelativeLayout
+        android:id="@+id/errorContentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/default_background"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/errorIcon"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/error"
+            android:src="@drawable/error" />
+
+        <TextView
+            android:id="@+id/errorText"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:gravity="center_horizontal"
+            android:layout_below="@+id/errorIcon"
+            android:textSize="30sp"
+            android:visibility="visible"
+            android:textColor="@color/content_area_text"
+            android:text="@string/something_went_wrong" />
+
+        <TextView
+            android:id="@+id/closeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_below="@+id/errorText"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:textSize="30sp"
+            android:focusable="true"
+            android:width="140dp"
+            android:textAllCaps="false"
+            android:background="@drawable/close_button"
+            android:textColor="@color/exit_overlay_controls"
+            android:text="@string/close" />
+
+    </RelativeLayout>
+
+</LinearLayout>

@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONArray;
@@ -26,11 +27,13 @@ import static ru.tv7.nebesa.helpers.Constants.NAME;
  */
 public class ArchiveMainCategoryGridAdapter extends RecyclerView.Adapter<ArchiveMainCategoryGridAdapter.SimpleViewHolder> {
 
+    private FragmentActivity activity = null;
     private Context context = null;
     private JSONArray elements = null;
     private double contentHeight = 0.0;
 
-    public ArchiveMainCategoryGridAdapter(Context context, JSONArray jsonArray, double contentHeight) {
+    public ArchiveMainCategoryGridAdapter(FragmentActivity activity, Context context, JSONArray jsonArray, double contentHeight) {
+        this.activity = activity;
         this.context = context;
         this.elements = jsonArray;
         this.contentHeight = contentHeight;
@@ -109,7 +112,7 @@ public class ArchiveMainCategoryGridAdapter extends RecyclerView.Adapter<Archive
             }
         }
         catch (Exception e) {
-            Utils.showErrorToast(context, context.getResources().getString(R.string.toast_something_went_wrong));
+            Utils.toErrorPage(activity);
         }
     }
 

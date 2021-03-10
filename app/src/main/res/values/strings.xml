@@ -7,6 +7,7 @@
     <string name="pause_start_stream">Pause/Start</string>
     <string name="arrows">Arrows</string>
     <string name="arrow">Arrow</string>
+    <string name="error">Error</string>
 
     <string name="toolbar_text">Когда содержание имеет значение</string>
     <string name="exit_question">Закрыть приложение ТВ7</string>
@@ -50,4 +51,8 @@
     <string name="os_api_level_title">OS API level:</string>
     <string name="device_title">Device:</string>
     <string name="model_and_product_title">Model (Product):</string>
+
+    <string name="something_went_wrong">Something went wrong :-(</string>
+    <string name="no_network_connection">No network connection :-(</string>
+    <string name="close">Close</string>
 </resources>

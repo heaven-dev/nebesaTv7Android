@@ -61,6 +61,7 @@ abstract public class Constants {
     public static final String SEARCH_RESULT_FRAGMENT = "search_result_fragment";
     public static final String FAVORITES_FRAGMENT = "favorites_fragment";
     public static final String ABOUT_FRAGMENT = "about_fragment";
+    public static final String ERROR_FRAGMENT = "error_fragment";
     public static final String EXIT_OVERLAY_FRAGMENT = "exit_overlay_fragment";
 
     public static final String CHANNEL_URL_PARAM = "channel_url";

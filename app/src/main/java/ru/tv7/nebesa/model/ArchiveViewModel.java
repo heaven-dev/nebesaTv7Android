@@ -486,7 +486,7 @@ public class ArchiveViewModel extends ViewModel {
             Log.d(LOG_TAG, "ArchiveViewModel.getSeriesInfo(): URL: " + url);
         }
 
-        this.runQuery(url, type, null,  archiveDataLoadedListener);
+        this.runQuery(url, type, null, archiveDataLoadedListener);
     }
 
     /**
@@ -563,99 +563,116 @@ public class ArchiveViewModel extends ViewModel {
             Log.d(LOG_TAG, "ArchiveViewModel.runQuery(): called.");
         }
 
-        JsonObjectRequest jsonRequest = new JsonObjectRequest(
-            Request.Method.GET,
-            url,
-            null,
-            new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    try {
-                        if (BuildConfig.DEBUG) {
-                            Log.d(LOG_TAG, "ArchiveViewModel.runQuery(): onResponse(): " + response.toString());
-                        }
+        if (!Utils.isConnectedToGateway()) {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "ArchiveViewModel.runQuery(): ***Not connected to gateway!***");
+            }
 
-                        if (archiveDataLoadedListener != null) {
-                            if (type.equals(PARENT_CATEGORIES_METHOD) || type.equals(SUB_CATEGORIES_METHOD)) {
-                                JSONArray filtered = filterCategoryResponse(response, type);
-                                if (type.equals(PARENT_CATEGORIES_METHOD)) {
-                                    parentCategories = new ArchiveDataCacheItem(filtered);
+            archiveDataLoadedListener.onNoNetwork(type);
+        }
+        else {
+            JsonObjectRequest jsonRequest = new JsonObjectRequest(
+                Request.Method.GET,
+                url,
+                null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            if (BuildConfig.DEBUG) {
+                                Log.d(LOG_TAG, "ArchiveViewModel.runQuery(): onResponse(): " + response.toString());
+                            }
+
+                            if (archiveDataLoadedListener != null) {
+                                if (type.equals(PARENT_CATEGORIES_METHOD) || type.equals(SUB_CATEGORIES_METHOD)) {
+                                    JSONArray filtered = filterCategoryResponse(response, type);
+                                    if (type.equals(PARENT_CATEGORIES_METHOD)) {
+                                        parentCategories = new ArchiveDataCacheItem(filtered);
+                                    }
+                                    else {
+                                        subCategories = new ArchiveDataCacheItem(filtered);
+                                    }
+
+                                    archiveDataLoadedListener.onArchiveDataLoaded(filtered, type);
+                                }
+                                else if (type.equals(TRANSLATION_METHOD) || type.equals(SERIES_INFO_METHOD)) {
+                                    JSONArray filtered = response.getJSONArray(type);
+
+                                    archiveDataLoadedListener.onArchiveDataLoaded(filtered, type);
+                                }
+                                else if (type.equals(GUIDE_DATE_METHOD)) {
+                                    JSONArray filtered = filterGuideByDateResponse(response, type, (Integer) data);
+
+                                    archiveDataLoadedListener.onArchiveDataLoaded(filtered, type);
+                                }
+                                else if (type.equals(SEARCH_METHOD)) {
+                                    JSONArray filtered = filterResponse(response, RESULTS);
+
+                                    archiveDataLoadedListener.onArchiveDataLoaded(filtered, type);
                                 }
                                 else {
-                                    subCategories = new ArchiveDataCacheItem(filtered);
-                                }
+                                    JSONArray filtered = filterResponse(response, type);
 
-                                archiveDataLoadedListener.onArchiveDataLoaded(filtered, type);
+                                    if (type.equals(RECOMMENDATIONS_METHOD)) {
+                                        recommended = new ArchiveDataCacheItem(filtered);
+                                    }
+                                    else if (type.equals(BROADCAST_RECOMMENDATIONS_METHOD)) {
+                                        broadcastRecommendations = new ArchiveDataCacheItem(filtered);
+                                    }
+                                    else if (type.equals(MOST_VIEWED_METHOD)) {
+                                        mostViewed = new ArchiveDataCacheItem(filtered);
+                                    }
+                                    else if (type.equals(NEWEST_METHOD)) {
+                                        newest = new ArchiveDataCacheItem(filtered);
+                                    }
+
+                                    archiveDataLoadedListener.onArchiveDataLoaded(filtered, type);
+                                }
                             }
-                            else if (type.equals(TRANSLATION_METHOD) || type.equals(SERIES_INFO_METHOD)) {
-                                JSONArray filtered = response.getJSONArray(type);
-
-                                archiveDataLoadedListener.onArchiveDataLoaded(filtered, type);
+                        }
+                        catch (Exception e) {
+                            if (BuildConfig.DEBUG) {
+                                Log.d(LOG_TAG, "ArchiveViewModel.onResponse(): Error fetching json: " + e.getMessage());
                             }
-                            else if (type.equals(GUIDE_DATE_METHOD)) {
-                                JSONArray filtered = filterGuideByDateResponse(response, type, (Integer)data);
 
-                                archiveDataLoadedListener.onArchiveDataLoaded(filtered, type);
-                            }
-                            else if (type.equals(SEARCH_METHOD)) {
-                                JSONArray filtered = filterResponse(response, RESULTS);
-
-                                archiveDataLoadedListener.onArchiveDataLoaded(filtered, type);
-                            }
-                            else {
-                                JSONArray filtered = filterResponse(response, type);
-
-                                if (type.equals(RECOMMENDATIONS_METHOD)) {
-                                    recommended = new ArchiveDataCacheItem(filtered);
-                                }
-                                else if (type.equals(BROADCAST_RECOMMENDATIONS_METHOD)) {
-                                    broadcastRecommendations = new ArchiveDataCacheItem(filtered);
-                                }
-                                else if (type.equals(MOST_VIEWED_METHOD)) {
-                                    mostViewed = new ArchiveDataCacheItem(filtered);
-                                }
-                                else if (type.equals(NEWEST_METHOD)) {
-                                    newest = new ArchiveDataCacheItem(filtered);
-                                }
-
-                                archiveDataLoadedListener.onArchiveDataLoaded(filtered, type);
+                            if (archiveDataLoadedListener != null) {
+                                archiveDataLoadedListener.onArchiveDataLoadError(e.getMessage(), type);
                             }
                         }
                     }
-                    catch (Exception e) {
-                        if (BuildConfig.DEBUG) {
-                            Log.d(LOG_TAG, "ArchiveViewModel.onResponse(): Error fetching json: " + e.getMessage());
-                        }
-                    }
-                }
-            },
-            new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    try {
-                        if (BuildConfig.DEBUG) {
-                            Log.d(LOG_TAG, "ArchiveViewModel.onErrorResponse(): Error fetching json: " + error.toString());
-                        }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        try {
+                            if (BuildConfig.DEBUG) {
+                                Log.d(LOG_TAG, "ArchiveViewModel.onErrorResponse(): Error fetching json: " + error.toString());
+                            }
 
-                        if (archiveDataLoadedListener != null) {
-                            archiveDataLoadedListener.onArchiveDataLoadError(error.getMessage(), type);
+                            if (archiveDataLoadedListener != null) {
+                                archiveDataLoadedListener.onArchiveDataLoadError(error.getMessage(), type);
+                            }
                         }
-                    }
-                    catch(Exception e) {
-                        if (BuildConfig.DEBUG) {
-                            Log.d(LOG_TAG, "ArchiveViewModel.onErrorResponse(): Error fetching json: " + e.getMessage());
+                        catch (Exception e) {
+                            if (BuildConfig.DEBUG) {
+                                Log.d(LOG_TAG, "ArchiveViewModel.onErrorResponse(): Error fetching json: " + e.getMessage());
+                            }
+
+                            if (archiveDataLoadedListener != null) {
+                                archiveDataLoadedListener.onArchiveDataLoadError(e.getMessage(), type);
+                            }
                         }
                     }
                 }
-            }
-        );
+            );
 
-        jsonRequest.setRetryPolicy(new DefaultRetryPolicy(
-                VOLLEY_TIMEOUT_VALUE,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            jsonRequest.setRetryPolicy(new DefaultRetryPolicy(
+                    VOLLEY_TIMEOUT_VALUE,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-        NebesaTv7.getInstance().addToRequestQueue(jsonRequest);
+            NebesaTv7.getInstance().addToRequestQueue(jsonRequest);
+        }
     }
 
     /**

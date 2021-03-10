@@ -112,7 +112,7 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "TvPlayerFragment.onCreateView(): Exception: " + e);
             }
-            Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
+            Utils.toErrorPage(getActivity());
         }
 
         return root;
@@ -156,7 +156,7 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "TvPlayerFragment.onStart(): Exception: " + e);
             }
-            Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
+            Utils.toErrorPage(getActivity());
         }
     }
 
@@ -323,7 +323,7 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "TvPlayerFragment.onKeyDown(): Exception: " + e);
             }
-            Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
+            Utils.toErrorPage(getActivity());
         }
 
         return false;
@@ -366,7 +366,7 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
                 Log.d(LOG_TAG, "TvPlayerFragment.onPlayerError(): Exception: " + e);
             }
 
-            Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
+            Utils.toErrorPage(getActivity());
         }
     }
 

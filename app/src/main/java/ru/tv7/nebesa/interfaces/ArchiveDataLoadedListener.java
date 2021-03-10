@@ -8,4 +8,5 @@ import org.json.JSONArray;
 public interface ArchiveDataLoadedListener {
     void onArchiveDataLoaded(JSONArray jsonArray, String type);
     void onArchiveDataLoadError(String message, String type);
+    void onNoNetwork(String type);
 }

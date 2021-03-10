@@ -106,18 +106,26 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        try {
+            super.onCreate(savedInstanceState);
 
-        if (BuildConfig.DEBUG) {
-            Log.d(LOG_TAG, "ArchiveMainFragment.onCreate() called.");
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "ArchiveMainFragment.onCreate() called.");
+            }
+
+            archiveViewModel = ViewModelProviders.of(requireActivity()).get(ArchiveViewModel.class);
+            sharedCacheViewModel = ViewModelProviders.of(requireActivity()).get(SharedCacheViewModel.class);
+
+            FragmentManager fragmentManager = Utils.getFragmentManager(getActivity());
+            if (fragmentManager != null) {
+                fragmentManager.addOnBackStackChangedListener(this);
+            }
         }
-
-        archiveViewModel = ViewModelProviders.of(requireActivity()).get(ArchiveViewModel.class);
-        sharedCacheViewModel = ViewModelProviders.of(requireActivity()).get(SharedCacheViewModel.class);
-
-        FragmentManager fragmentManager = Utils.getFragmentManager(getActivity());
-        if (fragmentManager != null) {
-            fragmentManager.addOnBackStackChangedListener(this);
+        catch(Exception e) {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "ArchiveMainFragment.onCreate(): Exception: " + e);
+            }
+            Utils.toErrorPage(getActivity());
         }
     }
 
@@ -157,7 +165,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "ArchiveMainFragment.onCreateView(): Exception: " + e);
             }
-            Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
+            Utils.toErrorPage(getActivity());
         }
         return root;
     }
@@ -229,7 +237,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "ArchiveMainFragment.restorePageState(): Exception: " + e);
             }
-            Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
+            Utils.toErrorPage(getActivity());
         }
     }
 
@@ -244,7 +252,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
 
         if (type.equals(BROADCAST_RECOMMENDATIONS_METHOD) || type.equals(RECOMMENDATIONS_METHOD)) {
             recommendScroll = root.findViewById(R.id.recommendScroll);
-            ArchiveMainProgramGridAdapter adapter = new ArchiveMainProgramGridAdapter(context, jsonArray);
+            ArchiveMainProgramGridAdapter adapter = new ArchiveMainProgramGridAdapter(getActivity(), context, jsonArray);
 
             recommendScroll.setAdapter(adapter);
 
@@ -256,7 +264,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
         }
         else if(type.equals(MOST_VIEWED_METHOD)) {
             mostViewedScroll = root.findViewById(R.id.mostViewedScroll);
-            ArchiveMainProgramGridAdapter adapter = new ArchiveMainProgramGridAdapter(context, jsonArray);
+            ArchiveMainProgramGridAdapter adapter = new ArchiveMainProgramGridAdapter(getActivity(), context, jsonArray);
 
             mostViewedScroll.setAdapter(adapter);
 
@@ -268,7 +276,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
         }
         else if(type.equals(NEWEST_METHOD)) {
             newestScroll = root.findViewById(R.id.newestScroll);
-            ArchiveMainProgramGridAdapter adapter = new ArchiveMainProgramGridAdapter(context, jsonArray);
+            ArchiveMainProgramGridAdapter adapter = new ArchiveMainProgramGridAdapter(getActivity(), context, jsonArray);
 
             newestScroll.setAdapter(adapter);
 
@@ -295,7 +303,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
         Context context = getContext();
 
         categoriesScroll = root.findViewById(R.id.categoriesScroll);
-        ArchiveMainCategoryGridAdapter adapter = new ArchiveMainCategoryGridAdapter(context, jsonArray, this.getContentRowHeight());
+        ArchiveMainCategoryGridAdapter adapter = new ArchiveMainCategoryGridAdapter(getActivity(), context, jsonArray, this.getContentRowHeight());
 
         categoriesScroll.setAdapter(adapter);
 
@@ -353,11 +361,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                 Log.d(LOG_TAG, "ArchiveMainFragment.onArchiveDataLoaded(): Exception: " + e);
             }
 
-            Context context = getContext();
-            if (context != null) {
-                String message = context.getString(R.string.toast_something_went_wrong);
-                Utils.showErrorToast(context, message);
-            }
+            Utils.toErrorPage(getActivity());
         }
     }
 
@@ -368,23 +372,24 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
      */
     @Override
     public void onArchiveDataLoadError(String message, String type) {
-        try {
-            if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "Archive data load error. Type: " + type + " - Error message: " + message);
-            }
-
-            Context context = getContext();
-            if (context != null) {
-                message = context.getString(R.string.toast_something_went_wrong);
-
-                Utils.showErrorToast(context, message);
-            }
+        if (BuildConfig.DEBUG) {
+            Log.d(LOG_TAG, "Archive data load error. Type: " + type + " - Error message: " + message);
         }
-        catch(Exception e) {
-            if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "ArchiveMainFragment.onArchiveDataLoadError(): Exception: " + e);
-            }
+
+        Utils.toErrorPage(getActivity());
+    }
+
+    /**
+     * Archive data load no network error response.
+     * @param type
+     */
+    @Override
+    public void onNoNetwork(String type) {
+        if (BuildConfig.DEBUG) {
+            Log.d(LOG_TAG, "Archive data load error. Type: " + type + " - ***No network connection!***");
         }
+
+        Utils.toErrorPage(getActivity());
     }
 
     /**
@@ -581,7 +586,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "ArchiveMainFragment.onKeyDown(): Exception: " + e);
             }
-            Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
+            Utils.toErrorPage(getActivity());
         }
 
         return true;

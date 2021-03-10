@@ -1,6 +1,5 @@
 package ru.tv7.nebesa.activities;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -18,11 +17,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.tv7.nebesa.BuildConfig;
+import ru.tv7.nebesa.NebesaTv7;
 import ru.tv7.nebesa.R;
 import ru.tv7.nebesa.fragments.AboutFragment;
 import ru.tv7.nebesa.fragments.ArchiveMainFragment;
 import ru.tv7.nebesa.fragments.ArchivePlayerFragment;
 import ru.tv7.nebesa.fragments.CategoriesFragment;
+import ru.tv7.nebesa.fragments.ErrorFragment;
 import ru.tv7.nebesa.fragments.ExitFragment;
 import ru.tv7.nebesa.fragments.FavoritesFragment;
 import ru.tv7.nebesa.fragments.GuideFragment;
@@ -86,13 +87,15 @@ public class MainActivity extends AppCompatActivity implements EpgDataLoadedList
             progressBar.setScaleY(PROGRESS_BAR_SIZE);
             progressBar.setScaleX(PROGRESS_BAR_SIZE);
 
+            NebesaTv7.getInstance().setActivity(this);
+
             viewModel.getEpgData(this);
         }
         catch(Exception e) {
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "MainActivity.onCreate(): Exception: " + e);
             }
-            Utils.showErrorToast(getApplicationContext(), getString(R.string.toast_something_went_wrong));
+            Utils.toErrorPage(this);
         }
     }
 
@@ -159,6 +162,10 @@ public class MainActivity extends AppCompatActivity implements EpgDataLoadedList
                     // About fragment visible
                     return ((AboutFragment) fragment).onKeyDown(keyCode, events);
                 }
+                else if (fragment instanceof ErrorFragment) {
+                    // Error fragment visible
+                    return ((ErrorFragment) fragment).onKeyDown(keyCode, events);
+                }
                 else if (fragment instanceof ExitFragment) {
                     // Exit overlay fragment visible
                     return ((ExitFragment) fragment).onKeyDown(keyCode, events);
@@ -169,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements EpgDataLoadedList
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "MainActivity.onKeyDown(): Exception: " + e);
             }
-            Utils.showErrorToast(getApplicationContext(), getString(R.string.toast_something_went_wrong));
+            Utils.toErrorPage(this);
         }
 
         return super.onKeyDown(keyCode, events);
@@ -216,11 +223,7 @@ public class MainActivity extends AppCompatActivity implements EpgDataLoadedList
                 Log.d(LOG_TAG, "MainActivity.onEpgDataLoaded(): Exception: " + e);
             }
 
-            Context context = getApplicationContext();
-            if (context != null) {
-                String message = context.getString(R.string.toast_something_went_wrong);
-                Utils.showErrorToast(context, message);
-            }
+            Utils.toErrorPage(this);
         }
     }
 
@@ -229,23 +232,23 @@ public class MainActivity extends AppCompatActivity implements EpgDataLoadedList
      */
     @Override
     public void onEpgDataLoadError(String message) {
-        try {
-            if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "MainActivity.onEpgDataLoadError(): EpgData load/parse error: " + message);
-            }
-
-            Context context = getApplicationContext();
-            if (context != null) {
-                message = context.getString(R.string.toast_something_went_wrong);
-
-                Utils.showErrorToast(context, message);
-            }
+        if (BuildConfig.DEBUG) {
+            Log.d(LOG_TAG, "MainActivity.onEpgDataLoadError(): EpgData load/parse error: " + message);
         }
-        catch(Exception e) {
-            if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "MainActivity.onEpgDataLoadError(): Exception: " + e);
-            }
+
+        Utils.toErrorPage(this);
+    }
+
+    /**
+     * No network callback.
+     */
+    @Override
+    public void onNoNetwork() {
+        if (BuildConfig.DEBUG) {
+            Log.d(LOG_TAG, "MainActivity.onNoNetwork(): ***No network connection!***");
         }
+
+        Utils.toErrorPage(this);
     }
 
     /**

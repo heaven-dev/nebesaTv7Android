@@ -77,14 +77,22 @@ public class SearchResultFragment extends Fragment implements ArchiveDataLoadedL
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        try {
+            super.onCreate(savedInstanceState);
 
-        if (BuildConfig.DEBUG) {
-            Log.d(LOG_TAG, "SearchResultFragment.onCreate() called.");
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "SearchResultFragment.onCreate() called.");
+            }
+
+            archiveViewModel = ViewModelProviders.of(requireActivity()).get(ArchiveViewModel.class);
+            sharedCacheViewModel = ViewModelProviders.of(requireActivity()).get(SharedCacheViewModel.class);
         }
-
-        archiveViewModel = ViewModelProviders.of(requireActivity()).get(ArchiveViewModel.class);
-        sharedCacheViewModel = ViewModelProviders.of(requireActivity()).get(SharedCacheViewModel.class);
+        catch (Exception e) {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "SearchResultFragment.onCreate(): Exception: " + e);
+            }
+            Utils.toErrorPage(getActivity());
+        }
     }
 
     /**
@@ -125,7 +133,7 @@ public class SearchResultFragment extends Fragment implements ArchiveDataLoadedL
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "SearchResultFragment.onCreateView(): Exception: " + e);
             }
-            Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
+            Utils.toErrorPage(getActivity());
         }
         return root;
     }
@@ -151,7 +159,7 @@ public class SearchResultFragment extends Fragment implements ArchiveDataLoadedL
             }
 
             searchResultScroll = root.findViewById(R.id.searchResultScroll);
-            searchResultGridAdapter = new SearchResultGridAdapter(getContext(), jsonArray);
+            searchResultGridAdapter = new SearchResultGridAdapter(getActivity(), getContext(), jsonArray);
             searchResultScroll.setAdapter(searchResultGridAdapter);
 
             if (jsonArray.length() == 0) {
@@ -169,7 +177,7 @@ public class SearchResultFragment extends Fragment implements ArchiveDataLoadedL
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "SearchResultFragment.addElements(): Exception: " + e);
             }
-            Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
+            Utils.toErrorPage(getActivity());
         }
     }
 
@@ -206,11 +214,7 @@ public class SearchResultFragment extends Fragment implements ArchiveDataLoadedL
                 Log.d(LOG_TAG, "SearchResultFragment.onArchiveDataLoaded(): Exception: " + e);
             }
 
-            Context context = getContext();
-            if (context != null) {
-                String message = context.getString(R.string.toast_something_went_wrong);
-                Utils.showErrorToast(context, message);
-            }
+            Utils.toErrorPage(getActivity());
         }
     }
 
@@ -221,23 +225,24 @@ public class SearchResultFragment extends Fragment implements ArchiveDataLoadedL
      */
     @Override
     public void onArchiveDataLoadError(String message, String type) {
-        try {
-            if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "Archive data load error. Type: " + type + " - Error message: " + message);
-            }
-
-            Context context = getContext();
-            if (context != null) {
-                message = context.getString(R.string.toast_something_went_wrong);
-
-                Utils.showErrorToast(context, message);
-            }
+        if (BuildConfig.DEBUG) {
+            Log.d(LOG_TAG, "Archive data load error. Type: " + type + " - Error message: " + message);
         }
-        catch(Exception e) {
-            if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "SearchResultFragment.onArchiveDataLoadError(): Exception: " + e);
-            }
+
+        Utils.toErrorPage(getActivity());
+    }
+
+    /**
+     * Archive data load no network error response.
+     * @param type
+     */
+    @Override
+    public void onNoNetwork(String type) {
+        if (BuildConfig.DEBUG) {
+            Log.d(LOG_TAG, "Archive data load error. Type: " + type + " - ***No network connection!***");
         }
+
+        Utils.toErrorPage(getActivity());
     }
 
     /**
@@ -366,7 +371,7 @@ public class SearchResultFragment extends Fragment implements ArchiveDataLoadedL
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "SearchResultFragment.onKeyDown(): Exception: " + e);
             }
-            Utils.showErrorToast(getContext(), getString(R.string.toast_something_went_wrong));
+            Utils.toErrorPage(getActivity());
         }
 
         return true;
