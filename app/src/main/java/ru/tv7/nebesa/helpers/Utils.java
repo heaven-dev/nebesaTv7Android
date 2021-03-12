@@ -176,13 +176,6 @@ public abstract class Utils {
     }
 
     public static void toPage(String page, FragmentActivity activity, boolean replace, boolean addToBackStack, Bundle bundle) {
-        if (!page.equals(ERROR_FRAGMENT) && !isConnectedToGateway()) {
-            page = ERROR_FRAGMENT;
-            replace = true;
-            addToBackStack = false;
-            bundle = null;
-        }
-
         FragmentManager fragmentManager = getFragmentManager(activity);
         if (fragmentManager != null) {
             Fragment fragment = fragmentManager.findFragmentByTag(page);

@@ -26,6 +26,7 @@ import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.android.exoplayer2.upstream.HttpDataSource;
 import com.google.android.exoplayer2.util.Util;
 
 import java.io.IOException;
@@ -35,6 +36,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import ru.tv7.nebesa.BuildConfig;
+import ru.tv7.nebesa.NebesaTv7;
 import ru.tv7.nebesa.R;
 import ru.tv7.nebesa.helpers.EpgItem;
 import ru.tv7.nebesa.helpers.Utils;
@@ -360,10 +362,22 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
     @Override
     public void onPlayerError(ExoPlaybackException error) {
         if (error.type == ExoPlaybackException.TYPE_SOURCE) {
-            IOException e = error.getSourceException();
+            IOException cause = error.getSourceException();
 
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "TvPlayerFragment.onPlayerError(): Exception: " + e);
+                Log.d(LOG_TAG, "TvPlayerFragment.onPlayerError(): Exception: " + cause);
+            }
+
+            if (cause instanceof HttpDataSource.HttpDataSourceException) {
+                HttpDataSource.HttpDataSourceException httpError = (HttpDataSource.HttpDataSourceException) cause;
+
+                if (BuildConfig.DEBUG) {
+                    Log.d(LOG_TAG, "TvPlayerFragment.onPlayerError(): Exception: " + httpError.getMessage());
+                }
+
+                if (httpError.type == HttpDataSource.HttpDataSourceException.TYPE_OPEN || httpError.type == HttpDataSource.HttpDataSourceException.TYPE_READ) {
+                    NebesaTv7.getInstance().setConnectedToNet(false);
+                }
             }
 
             Utils.toErrorPage(getActivity());
