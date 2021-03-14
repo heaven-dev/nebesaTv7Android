@@ -22,6 +22,8 @@ abstract public class Constants {
     public static final int NETWORK_REQUEST_FAILED_ERROR = 102;
     public static final int NETWORK_REQUEST_TIMEOUT_ERROR = 103;
 
+    public static final int STREAM_ERROR_RETRY_DELAY = 3000;
+
     public static final String STREAM_URL = "https://vod.tv7.fi:443/tv7-ru/_definst_/smil:tv7-ru.smil/playlist.m3u8";
     public static final String ARCHIVE_BASE_URL = "https://www.nebesatv7.com/wp-json/tv7-api/v1/";
     public static final String ARCHIVE_VIDEO_URL = "https://vod.tv7.fi:443/vod/_definst_/mp4:_LINK_PATH_/playlist.m3u8";

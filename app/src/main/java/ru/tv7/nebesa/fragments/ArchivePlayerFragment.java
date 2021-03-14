@@ -37,6 +37,7 @@ import com.google.android.exoplayer2.ui.SubtitleView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.upstream.HttpDataSource;
+import com.google.android.exoplayer2.upstream.LoadErrorHandlingPolicy;
 import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.Util;
 
@@ -48,7 +49,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import ru.tv7.nebesa.BuildConfig;
-import ru.tv7.nebesa.NebesaTv7;
 import ru.tv7.nebesa.R;
 import ru.tv7.nebesa.helpers.Utils;
 import ru.tv7.nebesa.interfaces.ArchiveDataLoadedListener;
@@ -70,7 +70,6 @@ import static ru.tv7.nebesa.helpers.Constants.IS_SUBTITLE;
 import static ru.tv7.nebesa.helpers.Constants.LANG_ID;
 import static ru.tv7.nebesa.helpers.Constants.LINK_PATH;
 import static ru.tv7.nebesa.helpers.Constants.LOG_TAG;
-import static ru.tv7.nebesa.helpers.Constants.NO_NETWORK_CONNECTION_ERROR;
 import static ru.tv7.nebesa.helpers.Constants.ONE_STR;
 import static ru.tv7.nebesa.helpers.Constants.PATH;
 import static ru.tv7.nebesa.helpers.Constants.PAUSE_START_ICON_ANIMATION_DURATION;
@@ -83,6 +82,7 @@ import static ru.tv7.nebesa.helpers.Constants.POSITION;
 import static ru.tv7.nebesa.helpers.Constants.QUESTION_MARK;
 import static ru.tv7.nebesa.helpers.Constants.SERIES_AND_NAME;
 import static ru.tv7.nebesa.helpers.Constants.SLASH_WITH_SPACES;
+import static ru.tv7.nebesa.helpers.Constants.STREAM_ERROR_RETRY_DELAY;
 import static ru.tv7.nebesa.helpers.Constants.SUBTITLES_URL;
 import static ru.tv7.nebesa.helpers.Constants.TRANSLATION_LANG_ID;
 import static ru.tv7.nebesa.helpers.Constants.TV_BRAND;
@@ -255,7 +255,7 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
             Context context = getContext();
 
             DataSource.Factory dataSourceFactory = new DefaultHttpDataSourceFactory(Util.getUserAgent(context, getString(R.string.app_name)));
-            HlsMediaSource hlsMediaSource = new HlsMediaSource.Factory(dataSourceFactory).setAllowChunklessPreparation(true).createMediaSource(Uri.parse(videoUrl));
+            HlsMediaSource hlsMediaSource = new HlsMediaSource.Factory(dataSourceFactory).setLoadErrorHandlingPolicy(getErrorHandlingPolicy()).setAllowChunklessPreparation(true).createMediaSource(Uri.parse(videoUrl));
             exoPlayer = new SimpleExoPlayer.Builder(context).build();
             playerView.setPlayer(exoPlayer);
 
@@ -297,6 +297,35 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
             }
             Utils.toErrorPage(getActivity());
         }
+    }
+
+    /**
+     * Stream error handling policy.
+     * @return
+     */
+    private static LoadErrorHandlingPolicy getErrorHandlingPolicy() {
+        return new LoadErrorHandlingPolicy() {
+
+            @Override
+            public long getBlacklistDurationMsFor(int dataType, long loadDurationMs, IOException exception, int errorCount) {
+                return 0;
+            }
+
+            @Override
+            public long getRetryDelayMsFor(int dataType, long loadDurationMs, IOException exception, int errorCount) {
+                if (exception instanceof HttpDataSource.HttpDataSourceException) {
+                    return STREAM_ERROR_RETRY_DELAY;
+                }
+                else {
+                    return C.TIME_UNSET;
+                }
+            }
+
+            @Override
+            public int getMinimumLoadableRetryCount(int dataType) {
+                return Integer.MAX_VALUE;
+            }
+        };
     }
 
     /**
@@ -538,22 +567,23 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
             IOException cause = error.getSourceException();
 
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "ArchivePlayerFragment.onPlayerError(): Exception: " + cause);
+                Log.d(LOG_TAG, "ArchivePlayerFragment.onPlayerError(): Exception cause: " + cause);
             }
 
             if (cause instanceof HttpDataSource.HttpDataSourceException) {
                 HttpDataSource.HttpDataSourceException httpError = (HttpDataSource.HttpDataSourceException) cause;
 
                 if (BuildConfig.DEBUG) {
-                    Log.d(LOG_TAG, "ArchivePlayerFragment.onPlayerError(): Exception: " + httpError.getMessage());
+                    Log.d(LOG_TAG, "ArchivePlayerFragment.onPlayerError(): Exception message: " + httpError.getMessage());
                 }
 
+                /*
                 if (httpError.type == HttpDataSource.HttpDataSourceException.TYPE_OPEN || httpError.type == HttpDataSource.HttpDataSourceException.TYPE_READ) {
                     NebesaTv7.getInstance().setErrorCode(NO_NETWORK_CONNECTION_ERROR);
+                    Utils.toErrorPage(getActivity());
                 }
+                */
             }
-
-            Utils.toErrorPage(getActivity());
         }
     }
 
