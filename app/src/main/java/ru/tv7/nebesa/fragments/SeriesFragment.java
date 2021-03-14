@@ -1,6 +1,5 @@
 package ru.tv7.nebesa.fragments;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
