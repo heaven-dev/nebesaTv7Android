@@ -349,10 +349,11 @@ public abstract class Utils {
         return Long.parseLong(value);
     }
 
+    /*
     public static boolean isConnectedToGateway() {
         boolean connected = true;
 
-        NebesaTv7 app = NebesaTv7.getInstance();
+        TaevasTv7 app = TaevasTv7.getInstance();
         if (app != null) {
             Activity activity = app.getActivity();
             if (activity != null) {
@@ -366,12 +367,13 @@ public abstract class Utils {
             }
 
             if (!connected) {
-                app.setConnectedToNet(false);
+                app.setErrorCode(NO_NETWORK_CONNECTION_ERROR);
             }
         }
 
         return connected;
     }
+    */
 
     public static JSONArray getSavedPrefs(String tag, String defaultValue, Context context) throws Exception {
         JSONArray jsonArray = null;

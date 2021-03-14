@@ -243,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements EpgDataLoadedList
      * No network callback.
      */
     @Override
-    public void onNoNetwork() {
+    public void onNetworkError() {
         if (BuildConfig.DEBUG) {
             Log.d(LOG_TAG, "MainActivity.onNoNetwork(): ***No network connection!***");
         }

@@ -6,5 +6,5 @@ package ru.tv7.nebesa.interfaces;
 public interface EpgDataLoadedListener {
     void onEpgDataLoaded();
     void onEpgDataLoadError(String message);
-    void onNoNetwork();
+    void onNetworkError();
 }

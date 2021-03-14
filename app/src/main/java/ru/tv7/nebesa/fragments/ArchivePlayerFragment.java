@@ -70,6 +70,7 @@ import static ru.tv7.nebesa.helpers.Constants.IS_SUBTITLE;
 import static ru.tv7.nebesa.helpers.Constants.LANG_ID;
 import static ru.tv7.nebesa.helpers.Constants.LINK_PATH;
 import static ru.tv7.nebesa.helpers.Constants.LOG_TAG;
+import static ru.tv7.nebesa.helpers.Constants.NO_NETWORK_CONNECTION_ERROR;
 import static ru.tv7.nebesa.helpers.Constants.ONE_STR;
 import static ru.tv7.nebesa.helpers.Constants.PATH;
 import static ru.tv7.nebesa.helpers.Constants.PAUSE_START_ICON_ANIMATION_DURATION;
@@ -548,7 +549,7 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
                 }
 
                 if (httpError.type == HttpDataSource.HttpDataSourceException.TYPE_OPEN || httpError.type == HttpDataSource.HttpDataSourceException.TYPE_READ) {
-                    NebesaTv7.getInstance().setConnectedToNet(false);
+                    NebesaTv7.getInstance().setErrorCode(NO_NETWORK_CONNECTION_ERROR);
                 }
             }
 
@@ -615,13 +616,13 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
     }
 
     /**
-     * Archive data load no network error response.
+     * Archive data load network error response.
      * @param type
      */
     @Override
-    public void onNoNetwork(String type) {
+    public void onNetworkError(String type) {
         if (BuildConfig.DEBUG) {
-            Log.d(LOG_TAG, "Archive data load error. Type: " + type + " - ***No network connection!***");
+            Log.d(LOG_TAG, "Archive data load error. Type: " + type + " - ***Network error!***");
         }
 
         Utils.toErrorPage(getActivity());
@@ -703,13 +704,19 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
                 obj.put(POSITION, position);
                 obj.put(PERCENT, percent);
 
-                jsonArray.put(obj);
+                // add new object to the begin of array
+                JSONArray newArray = new JSONArray();
+                newArray.put(obj);
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    newArray.put(jsonArray.get(i));
+                }
 
                 if (BuildConfig.DEBUG) {
                     Log.d(LOG_TAG, "ArchivePlayerFragment.saveVideoStatus(): Save status: " + obj.toString());
                 }
 
-                Utils.savePrefs(VIDEO_STATUSES_SP_TAG, getContext(), jsonArray);
+                Utils.savePrefs(VIDEO_STATUSES_SP_TAG, getContext(), newArray);
             }
         }
         catch(Exception e) {

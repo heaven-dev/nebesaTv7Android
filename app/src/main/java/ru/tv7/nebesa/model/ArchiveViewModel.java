@@ -8,6 +8,7 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 
@@ -59,7 +60,10 @@ import static ru.tv7.nebesa.helpers.Constants.LOG_TAG;
 import static ru.tv7.nebesa.helpers.Constants.MOST_VIEWED_METHOD;
 import static ru.tv7.nebesa.helpers.Constants.NAME;
 import static ru.tv7.nebesa.helpers.Constants.NEGATIVE_ONE_STR;
+import static ru.tv7.nebesa.helpers.Constants.NETWORK_REQUEST_FAILED_ERROR;
+import static ru.tv7.nebesa.helpers.Constants.NETWORK_REQUEST_TIMEOUT_ERROR;
 import static ru.tv7.nebesa.helpers.Constants.NEWEST_METHOD;
+import static ru.tv7.nebesa.helpers.Constants.NO_NETWORK_CONNECTION_ERROR;
 import static ru.tv7.nebesa.helpers.Constants.NULL_VALUE;
 import static ru.tv7.nebesa.helpers.Constants.OFFSET_PARAM;
 import static ru.tv7.nebesa.helpers.Constants.ONE_STR;
@@ -647,11 +651,16 @@ public class ArchiveViewModel extends ViewModel {
 
                                 if (archiveDataLoadedListener != null) {
                                     if (error instanceof NoConnectionError) {
-                                        app.setConnectedToNet(false);
-                                        archiveDataLoadedListener.onNoNetwork(type);
+                                        app.setErrorCode(NO_NETWORK_CONNECTION_ERROR);
+                                        archiveDataLoadedListener.onNetworkError(type);
+                                    }
+                                    else if (error instanceof TimeoutError) {
+                                        app.setErrorCode(NETWORK_REQUEST_TIMEOUT_ERROR);
+                                        archiveDataLoadedListener.onNetworkError(type);
                                     }
                                     else {
-                                        archiveDataLoadedListener.onArchiveDataLoadError(error.getMessage(), type);
+                                        app.setErrorCode(NETWORK_REQUEST_FAILED_ERROR);
+                                        archiveDataLoadedListener.onNetworkError(type);
                                     }
                                 }
                             }
@@ -679,6 +688,7 @@ public class ArchiveViewModel extends ViewModel {
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "ArchiveViewModel.runQuery(): Exception: " + e.getMessage());
             }
+
             archiveDataLoadedListener.onArchiveDataLoadError(e.getMessage(), type);
         }
     }

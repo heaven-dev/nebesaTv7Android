@@ -54,5 +54,7 @@
 
     <string name="something_went_wrong">Something went wrong :-(</string>
     <string name="no_network_connection">No network connection :-(</string>
+    <string name="network_request_failed">Network request failed :-(</string>
+    <string name="network_request_timeout">Network request timeout :-(</string>
     <string name="close">Close</string>
 </resources>

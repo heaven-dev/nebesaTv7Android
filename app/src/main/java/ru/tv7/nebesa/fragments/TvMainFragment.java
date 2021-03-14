@@ -248,12 +248,12 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
     }
 
     /**
-     * No network callback.
+     * Archive data load network error response.
      */
     @Override
-    public void onNoNetwork() {
+    public void onNetworkError() {
         if (BuildConfig.DEBUG) {
-            Log.d(LOG_TAG, "MainActivity.onNoNetwork(): ***No network connection!***");
+            Log.d(LOG_TAG, "TvMainFragment.onNetworkError(): ***Network error!***");
         }
 
         Utils.toErrorPage(getActivity());

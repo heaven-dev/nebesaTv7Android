@@ -15,7 +15,12 @@ abstract public class Constants {
     public static final String LOG_TAG = "tv7";
 
     public static final boolean VOLLEY_CACHE = false;
-    public static final int VOLLEY_TIMEOUT_VALUE = 20000;
+    public static final int VOLLEY_TIMEOUT_VALUE = 30000;
+
+    public static final int SOMETHING_WENT_WRONG_ERROR = 100;
+    public static final int NO_NETWORK_CONNECTION_ERROR = 101;
+    public static final int NETWORK_REQUEST_FAILED_ERROR = 102;
+    public static final int NETWORK_REQUEST_TIMEOUT_ERROR = 103;
 
     public static final String STREAM_URL = "https://vod.tv7.fi:443/tv7-ru/_definst_/smil:tv7-ru.smil/playlist.m3u8";
     public static final String ARCHIVE_BASE_URL = "https://www.nebesatv7.com/wp-json/tv7-api/v1/";

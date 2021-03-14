@@ -57,11 +57,14 @@ public class ErrorFragment extends Fragment {
                 Utils.fadePageAnimation(errorContentContainer);
             }
 
-            boolean isConnected = NebesaTv7.getInstance().getConnectedToNet();
-            if (!isConnected) {
-                TextView tv = root.findViewById(R.id.errorText);
-                if (tv != null) {
-                    tv.setText(getText(R.string.no_network_connection));
+            TextView tv = root.findViewById(R.id.errorText);
+            if (tv != null) {
+                String errorText = NebesaTv7.getInstance().getErrorString();
+                if (errorText != null) {
+                    tv.setText(errorText);
+                }
+                else {
+                    tv.setText(R.string.something_went_wrong);
                 }
             }
 

@@ -49,6 +49,7 @@ import static ru.tv7.nebesa.helpers.Constants.DASH_WITH_SPACES;
 import static ru.tv7.nebesa.helpers.Constants.DOT;
 import static ru.tv7.nebesa.helpers.Constants.GUIDE_TIMER_TIMEOUT;
 import static ru.tv7.nebesa.helpers.Constants.LOG_TAG;
+import static ru.tv7.nebesa.helpers.Constants.NO_NETWORK_CONNECTION_ERROR;
 import static ru.tv7.nebesa.helpers.Constants.PAUSE_START_ICON_ANIMATION_DURATION;
 import static ru.tv7.nebesa.helpers.Constants.PAUSE_START_ICON_ANIMATION_END;
 import static ru.tv7.nebesa.helpers.Constants.PAUSE_START_ICON_ANIMATION_START;
@@ -376,7 +377,7 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
                 }
 
                 if (httpError.type == HttpDataSource.HttpDataSourceException.TYPE_OPEN || httpError.type == HttpDataSource.HttpDataSourceException.TYPE_READ) {
-                    NebesaTv7.getInstance().setConnectedToNet(false);
+                    NebesaTv7.getInstance().setErrorCode(NO_NETWORK_CONNECTION_ERROR);
                 }
             }
 

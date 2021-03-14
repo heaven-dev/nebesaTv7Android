@@ -9,6 +9,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
 import static ru.tv7.nebesa.helpers.Constants.LOG_TAG;
+import static ru.tv7.nebesa.helpers.Constants.NETWORK_REQUEST_FAILED_ERROR;
+import static ru.tv7.nebesa.helpers.Constants.NETWORK_REQUEST_TIMEOUT_ERROR;
+import static ru.tv7.nebesa.helpers.Constants.NO_NETWORK_CONNECTION_ERROR;
 import static ru.tv7.nebesa.helpers.Constants.VOLLEY_CACHE;
 
 /**
@@ -20,7 +23,7 @@ public class NebesaTv7 extends Application {
 
     private RequestQueue requestQueue = null;
     private static NebesaTv7 nebesaTv7 = null;
-    private boolean connectedToNet = true;
+    private int errorCode = 0;
     private Activity activity = null;
 
     /**
@@ -96,19 +99,30 @@ public class NebesaTv7 extends Application {
     }
 
     /**
-     * Returns is connected to network value.
+     * Returns error string.
      * @return
      */
-    public boolean getConnectedToNet() {
-        return connectedToNet;
+    public String getErrorString() {
+        if (errorCode == NO_NETWORK_CONNECTION_ERROR) {
+            return getResources().getString(R.string.no_network_connection);
+        }
+        else if (errorCode == NETWORK_REQUEST_FAILED_ERROR) {
+            return getResources().getString(R.string.network_request_failed);
+        }
+        else if (errorCode == NETWORK_REQUEST_TIMEOUT_ERROR) {
+            return getResources().getString(R.string.network_request_timeout);
+        }
+        else {
+            return getResources().getString(R.string.something_went_wrong);
+        }
     }
 
     /**
-     * Sets is connected to network value.
-     * @param value
+     * Sets error code.
+     * @param errorCode
      */
-    public void setConnectedToNet(boolean value) {
-        connectedToNet = value;
+    public void setErrorCode(int errorCode) {
+        this.errorCode = errorCode;
     }
 
     /**
