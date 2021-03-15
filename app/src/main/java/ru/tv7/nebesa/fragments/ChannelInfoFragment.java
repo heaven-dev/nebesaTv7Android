@@ -30,8 +30,6 @@ public class ChannelInfoFragment extends Fragment {
 
     private View root = null;
     private List<TextView> menuTexts = null;
-    private RelativeLayout channelInfoContentContainer = null;
-    private int scrollPos = 0;
 
     private SharedCacheViewModel sharedCacheViewModel = null;
 
@@ -86,7 +84,7 @@ public class ChannelInfoFragment extends Fragment {
         try {
             root = inflater.inflate(R.layout.fragment_channel_info, container, false);
 
-            channelInfoContentContainer = root.findViewById(R.id.channelInfoContentContainer);
+            RelativeLayout channelInfoContentContainer = root.findViewById(R.id.channelInfoContentContainer);
             if (channelInfoContentContainer != null) {
                 Utils.fadePageAnimation(channelInfoContentContainer);
             }
@@ -163,10 +161,6 @@ public class ChannelInfoFragment extends Fragment {
                 if (Sidebar.isSideMenuOpen(menuTexts)) {
                     Sidebar.menuFocusDown(root, R.id.channelInfoMenuContainer);
                 }
-                else {
-                    scrollPos += 50;
-                    channelInfoContentContainer.scrollTo(0, scrollPos);
-                }
             }
             else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
                 if (BuildConfig.DEBUG) {
@@ -175,13 +169,6 @@ public class ChannelInfoFragment extends Fragment {
 
                 if (Sidebar.isSideMenuOpen(menuTexts)) {
                     Sidebar.menuFocusUp(root, R.id.channelInfoMenuContainer);
-                }
-                else {
-                    scrollPos -= 50;
-                    if (scrollPos < 0) {
-                        scrollPos = 0;
-                    }
-                    channelInfoContentContainer.scrollTo(0, scrollPos);
                 }
             }
             else if (keyCode == KeyEvent.KEYCODE_BACK) {
