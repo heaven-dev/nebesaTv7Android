@@ -168,16 +168,18 @@ public class AboutFragment extends Fragment {
                     Log.d(LOG_TAG, "AboutFragment.onKeyDown(): KEYCODE_DPAD_CENTER: keyCode: " + keyCode);
                 }
 
-                int focusedMenu = Sidebar.getFocusedMenuItem(root);
-                if (focusedMenu == R.id.aboutMenuContainer) {
-                    this.focusOutFromSideMenu();
-                }
-                else {
-                    if (BuildConfig.DEBUG) {
-                        Log.d(LOG_TAG, "AboutFragment.onKeyDown(): Selected sidebar menu: " + focusedMenu);
+                if (Sidebar.isSideMenuOpen(menuTexts)) {
+                    int focusedMenu = Sidebar.getFocusedMenuItem(root);
+                    if (focusedMenu == R.id.aboutMenuContainer) {
+                        this.focusOutFromSideMenu();
                     }
+                    else {
+                        if (BuildConfig.DEBUG) {
+                            Log.d(LOG_TAG, "AboutFragment.onKeyDown(): Selected sidebar menu: " + focusedMenu);
+                        }
 
-                    Sidebar.menuItemSelected(focusedMenu, getActivity(), sharedCacheViewModel);
+                        Sidebar.menuItemSelected(focusedMenu, getActivity(), sharedCacheViewModel);
+                    }
                 }
             }
             else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
