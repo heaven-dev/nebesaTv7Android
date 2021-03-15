@@ -104,6 +104,9 @@ public class Sidebar {
             focusedMenuId = setFocusToMenu(root, R.id.favoritesMenuContainer);
         }
         else if (id == R.id.favoritesMenuContainer) {
+            focusedMenuId = setFocusToMenu(root, R.id.channelInfoMenuContainer);
+        }
+        else if (id == R.id.channelInfoMenuContainer) {
             focusedMenuId = setFocusToMenu(root, R.id.aboutMenuContainer);
         }
 
@@ -124,6 +127,9 @@ public class Sidebar {
 
         int focusedMenuId = 0;
         if (id == R.id.aboutMenuContainer) {
+            focusedMenuId = setFocusToMenu(root, R.id.channelInfoMenuContainer);
+        }
+        else if (id == R.id.channelInfoMenuContainer) {
             focusedMenuId = setFocusToMenu(root, R.id.favoritesMenuContainer);
         }
         else if (id == R.id.favoritesMenuContainer) {
@@ -185,6 +191,9 @@ public class Sidebar {
             }
             else if (menuId == R.id.favoritesMenuContainer) {
                 fragmentTag = Constants.FAVORITES_FRAGMENT;
+            }
+            else if (menuId == R.id.channelInfoMenuContainer) {
+                fragmentTag = Constants.CHANNEL_INFO_FRAGMENT;
             }
             else if (menuId == R.id.aboutMenuContainer) {
                 fragmentTag = Constants.ABOUT_FRAGMENT;

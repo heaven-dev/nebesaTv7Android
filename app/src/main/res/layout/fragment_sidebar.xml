@@ -164,6 +164,36 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/channelInfoMenuContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:orientation="horizontal"
+            android:layout_below="@+id/favoritesMenuContainer"
+            android:background="@drawable/menu_item_container">
+
+            <ImageView
+                android:id="@+id/channelInfoMenuIcon"
+                android:layout_width="30dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:src="@drawable/info" />
+
+            <TextView
+                android:id="@+id/channelInfoMenuText"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:gravity="center_vertical"
+                android:textSize="20sp"
+                android:visibility="gone"
+                android:paddingStart="0dp"
+                android:paddingEnd="10dp"
+                android:textColor="@color/sidebar_text"
+                android:text="@string/channel_info" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/aboutMenuContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

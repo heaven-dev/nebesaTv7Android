@@ -34,6 +34,7 @@ import ru.tv7.nebesa.fragments.AboutFragment;
 import ru.tv7.nebesa.fragments.ArchiveMainFragment;
 import ru.tv7.nebesa.fragments.ArchivePlayerFragment;
 import ru.tv7.nebesa.fragments.CategoriesFragment;
+import ru.tv7.nebesa.fragments.ChannelInfoFragment;
 import ru.tv7.nebesa.fragments.ErrorFragment;
 import ru.tv7.nebesa.fragments.ExitFragment;
 import ru.tv7.nebesa.fragments.FavoritesFragment;
@@ -49,6 +50,7 @@ import static ru.tv7.nebesa.helpers.Constants.ABOUT_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.ARCHIVE_MAIN_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.ARCHIVE_PLAYER_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.CATEGORIES_FRAGMENT;
+import static ru.tv7.nebesa.helpers.Constants.CHANNEL_INFO_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.COLON;
 import static ru.tv7.nebesa.helpers.Constants.DASH;
 import static ru.tv7.nebesa.helpers.Constants.DOT;
@@ -209,6 +211,9 @@ public abstract class Utils {
                 }
                 else if (page.equals(FAVORITES_FRAGMENT)) {
                     fragment = FavoritesFragment.newInstance();
+                }
+                else if (page.equals(CHANNEL_INFO_FRAGMENT)) {
+                    fragment = ChannelInfoFragment.newInstance();
                 }
                 else if (page.equals(ABOUT_FRAGMENT)) {
                     fragment = AboutFragment.newInstance();

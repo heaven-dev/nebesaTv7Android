@@ -23,6 +23,7 @@ import ru.tv7.nebesa.fragments.AboutFragment;
 import ru.tv7.nebesa.fragments.ArchiveMainFragment;
 import ru.tv7.nebesa.fragments.ArchivePlayerFragment;
 import ru.tv7.nebesa.fragments.CategoriesFragment;
+import ru.tv7.nebesa.fragments.ChannelInfoFragment;
 import ru.tv7.nebesa.fragments.ErrorFragment;
 import ru.tv7.nebesa.fragments.ExitFragment;
 import ru.tv7.nebesa.fragments.FavoritesFragment;
@@ -157,6 +158,10 @@ public class MainActivity extends AppCompatActivity implements EpgDataLoadedList
                 else if (fragment instanceof FavoritesFragment) {
                     // Favorites fragment visible
                     return ((FavoritesFragment) fragment).onKeyDown(keyCode, events);
+                }
+                else if (fragment instanceof ChannelInfoFragment) {
+                    // Channel info fragment visible
+                    return ((ChannelInfoFragment) fragment).onKeyDown(keyCode, events);
                 }
                 else if (fragment instanceof AboutFragment) {
                     // About fragment visible
