@@ -50,8 +50,8 @@
                     android:layout_below="@+id/title_1"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     android:textColor="@color/content_area_text"
                     android:text="@string/title_1_chapter_1" />
 
@@ -62,8 +62,8 @@
                     android:layout_below="@+id/title_1_chapter_1"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     android:textColor="@color/content_area_text"
                     android:text="@string/title_1_chapter_2" />
 
@@ -74,8 +74,8 @@
                     android:layout_below="@+id/title_1_chapter_2"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     android:textColor="@color/content_area_text"
                     android:text="@string/title_1_chapter_3" />
 
@@ -103,8 +103,8 @@
                     android:layout_below="@+id/title_2"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     android:textColor="@color/content_area_text"
                     android:text="@string/title_1_chapter_3" />
 
@@ -115,8 +115,8 @@
                     android:layout_below="@+id/title_2_chapter_1"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     android:textColor="@color/content_area_text"
                     android:text="@string/title_2_chapter_2" />
 
@@ -144,8 +144,8 @@
                     android:layout_below="@+id/title_3"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     android:textColor="@color/content_area_text"
                     android:text="@string/title_3_chapter_1" />
 
@@ -156,8 +156,8 @@
                     android:layout_below="@+id/title_3_chapter_1"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     android:textColor="@color/content_area_text"
                     android:text="@string/title_3_chapter_2" />
 
@@ -185,8 +185,8 @@
                     android:layout_below="@+id/title_4"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     android:textColor="@color/content_area_text"
                     android:text="@string/title_4_chapter_1" />
 
@@ -214,8 +214,8 @@
                     android:layout_below="@+id/title_5"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     android:textColor="@color/content_area_text"
                     android:text="@string/title_5_chapter_1" />
 
@@ -243,8 +243,8 @@
                     android:layout_below="@+id/title_6"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     android:textColor="@color/content_area_text"
                     android:text="@string/title_6_chapter_1" />
 
@@ -272,8 +272,8 @@
                     android:layout_below="@+id/title_7"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     android:textColor="@color/content_area_text"
                     android:text="@string/title_7_chapter_1" />
 
@@ -284,8 +284,8 @@
                     android:layout_below="@+id/title_7_chapter_1"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     android:textColor="@color/content_area_text"
                     android:text="@string/title_7_chapter_2" />
 
@@ -296,8 +296,8 @@
                     android:layout_below="@+id/title_7_chapter_2"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     android:textColor="@color/content_area_text"
                     android:text="@string/title_7_chapter_3" />
 
@@ -308,8 +308,8 @@
                     android:layout_below="@+id/title_7_chapter_3"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     android:textColor="@color/content_area_text"
                     android:text="@string/title_7_chapter_4" />
 
@@ -320,8 +320,8 @@
                     android:layout_below="@+id/title_7_chapter_4"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     android:textColor="@color/content_area_text"
                     android:text="@string/title_7_chapter_5" />
 
@@ -332,8 +332,8 @@
                     android:layout_below="@+id/title_7_chapter_5"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     android:textColor="@color/content_area_text"
                     android:text="@string/title_7_chapter_6" />
 
@@ -344,8 +344,8 @@
                     android:layout_below="@+id/title_7_chapter_6"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     android:textColor="@color/content_area_text"
                     android:text="@string/title_7_chapter_7" />
 
@@ -356,8 +356,8 @@
                     android:layout_below="@+id/title_7_chapter_7"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     android:textColor="@color/content_area_text"
                     android:text="@string/title_7_chapter_8" />
 
@@ -368,8 +368,8 @@
                     android:layout_below="@+id/title_7_chapter_8"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     android:textColor="@color/content_area_text"
                     android:text="@string/title_7_chapter_9" />
 
@@ -380,8 +380,8 @@
                     android:layout_below="@+id/title_7_chapter_9"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     android:textColor="@color/content_area_text"
                     android:text="@string/title_7_chapter_10" />
 
@@ -392,8 +392,8 @@
                     android:layout_below="@+id/title_7_chapter_10"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     android:textColor="@color/content_area_text"
                     android:text="@string/title_7_chapter_11" />
 
@@ -404,8 +404,8 @@
                     android:layout_below="@+id/title_7_chapter_11"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     android:textColor="@color/content_area_text"
                     android:text="@string/title_7_chapter_12" />
 
@@ -416,8 +416,8 @@
                     android:layout_below="@+id/title_7_chapter_12"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     android:textColor="@color/content_area_text"
                     android:text="@string/title_7_chapter_13" />
 
@@ -428,8 +428,8 @@
                     android:layout_below="@+id/title_7_chapter_13"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     android:textColor="@color/content_area_text"
                     android:text="@string/title_7_chapter_14" />
 
@@ -440,8 +440,8 @@
                     android:layout_below="@+id/title_7_chapter_14"
                     android:textSize="18sp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     android:layout_marginBottom="20dp"
                     android:textColor="@color/content_area_text"
                     android:text="@string/title_7_chapter_15" />
