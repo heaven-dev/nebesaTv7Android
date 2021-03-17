@@ -39,6 +39,7 @@ import static ru.tv7.nebesa.helpers.Constants.BROADCAST_DATE_TIME;
 import static ru.tv7.nebesa.helpers.Constants.CAPTION;
 import static ru.tv7.nebesa.helpers.Constants.COLON_WITH_SPACE;
 import static ru.tv7.nebesa.helpers.Constants.DURATION;
+import static ru.tv7.nebesa.helpers.Constants.EMPTY;
 import static ru.tv7.nebesa.helpers.Constants.EPISODE_NUMBER;
 import static ru.tv7.nebesa.helpers.Constants.FAVORITES_SP_DEFAULT;
 import static ru.tv7.nebesa.helpers.Constants.FAVORITES_SP_TAG;
@@ -51,6 +52,7 @@ import static ru.tv7.nebesa.helpers.Constants.IMAGE_PATH;
 import static ru.tv7.nebesa.helpers.Constants.IS_VISIBLE_ON_VOD;
 import static ru.tv7.nebesa.helpers.Constants.LOG_TAG;
 import static ru.tv7.nebesa.helpers.Constants.NEGATIVE_ONE_STR;
+import static ru.tv7.nebesa.helpers.Constants.NULL_VALUE;
 import static ru.tv7.nebesa.helpers.Constants.ONE_STR;
 import static ru.tv7.nebesa.helpers.Constants.PERCENT;
 import static ru.tv7.nebesa.helpers.Constants.PROGRAM_INFO_FRAGMENT;
@@ -149,11 +151,11 @@ public class ProgramInfoFragment extends Fragment {
             backgroundImage = root.findViewById(R.id.backgroundImage);
             if (backgroundImage != null) {
                 String imagePath = Utils.getValue(selectedProgram, IMAGE_PATH);
-                if (imagePath != null) {
+                if (imagePath != null && !imagePath.equals(EMPTY) && !imagePath.equals(NULL_VALUE)) {
                     Glide.with(this).asBitmap().load(imagePath).into(backgroundImage);
                 }
                 else {
-                    Glide.with(this).asBitmap().load(R.drawable.tv7_app_icon).into(backgroundImage);
+                    Glide.with(this).asBitmap().load(R.drawable.fallback).into(backgroundImage);
                 }
             }
 

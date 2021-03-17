@@ -23,8 +23,10 @@ import ru.tv7.nebesa.helpers.Utils;
 import static ru.tv7.nebesa.helpers.Constants.BROADCAST_DATE_TIME;
 import static ru.tv7.nebesa.helpers.Constants.COLON_WITH_SPACE;
 import static ru.tv7.nebesa.helpers.Constants.DURATION;
+import static ru.tv7.nebesa.helpers.Constants.EMPTY;
 import static ru.tv7.nebesa.helpers.Constants.EPISODE_NUMBER;
 import static ru.tv7.nebesa.helpers.Constants.IMAGE_PATH;
+import static ru.tv7.nebesa.helpers.Constants.NULL_VALUE;
 import static ru.tv7.nebesa.helpers.Constants.SERIES_AND_NAME;
 
 /**
@@ -113,11 +115,11 @@ public class SeriesGridAdapter extends RecyclerView.Adapter<SeriesGridAdapter.Si
             if (obj != null) {
 
                 String value = Utils.getValue(obj, IMAGE_PATH);
-                if (value != null) {
+                if (value != null && !value.equals(EMPTY) && !value.equals(NULL_VALUE)) {
                     Glide.with(context).asBitmap().load(value).into(holder.seriesImage);
                 }
                 else {
-                    Glide.with(context).asBitmap().load(R.drawable.tv7_app_icon).into(holder.seriesImage);
+                    Glide.with(context).asBitmap().load(R.drawable.fallback).into(holder.seriesImage);
                 }
 
                 value = Utils.getValue(obj, SERIES_AND_NAME);

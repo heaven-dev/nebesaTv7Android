@@ -45,6 +45,7 @@ import static ru.tv7.nebesa.helpers.Constants.GUIDE_TIMER_TIMEOUT;
 import static ru.tv7.nebesa.helpers.Constants.HTTP;
 import static ru.tv7.nebesa.helpers.Constants.HTTPS;
 import static ru.tv7.nebesa.helpers.Constants.LOG_TAG;
+import static ru.tv7.nebesa.helpers.Constants.NULL_VALUE;
 import static ru.tv7.nebesa.helpers.Constants.PIPE_WITH_SPACES;
 import static ru.tv7.nebesa.helpers.Constants.PROGRAM_LIST_MIN_SIZE;
 import static ru.tv7.nebesa.helpers.Constants.PROGRAM_VISIBLE_IMAGE_COUNT;
@@ -310,9 +311,14 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
 
                     String imageUrl = epgItem.getIcon();
 
-                    // Change scheme from http to https
-                    if (imageUrl != null && !imageUrl.startsWith(HTTPS)) {
-                        imageUrl = imageUrl.replace(HTTP, HTTPS);
+                    if (imageUrl != null && !imageUrl.equals(EMPTY) && !imageUrl.equals(NULL_VALUE)) {
+                        // Change scheme from http to https
+                        if (!imageUrl.startsWith(HTTPS)) {
+                            imageUrl = imageUrl.replace(HTTP, HTTPS);
+                        }
+                    }
+                    else {
+                        imageUrl = null;
                     }
 
                     if (index == 0) {
@@ -349,7 +355,12 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
 
             ImageView tvImage = root.findViewById(R.id.tvImage);
             if (tvImage != null) {
-                Glide.with(this).asBitmap().load(icon).into(tvImage);
+                if (icon != null) {
+                    Glide.with(this).asBitmap().load(icon).into(tvImage);
+                }
+                else {
+                    Glide.with(this).asBitmap().load(R.drawable.fallback).into(tvImage);
+                }
             }
 
             TextView tvText = root.findViewById(R.id.tvText);
@@ -386,7 +397,12 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
             if (cpi != null) {
                 ImageView imageView = root.findViewById(cpi.getImageId());
                 if (imageView != null) {
-                    Glide.with(this).asBitmap().load(icon).into(imageView);
+                    if (icon != null) {
+                        Glide.with(this).asBitmap().load(icon).into(imageView);
+                    }
+                    else {
+                        Glide.with(this).asBitmap().load(R.drawable.fallback).into(imageView);
+                    }
                 }
 
                 TextView textView = root.findViewById(cpi.getTextId());
