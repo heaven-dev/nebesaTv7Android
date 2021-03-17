@@ -96,4 +96,5 @@ Guide of [Android TV](https://developer.android.com/training/tv).
 
 ### License
  - [MIT](https://github.com/heaven-dev/nebesaTv7Android/blob/master/LICENSE.md)
+ - __Unauthorized publication of programs or subtitles is prohibited.__
 
