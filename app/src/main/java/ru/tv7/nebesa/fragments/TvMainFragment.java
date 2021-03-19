@@ -44,6 +44,7 @@ import static ru.tv7.nebesa.helpers.Constants.GUIDE_ROWS;
 import static ru.tv7.nebesa.helpers.Constants.GUIDE_TIMER_TIMEOUT;
 import static ru.tv7.nebesa.helpers.Constants.HTTP;
 import static ru.tv7.nebesa.helpers.Constants.HTTPS;
+import static ru.tv7.nebesa.helpers.Constants.ID_NULL;
 import static ru.tv7.nebesa.helpers.Constants.LOG_TAG;
 import static ru.tv7.nebesa.helpers.Constants.NULL_VALUE;
 import static ru.tv7.nebesa.helpers.Constants.PIPE_WITH_SPACES;
@@ -311,7 +312,7 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
 
                     String imageUrl = epgItem.getIcon();
 
-                    if (imageUrl != null && !imageUrl.equals(EMPTY) && !imageUrl.equals(NULL_VALUE)) {
+                    if (imageUrl != null && !imageUrl.equals(EMPTY) && !imageUrl.equals(NULL_VALUE) && !imageUrl.contains(ID_NULL)) {
                         // Change scheme from http to https
                         if (!imageUrl.startsWith(HTTPS)) {
                             imageUrl = imageUrl.replace(HTTP, HTTPS);

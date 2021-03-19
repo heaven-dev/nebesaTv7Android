@@ -21,6 +21,7 @@ import ru.tv7.nebesa.helpers.Utils;
 
 import static ru.tv7.nebesa.helpers.Constants.CAPTION;
 import static ru.tv7.nebesa.helpers.Constants.EMPTY;
+import static ru.tv7.nebesa.helpers.Constants.ID_NULL;
 import static ru.tv7.nebesa.helpers.Constants.IMAGE_PATH;
 import static ru.tv7.nebesa.helpers.Constants.NULL_VALUE;
 import static ru.tv7.nebesa.helpers.Constants.SERIES;
@@ -100,7 +101,7 @@ public class FavoritesGridAdapter extends RecyclerView.Adapter<FavoritesGridAdap
             if (obj != null) {
 
                 String value = Utils.getValue(obj, IMAGE_PATH);
-                if (value != null && !value.equals(EMPTY) && !value.equals(NULL_VALUE)) {
+                if (value != null && !value.equals(EMPTY) && !value.equals(NULL_VALUE) && !value.contains(ID_NULL)) {
                     Glide.with(context).asBitmap().load(value).into(holder.favoriteImage);
                 }
                 else {

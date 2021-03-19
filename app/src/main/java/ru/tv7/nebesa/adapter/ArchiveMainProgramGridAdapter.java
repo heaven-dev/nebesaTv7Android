@@ -22,6 +22,7 @@ import ru.tv7.nebesa.helpers.Utils;
 import static ru.tv7.nebesa.helpers.Constants.BROADCAST_DATE_TIME;
 import static ru.tv7.nebesa.helpers.Constants.DURATION;
 import static ru.tv7.nebesa.helpers.Constants.EMPTY;
+import static ru.tv7.nebesa.helpers.Constants.ID_NULL;
 import static ru.tv7.nebesa.helpers.Constants.IMAGE_PATH;
 import static ru.tv7.nebesa.helpers.Constants.NULL_VALUE;
 import static ru.tv7.nebesa.helpers.Constants.SERIES_AND_NAME;
@@ -80,7 +81,7 @@ public class ArchiveMainProgramGridAdapter extends RecyclerView.Adapter<ArchiveM
             JSONObject obj = elements.getJSONObject(position);
             if (obj != null) {
                 String imagePath = Utils.getValue(obj, IMAGE_PATH);
-                if (imagePath != null && !imagePath.equals(EMPTY) && !imagePath.equals(NULL_VALUE)) {
+                if (imagePath != null && !imagePath.equals(EMPTY) && !imagePath.equals(NULL_VALUE) && !imagePath.contains(ID_NULL)) {
                     Glide.with(context).asBitmap().load(imagePath).into(holder.programImage);
                 }
                 else {

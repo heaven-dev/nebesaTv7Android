@@ -25,6 +25,7 @@ import static ru.tv7.nebesa.helpers.Constants.COLON_WITH_SPACE;
 import static ru.tv7.nebesa.helpers.Constants.DURATION;
 import static ru.tv7.nebesa.helpers.Constants.EMPTY;
 import static ru.tv7.nebesa.helpers.Constants.EPISODE_NUMBER;
+import static ru.tv7.nebesa.helpers.Constants.ID_NULL;
 import static ru.tv7.nebesa.helpers.Constants.IMAGE_PATH;
 import static ru.tv7.nebesa.helpers.Constants.NULL_VALUE;
 import static ru.tv7.nebesa.helpers.Constants.SERIES_AND_NAME;
@@ -115,7 +116,7 @@ public class SeriesGridAdapter extends RecyclerView.Adapter<SeriesGridAdapter.Si
             if (obj != null) {
 
                 String value = Utils.getValue(obj, IMAGE_PATH);
-                if (value != null && !value.equals(EMPTY) && !value.equals(NULL_VALUE)) {
+                if (value != null && !value.equals(EMPTY) && !value.equals(NULL_VALUE) && !value.contains(ID_NULL)) {
                     Glide.with(context).asBitmap().load(value).into(holder.seriesImage);
                 }
                 else {

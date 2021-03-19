@@ -48,6 +48,7 @@ import static ru.tv7.nebesa.helpers.Constants.FAVORITES_TEXT_ANIMATION_END;
 import static ru.tv7.nebesa.helpers.Constants.FAVORITES_TEXT_ANIMATION_START;
 import static ru.tv7.nebesa.helpers.Constants.FAVORITES_TEXT_ANIMATION_START_OFFSET;
 import static ru.tv7.nebesa.helpers.Constants.ID;
+import static ru.tv7.nebesa.helpers.Constants.ID_NULL;
 import static ru.tv7.nebesa.helpers.Constants.IMAGE_PATH;
 import static ru.tv7.nebesa.helpers.Constants.IS_VISIBLE_ON_VOD;
 import static ru.tv7.nebesa.helpers.Constants.LOG_TAG;
@@ -151,7 +152,7 @@ public class ProgramInfoFragment extends Fragment {
             backgroundImage = root.findViewById(R.id.backgroundImage);
             if (backgroundImage != null) {
                 String imagePath = Utils.getValue(selectedProgram, IMAGE_PATH);
-                if (imagePath != null && !imagePath.equals(EMPTY) && !imagePath.equals(NULL_VALUE)) {
+                if (imagePath != null && !imagePath.equals(EMPTY) && !imagePath.equals(NULL_VALUE) && !imagePath.contains(ID_NULL)) {
                     Glide.with(this).asBitmap().load(imagePath).into(backgroundImage);
                 }
                 else {

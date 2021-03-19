@@ -1,3 +1,15 @@
+# 19.03.2021 08:46
+
+### Bug Fixes
+
+* Fix to localized texts.
+* Added id=null check to image URLs.
+
+### Features
+
+* Version 11.
+
+
 # 17.03.2021 08:52
 
 ### Bug Fixes

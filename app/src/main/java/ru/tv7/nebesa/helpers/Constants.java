@@ -126,6 +126,7 @@ abstract public class Constants {
     public static final String HTTP = "http";
     public static final String HTTPS = "https";
     public static final String UTF_8 = "UTF-8";
+    public static final String ID_NULL = "id=null";
 
     public static final String PROGRAMME = "programme";
     public static final String START = "start";
