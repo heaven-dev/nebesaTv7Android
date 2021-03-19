@@ -18,7 +18,7 @@
 
     <string name="net_tv">Веб-ТВ</string>
     <string name="archive">Видеоархив</string>
-    <string name="guide">телепрограмму</string>
+    <string name="guide">Телепрограмму</string>
     <string name="search">Поиск</string>
     <string name="favorites">Избранные</string>
     <string name="channel_info">Небеса ТВ7</string>
@@ -27,8 +27,8 @@
     <string name="we_recommend">Рекомендуемые</string>
     <string name="most_viewed">Самые популярные</string>
     <string name="newest">Новые</string>
-    <string name="categories">категории</string>
-    <string name="category">категория</string>
+    <string name="categories">Категории</string>
+    <string name="category">Категория</string>
     <string name="series">Серия</string>
 
     <string name="first_broadcast">Первая трансляция</string>
@@ -36,9 +36,9 @@
     <string name="episode">Выпуск</string>
     <string name="aspect_ratio">Соотношение сторон</string>
 
-    <string name="back">обратно</string>
+    <string name="back">Обратно</string>
     <string name="do_search">Найти</string>
-    <string name="clear">стере́ть</string>
+    <string name="clear">Стере́ть</string>
     <string name="search_results">Результаты поиска</string>
 
     <string name="no_hits">Ничего не найдено</string>
