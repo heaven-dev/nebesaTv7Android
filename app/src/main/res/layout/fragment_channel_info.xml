@@ -8,17 +8,15 @@
 
     <include layout="@layout/fragment_toolbar"/>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-
-        <include layout="@layout/fragment_sidebar"/>
+        android:layout_height="match_parent">
 
         <ScrollView
             android:id="@+id/fragmentChannelInfoSw"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginStart="38dp"
             android:fillViewport="true">
 
             <RelativeLayout
@@ -449,5 +447,7 @@
             </RelativeLayout>
         </ScrollView>
 
-    </LinearLayout>
+        <include layout="@layout/fragment_sidebar"/>
+
+    </RelativeLayout>
 </LinearLayout>

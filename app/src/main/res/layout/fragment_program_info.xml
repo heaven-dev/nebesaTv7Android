@@ -8,17 +8,15 @@
 
     <include layout="@layout/fragment_toolbar"/>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-
-        <include layout="@layout/fragment_sidebar"/>
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:id="@+id/contentContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="38dp"
             android:background="@color/default_background"
             android:orientation="vertical">
 
@@ -191,5 +189,7 @@
 
         </RelativeLayout>
 
-    </LinearLayout>
+        <include layout="@layout/fragment_sidebar"/>
+
+    </RelativeLayout>
 </LinearLayout>
