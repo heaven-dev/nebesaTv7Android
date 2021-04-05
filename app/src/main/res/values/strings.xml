@@ -8,6 +8,8 @@
     <string name="arrows">Arrows</string>
     <string name="arrow">Arrow</string>
     <string name="error">Error</string>
+    <string name="arrow_down">Arrow down</string>
+    <string name="arrow_up">Arrow up</string>
 
     <string name="toolbar_text">Когда содержание имеет значение</string>
     <string name="exit_question">Закрыть приложение ТВ7</string>

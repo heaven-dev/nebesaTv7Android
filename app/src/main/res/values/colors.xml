@@ -20,6 +20,7 @@
     <color name="video_top_bar">#444444</color>
     <color name="video_top_bar_text">#ffffff</color>
     <color name="main_archive_image_border">#444444</color>
+    <color name="newest_program_image_border">#eeeeee</color>
     <color name="gradient_bottom">#000000</color>
     <color name="exoplayer_background">#000000</color>
     <color name="series_program_icon_background">#cccccc</color>

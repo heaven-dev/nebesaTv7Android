@@ -97,10 +97,47 @@
             android:layout_alignParentBottom="true"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:layout_marginBottom="18dp"
-            android:scaleY="2.5"/>
+            android:layout_marginBottom="40dp"
+            android:scaleY="2.3"/>
+
+        <ImageView
+            android:id="@+id/arrowDownIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:contentDescription="@string/arrow_down"
+            android:src="@drawable/arrow_down" />
 
     </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/otherVideos"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="40dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone">
+
+        <androidx.leanback.widget.HorizontalGridView
+            android:id="@+id/newestProgramsScroll"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/arrowUpIcon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/otherVideos"
+        android:contentDescription="@string/arrow_down"
+        android:src="@drawable/arrow_up"
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/pauseStartIcon"

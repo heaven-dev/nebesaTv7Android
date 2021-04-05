@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.leanback.widget.HorizontalGridView;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.exoplayer2.C;
@@ -50,6 +51,7 @@ import java.util.TimerTask;
 
 import ru.tv7.nebesa.BuildConfig;
 import ru.tv7.nebesa.R;
+import ru.tv7.nebesa.adapter.NewestProgramsGridAdapter;
 import ru.tv7.nebesa.helpers.Utils;
 import ru.tv7.nebesa.interfaces.ArchiveDataLoadedListener;
 import ru.tv7.nebesa.model.ArchiveViewModel;
@@ -63,6 +65,7 @@ import static ru.tv7.nebesa.helpers.Constants.AUDIO_INDEX_PARAM;
 import static ru.tv7.nebesa.helpers.Constants.CAPTION;
 import static ru.tv7.nebesa.helpers.Constants.COLON_WITH_SPACE;
 import static ru.tv7.nebesa.helpers.Constants.DASH;
+import static ru.tv7.nebesa.helpers.Constants.EMPTY;
 import static ru.tv7.nebesa.helpers.Constants.EPISODE_NUMBER;
 import static ru.tv7.nebesa.helpers.Constants.EQUAL;
 import static ru.tv7.nebesa.helpers.Constants.ID;
@@ -70,6 +73,8 @@ import static ru.tv7.nebesa.helpers.Constants.IS_SUBTITLE;
 import static ru.tv7.nebesa.helpers.Constants.LANG_ID;
 import static ru.tv7.nebesa.helpers.Constants.LINK_PATH;
 import static ru.tv7.nebesa.helpers.Constants.LOG_TAG;
+import static ru.tv7.nebesa.helpers.Constants.NEWEST_LIMIT;
+import static ru.tv7.nebesa.helpers.Constants.NEWEST_METHOD;
 import static ru.tv7.nebesa.helpers.Constants.ONE_STR;
 import static ru.tv7.nebesa.helpers.Constants.PATH;
 import static ru.tv7.nebesa.helpers.Constants.PAUSE_START_ICON_ANIMATION_DURATION;
@@ -79,12 +84,14 @@ import static ru.tv7.nebesa.helpers.Constants.PAUSE_START_ICON_ANIMATION_START_O
 import static ru.tv7.nebesa.helpers.Constants.PERCENT;
 import static ru.tv7.nebesa.helpers.Constants.PNID_PARAM;
 import static ru.tv7.nebesa.helpers.Constants.POSITION;
+import static ru.tv7.nebesa.helpers.Constants.PROGRAM_INFO_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.QUESTION_MARK;
 import static ru.tv7.nebesa.helpers.Constants.SERIES_AND_NAME;
 import static ru.tv7.nebesa.helpers.Constants.SLASH_WITH_SPACES;
 import static ru.tv7.nebesa.helpers.Constants.STREAM_ERROR_RETRY_DELAY;
 import static ru.tv7.nebesa.helpers.Constants.SUBTITLES_URL;
 import static ru.tv7.nebesa.helpers.Constants.TRANSLATION_LANG_ID;
+import static ru.tv7.nebesa.helpers.Constants.TRANSLATION_METHOD;
 import static ru.tv7.nebesa.helpers.Constants.TV_BRAND;
 import static ru.tv7.nebesa.helpers.Constants.VIDEO_CONTROLS_TIMEOUT;
 import static ru.tv7.nebesa.helpers.Constants.VIDEO_POSITION_TIMEOUT;
@@ -106,10 +113,14 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
     private ArchiveViewModel archiveViewModel = null;
     private SharedCacheViewModel sharedCacheViewModel = null;
 
+    private HorizontalGridView newestProgramsScroll = null;
+    private NewestProgramsGridAdapter adapter = null;
+    private boolean newestProgramsLoaded = false;
+
     private JSONObject selectedProgram = null;
 
     private SimpleExoPlayer exoPlayer = null;
-    private boolean controlsVisible = false;
+    private int controlsVisible = 0;
     private boolean paused = false;
     private boolean seeking = false;
 
@@ -117,6 +128,7 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
     private long videoPosition = 0;
 
     private RelativeLayout controls = null;
+    private RelativeLayout otherVideos = null;
     private ProgressBar videoProgressBar = null;
     private TextView positionAndDurationTimes = null;
 
@@ -176,53 +188,12 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
 
             root = inflater.inflate(R.layout.fragment_archive_player, container, false);
 
-            selectedProgram = sharedCacheViewModel.getSelectedProgram();
-            if (selectedProgram == null) {
-                throw new Exception("Archive player page. Not selected program passed to this fragment!");
-            }
-
-            String programId = Utils.getValue(selectedProgram, ID);
-            if (programId == null) {
-                throw new Exception("Archive player page. Not selected program id passed to this fragment!");
-            }
-
             controls = root.findViewById(R.id.controls);
+            otherVideos = root.findViewById(R.id.otherVideos);
             videoProgressBar = root.findViewById(R.id.videoProgressBar);
             positionAndDurationTimes = root.findViewById(R.id.positionAndDurationTimes);
 
-            Resources resources = getResources();
-
-            TextView episode = root.findViewById(R.id.episode);
-            if (episode != null) {
-                String episodeNbr = Utils.getValue(selectedProgram, EPISODE_NUMBER);
-                if (episodeNbr != null) {
-                    String text = resources.getString(R.string.episode) + COLON_WITH_SPACE + episodeNbr;
-                    episode.setText(text);
-                }
-            }
-
-            TextView caption = root.findViewById(R.id.caption);
-            if (caption != null) {
-                String captionText = Utils.getValue(selectedProgram, CAPTION);
-                if (captionText != null && captionText.length() > 0) {
-                    caption.setText(captionText);
-                }
-                else {
-                    caption.setVisibility(View.GONE);
-                }
-            }
-
-            TextView seriesAndName = root.findViewById(R.id.seriesAndName);
-            if (seriesAndName != null) {
-                String name = Utils.getValue(selectedProgram, SERIES_AND_NAME);
-                if (name == null) {
-                    throw new Exception("Archive player page. Not selected program serias and name passed to this fragment!");
-                }
-
-                seriesAndName.setText(name);
-            }
-
-            archiveViewModel.getTranslation(programId, this);
+            this.prepareView(false);
         }
         catch(Exception e) {
             if (BuildConfig.DEBUG) {
@@ -235,11 +206,82 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
     }
 
     /**
+     * Prepares view.
+     * @param fromOtherVideo
+     * @throws Exception
+     */
+    private void prepareView(boolean fromOtherVideo) throws Exception {
+        selectedProgram = sharedCacheViewModel.getSelectedProgram();
+        if (selectedProgram == null) {
+            throw new Exception("Archive player page. Not selected program passed to this fragment!");
+        }
+
+        String programId = Utils.getValue(selectedProgram, ID);
+        if (programId == null) {
+            throw new Exception("Archive player page. Not selected program id passed to this fragment!");
+        }
+
+        Resources resources = getResources();
+
+        TextView episode = root.findViewById(R.id.episode);
+        if (episode != null) {
+            String episodeNbr = Utils.getValue(selectedProgram, EPISODE_NUMBER);
+            if (episodeNbr != null) {
+                String text = resources.getString(R.string.episode) + COLON_WITH_SPACE + episodeNbr;
+                episode.setText(text);
+                episode.setVisibility(View.VISIBLE);
+            }
+            else {
+                episode.setText(EMPTY);
+                episode.setVisibility(View.GONE);
+            }
+        }
+
+        TextView caption = root.findViewById(R.id.caption);
+        if (caption != null) {
+            String captionText = Utils.getValue(selectedProgram, CAPTION);
+            if (captionText != null && captionText.length() > 0) {
+                caption.setText(captionText);
+                caption.setVisibility(View.VISIBLE);
+            }
+            else {
+                caption.setText(EMPTY);
+                caption.setVisibility(View.GONE);
+            }
+        }
+
+        TextView seriesAndName = root.findViewById(R.id.seriesAndName);
+        if (seriesAndName != null) {
+            String name = Utils.getValue(selectedProgram, SERIES_AND_NAME);
+            if (name != null && name.length() > 0) {
+                seriesAndName.setText(name);
+                seriesAndName.setVisibility(View.VISIBLE);
+            }
+            else {
+                seriesAndName.setText(EMPTY);
+                seriesAndName.setVisibility(View.GONE);
+            }
+        }
+
+        if (!fromOtherVideo) {
+            if (otherVideos != null) {
+                ViewGroup.LayoutParams params = otherVideos.getLayoutParams();
+                params.height = Utils.dpToPx(this.calculateOtherVideoItemHeight());
+                otherVideos.setLayoutParams(params);
+            }
+
+            this.loadNewestPrograms();
+        }
+
+        archiveViewModel.getTranslation(programId, this);
+    }
+
+    /**
      * Starts video on exoplayer.
      * @param subtitlesUrl - subtitles URL
      * @param langId
      */
-    public void startVideo(String subtitlesUrl, String langId) {
+    private void startVideo(String subtitlesUrl, String langId) {
         try {
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "ArchivePlayerFragment.startVideo(): Called.");
@@ -344,7 +386,11 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
      * Home button pressed => pause.
      */
     public void onHomeButtonPressed() {
-        if (!controlsVisible) {
+        if (controlsVisible == 0) {
+            this.showControls();
+        }
+        else if (controlsVisible == 2) {
+            this.hideOtherVideos();
             this.showControls();
         }
 
@@ -380,7 +426,7 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
                     Log.d(LOG_TAG, "ArchivePlayerFragment.onKeyDown(): KEYCODE_DPAD_CENTER: keyCode: " + keyCode);
                 }
 
-                if (controlsVisible) {
+                if (controlsVisible == 1) {
                     this.cancelVideoControlsTimer();
 
                     if (seeking) {
@@ -396,7 +442,10 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
                         }
                     }
                 }
-                else {
+                else if (controlsVisible == 2) {
+                    this.startOtherVideo();
+                }
+                else if (controlsVisible == 0) {
                     this.showControls();
                 }
             }
@@ -405,7 +454,7 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
                     Log.d(LOG_TAG, "ArchivePlayerFragment.onKeyDown(): KEYCODE_DPAD_LEFT: keyCode: " + keyCode);
                 }
 
-                if (controlsVisible) {
+                if (controlsVisible == 1) {
                     this.cancelVideoControlsTimer();
 
                     seeking = true;
@@ -421,7 +470,8 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
 
                     this.updateControls(videoPosition);
                 }
-                else {
+                else if (controlsVisible == 2) { }
+                else if (controlsVisible == 0) {
                     this.showControls();
                 }
             }
@@ -430,7 +480,7 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
                     Log.d(LOG_TAG, "ArchivePlayerFragment.onKeyDown(): KEYCODE_DPAD_RIGHT: keyCode: " + keyCode);
                 }
 
-                if (controlsVisible) {
+                if (controlsVisible == 1) {
                     this.cancelVideoControlsTimer();
 
                     seeking = true;
@@ -446,7 +496,8 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
 
                     this.updateControls(videoPosition);
                 }
-                else {
+                else if (controlsVisible == 2) { }
+                else if (controlsVisible == 0) {
                     this.showControls();
                 }
             }
@@ -455,8 +506,12 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
                     Log.d(LOG_TAG, "ArchivePlayerFragment.onKeyDown(): KEYCODE_DPAD_DOWN: keyCode: " + keyCode);
                 }
 
-                if (!controlsVisible) {
+                if (controlsVisible == 0) {
                     this.showControls();
+                }
+                else if (controlsVisible == 1 && newestProgramsLoaded) {
+                    this.hideControls();
+                    this.showOtherVideos();
                 }
             }
             else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
@@ -464,7 +519,11 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
                     Log.d(LOG_TAG, "ArchivePlayerFragment.onKeyDown(): KEYCODE_DPAD_UP: keyCode: " + keyCode);
                 }
 
-                if (!controlsVisible) {
+                if (controlsVisible == 0) {
+                    this.showControls();
+                }
+                else if (controlsVisible == 2) {
+                    this.hideOtherVideos();
                     this.showControls();
                 }
             }
@@ -474,6 +533,10 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
                 }
 
                 if (!paused) {
+                    if (controlsVisible == 2) {
+                        this.hideOtherVideos();
+                    }
+
                     this.showControls();
                     this.cancelVideoControlsTimer();
 
@@ -486,6 +549,10 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
                 }
 
                 if (paused) {
+                    if (controlsVisible == 2) {
+                        this.hideOtherVideos();
+                    }
+
                     if (seeking) {
                         this.seekTo();
                     }
@@ -496,6 +563,10 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
             else if (keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE) {
                 if (BuildConfig.DEBUG) {
                     Log.d(LOG_TAG, "ArchivePlayerFragment.onKeyDown(): KEYCODE_MEDIA_PLAY_PAUSE: keyCode: " + keyCode);
+                }
+
+                if (controlsVisible == 2) {
+                    this.hideOtherVideos();
                 }
 
                 if (paused) {
@@ -517,22 +588,24 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
                     Log.d(LOG_TAG, "ArchivePlayerFragment.onKeyDown(): KEYCODE_BACK: keyCode: " + keyCode);
                 }
 
-                if (controlsVisible) {
+                if (controlsVisible == 1 || controlsVisible == 2) {
+                    if (controlsVisible == 2) {
+                        this.hideOtherVideos();
+                    }
+
                     if (seeking) {
                         this.seekTo();
-                    }
-                    else {
-                        this.cancelVideoControlsTimer();
                     }
 
                     if (paused) {
                         this.play();
                     }
                     else {
+                        this.resetFlags();
                         this.hideControls();
                     }
                 }
-                else {
+                else if (controlsVisible == 0) {
                     this.toPreviousPage();
                 }
             }
@@ -598,8 +671,8 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
         String langId = null;
 
         try {
-            // Check is subtitles available
-            if (jsonArray != null) {
+            if (type.equals(TRANSLATION_METHOD) && jsonArray != null) {
+                // Check is subtitles available
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject obj = jsonArray.getJSONObject(i);
                     if (obj == null) {
@@ -618,6 +691,16 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
                 if (subtitlesUrl != null) {
                     subtitlesUrl = SUBTITLES_URL + subtitlesUrl;
                 }
+
+                this.startVideo(subtitlesUrl, langId);
+            }
+            else if (type.equals(NEWEST_METHOD) && jsonArray != null) {
+                newestProgramsScroll = root.findViewById(R.id.newestProgramsScroll);
+                adapter = new NewestProgramsGridAdapter(getActivity(), getContext(), jsonArray);
+
+                newestProgramsScroll.setAdapter(adapter);
+
+                newestProgramsLoaded = jsonArray.length() > 0;
             }
         }
         catch(Exception e) {
@@ -627,8 +710,6 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
 
             Utils.toErrorPage(getActivity());
         }
-
-        this.startVideo(subtitlesUrl, langId);
     }
 
     /**
@@ -656,6 +737,32 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
         }
 
         Utils.toErrorPage(getActivity());
+    }
+
+    /**
+     * Opens selected video.
+     * @throws Exception
+     */
+    private void startOtherVideo() throws Exception {
+        this.saveVideoStatus();
+
+        int pos = this.getSelectedPosition();
+        JSONObject obj = adapter.getElementByIndex(pos);
+        if (obj != null) {
+            sharedCacheViewModel.resetAll();
+            sharedCacheViewModel.clearPageHistory();
+            sharedCacheViewModel.setSelectedProgram(obj);
+
+            videoDuration = 0;
+            videoPosition = 0;
+
+            this.hideOtherVideos();
+            this.resetFlags();
+            this.hideControls();
+            this.releasePlayer();
+
+            this.prepareView(true);
+        }
     }
 
     /**
@@ -769,9 +876,11 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
         this.cancelVideoControlsTimer();
 
         String page = sharedCacheViewModel.getPageFromHistory();
-        if (page != null) {
-            Utils.toPage(page, getActivity(), true, false, null);
+        if (page == null) {
+            page = PROGRAM_INFO_FRAGMENT;
         }
+
+        Utils.toPage(page, getActivity(), true, false, null);
     }
 
     /**
@@ -786,7 +895,7 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
         videoProgressTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                if (controlsVisible && !paused) {
+                if (controlsVisible == 1 && !paused) {
                     updateControlsInMainThread();
                 }
             }
@@ -837,7 +946,7 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
         videoControlsTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                if (controlsVisible) {
+                if (controlsVisible == 1) {
                     hideControlsInMainThread();
                 }
             }
@@ -862,6 +971,7 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
             @Override
             public void run() {
                 try {
+                    resetFlags();
                     hideControls();
                 }
                 catch(Exception e) {
@@ -1016,7 +1126,7 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
             long pos = exoPlayer.getContentPosition() / 1000;
             this.updateControls(pos);
 
-            controlsVisible = true;
+            controlsVisible = 1;
             controls.setVisibility(View.VISIBLE);
 
             this.addVideoControlsTimer();
@@ -1024,22 +1134,58 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
     }
 
     /**
+     * Resets seeking and paused flags.
+     */
+    private void resetFlags() {
+        seeking = false;
+        paused = false;
+    }
+
+    /**
      * Hides video controls.
      */
     private void hideControls() {
-        controlsVisible = false;
-        seeking = false;
-        paused = false;
+        controlsVisible = 0;
 
         controls.setVisibility(View.GONE);
-
         this.cancelVideoControlsTimer();
+    }
+
+    /**
+     * Shows other videos.
+     */
+    private void showOtherVideos() {
+        controlsVisible = 2;
+
+        controls.setVisibility(View.GONE);
+        otherVideos.setVisibility(View.VISIBLE);
+
+        ImageView arrowUpIcon = root.findViewById(R.id.arrowUpIcon);
+        if (arrowUpIcon != null) {
+            arrowUpIcon.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * Hides other videos.
+     */
+    private void hideOtherVideos() {
+        controlsVisible = 1;
+
+        controls.setVisibility(View.VISIBLE);
+        otherVideos.setVisibility(View.GONE);
+
+        ImageView arrowUpIcon = root.findViewById(R.id.arrowUpIcon);
+        if (arrowUpIcon != null) {
+            arrowUpIcon.setVisibility(View.GONE);
+        }
     }
 
     /**
      * Starts video.
      */
     private void play() {
+        this.resetFlags();
         this.hideControls();
         exoPlayer.setPlayWhenReady(true);
 
@@ -1095,5 +1241,38 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
 
             pauseStartIcon.startAnimation(animation);
         }
+    }
+
+    /**
+     * Calls load newest programs.
+     */
+    private void loadNewestPrograms() {
+        archiveViewModel.getNewestPrograms(Utils.getTodayUtcFormattedLocalDate(), NEWEST_LIMIT, 0, this);
+    }
+
+    /**
+     * Get scroll view item position.
+     */
+    private int getSelectedPosition() {
+        if (newestProgramsScroll != null) {
+            int pos = newestProgramsScroll.getSelectedPosition();
+            if (pos < 0) {
+                pos = 0;
+            }
+            return pos;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Calculates other video item height.
+     *  - 3.2 items visible
+     *  - 16:9 aspect ratio
+     * @return item height in dp
+     */
+    private int calculateOtherVideoItemHeight() {
+        float itemWidth = Utils.getScreenWidthDp() / (float)3.2;
+        return Math.round((float)9 / (float)16 * (float)itemWidth);
     }
 }

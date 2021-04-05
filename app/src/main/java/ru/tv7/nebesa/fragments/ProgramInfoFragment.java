@@ -32,6 +32,7 @@ import ru.tv7.nebesa.helpers.Sidebar;
 import ru.tv7.nebesa.helpers.Utils;
 import ru.tv7.nebesa.model.SharedCacheViewModel;
 
+import static ru.tv7.nebesa.helpers.Constants.ARCHIVE_MAIN_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.ARCHIVE_PLAYER_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.ASPECT_RATIO;
 import static ru.tv7.nebesa.helpers.Constants.ASPECT_RATIO_16_9;
@@ -426,9 +427,11 @@ public class ProgramInfoFragment extends Fragment {
                 }
                 else {
                     String toPage = sharedCacheViewModel.getPageFromHistory();
-                    if (toPage != null) {
-                        Utils.toPage(toPage, getActivity(), true, false,null);
+                    if (toPage == null) {
+                        toPage = ARCHIVE_MAIN_FRAGMENT;
                     }
+
+                    Utils.toPage(toPage, getActivity(), true, false,null);
                 }
             }
         }
