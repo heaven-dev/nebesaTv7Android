@@ -4,6 +4,7 @@
 * none
 
 ### Features
+* Changed the style of video subtitles.
 * Added possibility to open another video on archive player during playback.
 * Sidebar menu absolute positioning.
 * Version 12.

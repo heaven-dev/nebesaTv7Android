@@ -3,6 +3,7 @@ package ru.tv7.nebesa.fragments;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -312,8 +313,8 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
 
                 SubtitleView subtitleView = playerView.getSubtitleView();
                 if (subtitleView != null) {
-                    CaptionStyleCompat captionStyleCompat = new CaptionStyleCompat(Color.WHITE, Color.BLACK,
-                            Color.TRANSPARENT, CaptionStyleCompat.EDGE_TYPE_NONE, Color.TRANSPARENT, null);
+                    CaptionStyleCompat captionStyleCompat = new CaptionStyleCompat(Color.WHITE, Color.TRANSPARENT,
+                            Color.TRANSPARENT, CaptionStyleCompat.EDGE_TYPE_OUTLINE, Color.BLACK, Typeface.DEFAULT_BOLD);
                     subtitleView.setStyle(captionStyleCompat);
                     subtitleView.setAlpha(0.8f);
                 }
