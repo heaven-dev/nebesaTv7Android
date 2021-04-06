@@ -34,6 +34,8 @@ import com.google.android.exoplayer2.source.MergingMediaSource;
 import com.google.android.exoplayer2.source.SingleSampleMediaSource;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.text.CaptionStyleCompat;
+import com.google.android.exoplayer2.text.Cue;
+import com.google.android.exoplayer2.text.TextOutput;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.ui.SubtitleView;
 import com.google.android.exoplayer2.upstream.DataSource;
@@ -47,6 +49,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -65,6 +69,7 @@ import static ru.tv7.nebesa.helpers.Constants.AUDIO_INDEX_ENABLE_LANG;
 import static ru.tv7.nebesa.helpers.Constants.AUDIO_INDEX_PARAM;
 import static ru.tv7.nebesa.helpers.Constants.CAPTION;
 import static ru.tv7.nebesa.helpers.Constants.COLON_WITH_SPACE;
+import static ru.tv7.nebesa.helpers.Constants.CUE_LINE_POSITION;
 import static ru.tv7.nebesa.helpers.Constants.DASH;
 import static ru.tv7.nebesa.helpers.Constants.EMPTY;
 import static ru.tv7.nebesa.helpers.Constants.EPISODE_NUMBER;
@@ -313,10 +318,29 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
 
                 SubtitleView subtitleView = playerView.getSubtitleView();
                 if (subtitleView != null) {
-                    CaptionStyleCompat captionStyleCompat = new CaptionStyleCompat(Color.WHITE, Color.TRANSPARENT,
-                            Color.TRANSPARENT, CaptionStyleCompat.EDGE_TYPE_OUTLINE, Color.BLACK, Typeface.DEFAULT_BOLD);
+                    CaptionStyleCompat captionStyleCompat = new CaptionStyleCompat(Color.WHITE, Color.DKGRAY,
+                            Color.TRANSPARENT, CaptionStyleCompat.EDGE_TYPE_NONE, Color.TRANSPARENT, Typeface.DEFAULT_BOLD);
                     subtitleView.setStyle(captionStyleCompat);
                     subtitleView.setAlpha(0.8f);
+
+                    exoPlayer.addTextOutput(new TextOutput() {
+                        @Override
+                        public void onCues(List<Cue> cues) {
+                            // Move subtitles little up
+                            if (cues.size() > 0) {
+                                List<Cue> resultCues = new ArrayList<>();
+                                for (Cue cue: cues) {
+                                    Cue newCue = new Cue(cue.text, cue.textAlignment, CUE_LINE_POSITION, cue.lineType,
+                                            cue.lineAnchor, cue.position, cue.positionAnchor, cue.size);
+                                    resultCues.add(newCue);
+                                }
+
+                                if (resultCues.size() > 0) {
+                                    subtitleView.setCues(resultCues);
+                                }
+                            }
+                        }
+                    });
                 }
             }
 

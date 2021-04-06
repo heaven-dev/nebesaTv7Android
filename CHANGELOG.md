@@ -1,10 +1,10 @@
-# 01.04.2021 15:56
+# 06.04.2021 08:57
 
 ### Bug Fixes
 * none
 
 ### Features
-* Changed the style of video subtitles.
+* Changed the style and the position of video subtitles.
 * Added possibility to open another video on archive player during playback.
 * Sidebar menu absolute positioning.
 * Version 12.
