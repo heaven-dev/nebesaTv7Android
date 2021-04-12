@@ -82,7 +82,9 @@ abstract public class Constants {
     public static final int GUIDE_TIMER_TIMEOUT = 10000;
     public static final int VIDEO_POSITION_TIMEOUT = 1000;
     public static final int VIDEO_CONTROLS_TIMEOUT = 6000;
+
     public static final float CUE_LINE_POSITION = 0.82f;
+    public static final int SUBTITLE_BACKGROUND = 0x99000000;
 
     public static final int DATES_COUNT = 7;
     public static final int ARCHIVE_MAIN_NO_SEL_POS = -1;
