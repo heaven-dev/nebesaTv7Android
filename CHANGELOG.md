@@ -1,3 +1,12 @@
+# 12.04.2021 10:00
+
+### Bug Fixes
+* none
+
+### Features
+* Changed the style of video subtitles.
+
+
 # 06.04.2021 08:57
 
 ### Bug Fixes

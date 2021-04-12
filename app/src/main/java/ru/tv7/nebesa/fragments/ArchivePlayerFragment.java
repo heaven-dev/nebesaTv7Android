@@ -318,8 +318,8 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
 
                 SubtitleView subtitleView = playerView.getSubtitleView();
                 if (subtitleView != null) {
-                    CaptionStyleCompat captionStyleCompat = new CaptionStyleCompat(Color.WHITE, Color.DKGRAY,
-                            Color.TRANSPARENT, CaptionStyleCompat.EDGE_TYPE_NONE, Color.TRANSPARENT, Typeface.DEFAULT_BOLD);
+                    CaptionStyleCompat captionStyleCompat = new CaptionStyleCompat(Color.WHITE, Color.BLACK,
+                            Color.TRANSPARENT, CaptionStyleCompat.EDGE_TYPE_NONE, Color.TRANSPARENT, Typeface.DEFAULT);
                     subtitleView.setStyle(captionStyleCompat);
                     subtitleView.setAlpha(0.8f);
 
