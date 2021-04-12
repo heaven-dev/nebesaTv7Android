@@ -321,7 +321,7 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
                     CaptionStyleCompat captionStyleCompat = new CaptionStyleCompat(Color.WHITE, Color.BLACK,
                             Color.TRANSPARENT, CaptionStyleCompat.EDGE_TYPE_NONE, Color.TRANSPARENT, Typeface.DEFAULT);
                     subtitleView.setStyle(captionStyleCompat);
-                    subtitleView.setAlpha(0.6f);
+                    subtitleView.setAlpha(0.8f);
 
                     exoPlayer.addTextOutput(new TextOutput() {
                         @Override
