@@ -30,7 +30,7 @@
         android:layout_height="match_parent">
 
         <View
-            android:id="@+id/gradient"
+            android:id="@+id/gradientControls"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:alpha="0.8"
@@ -110,6 +110,14 @@
             android:src="@drawable/arrow_down" />
 
     </RelativeLayout>
+
+    <View
+        android:id="@+id/gradientOtherVideos"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:alpha="0.8"
+        android:background="@drawable/gradient_background"/>
 
     <RelativeLayout
         android:id="@+id/otherVideos"

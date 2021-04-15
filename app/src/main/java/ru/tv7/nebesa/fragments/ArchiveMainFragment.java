@@ -789,6 +789,8 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
         if (grid != null) {
             grid.scrollToPosition(pos);
             Utils.requestFocus(grid);
+
+            this.refresh(grid);
         }
     }
 
@@ -801,6 +803,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
         HorizontalGridView grid = this.getScrollView(row);
         if (grid != null) {
             grid.scrollToPosition(column);
+            this.refresh(grid);
         }
     }
 
@@ -827,6 +830,17 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
         HorizontalGridView grid = this.getScrollView(focusedRow);
         if (grid != null) {
             grid.setSelectedPositionSmooth(position);
+            this.refresh(grid);
+        }
+    }
+
+    /**
+     * Refresh layout.
+     */
+    private void refresh(HorizontalGridView grid) {
+        if (grid != null) {
+            grid.invalidate();
+            grid.requestLayout();
         }
     }
 

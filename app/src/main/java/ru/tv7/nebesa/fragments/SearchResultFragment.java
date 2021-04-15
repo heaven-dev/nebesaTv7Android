@@ -435,6 +435,7 @@ public class SearchResultFragment extends Fragment implements ArchiveDataLoadedL
     private void setSelectedPosition(int position) {
         if (searchResultScroll != null) {
             searchResultScroll.setSelectedPositionSmooth(position);
+            this.refresh();
         }
     }
 
@@ -445,6 +446,17 @@ public class SearchResultFragment extends Fragment implements ArchiveDataLoadedL
     private void scrollToPosition(int position) {
         if (searchResultScroll != null) {
             searchResultScroll.scrollToPosition(position);
+            this.refresh();
+        }
+    }
+
+    /**
+     * Refresh layout.
+     */
+    private void refresh() {
+        if (searchResultScroll != null) {
+            searchResultScroll.invalidate();
+            searchResultScroll.requestLayout();
         }
     }
 

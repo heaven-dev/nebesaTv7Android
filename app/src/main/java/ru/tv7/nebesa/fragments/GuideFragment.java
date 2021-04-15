@@ -506,6 +506,7 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
     private void setSelectedPosition(int position) {
         if (guideScroll != null) {
             guideScroll.setSelectedPositionSmooth(position);
+            this.refresh();
         }
     }
 
@@ -516,6 +517,17 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
     private void scrollToPosition(int position) {
         if (guideScroll != null) {
             guideScroll.scrollToPosition(position);
+            this.refresh();
+        }
+    }
+
+    /**
+     * Refresh layout.
+     */
+    private void refresh() {
+        if (guideScroll != null) {
+            guideScroll.invalidate();
+            guideScroll.requestLayout();
         }
     }
 

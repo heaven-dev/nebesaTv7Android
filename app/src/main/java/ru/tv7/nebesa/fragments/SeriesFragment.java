@@ -464,6 +464,7 @@ public class SeriesFragment extends Fragment implements ArchiveDataLoadedListene
     private void setSelectedPosition(int position) {
         if (seriesScroll != null) {
             seriesScroll.setSelectedPositionSmooth(position);
+            this.refresh();
         }
     }
 
@@ -474,6 +475,17 @@ public class SeriesFragment extends Fragment implements ArchiveDataLoadedListene
     private void scrollToPosition(int position) {
         if (seriesScroll != null) {
             seriesScroll.scrollToPosition(position);
+            this.refresh();
+        }
+    }
+
+    /**
+     * Refresh layout.
+     */
+    private void refresh() {
+        if (seriesScroll != null) {
+            seriesScroll.invalidate();
+            seriesScroll.requestLayout();
         }
     }
 

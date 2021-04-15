@@ -467,6 +467,7 @@ public class CategoriesFragment extends Fragment implements ArchiveDataLoadedLis
     private void setSelectedPosition(int position) {
         if (categoriesScroll != null) {
             categoriesScroll.setSelectedPositionSmooth(position);
+            this.refresh();
         }
     }
 
@@ -477,6 +478,17 @@ public class CategoriesFragment extends Fragment implements ArchiveDataLoadedLis
     private void scrollToPosition(int position) {
         if (categoriesScroll != null) {
             categoriesScroll.scrollToPosition(position);
+            this.refresh();
+        }
+    }
+
+    /**
+     * Refresh layout.
+     */
+    private void refresh() {
+        if (categoriesScroll != null) {
+            categoriesScroll.invalidate();
+            categoriesScroll.requestLayout();
         }
     }
 

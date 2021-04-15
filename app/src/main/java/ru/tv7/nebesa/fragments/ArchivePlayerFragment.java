@@ -495,7 +495,9 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
 
                     this.updateControls(videoPosition);
                 }
-                else if (controlsVisible == 2) { }
+                else if (controlsVisible == 2) {
+                    this.refresh();
+                }
                 else if (controlsVisible == 0) {
                     this.showControls();
                 }
@@ -521,7 +523,9 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
 
                     this.updateControls(videoPosition);
                 }
-                else if (controlsVisible == 2) { }
+                else if (controlsVisible == 2) {
+                    this.refresh();
+                }
                 else if (controlsVisible == 0) {
                     this.showControls();
                 }
@@ -1185,6 +1189,11 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
         controls.setVisibility(View.GONE);
         otherVideos.setVisibility(View.VISIBLE);
 
+        View gradientOtherVideos = root.findViewById(R.id.gradientOtherVideos);
+        if (gradientOtherVideos != null) {
+            gradientOtherVideos.setVisibility(View.VISIBLE);
+        }
+
         ImageView arrowUpIcon = root.findViewById(R.id.arrowUpIcon);
         if (arrowUpIcon != null) {
             arrowUpIcon.setVisibility(View.VISIBLE);
@@ -1199,6 +1208,11 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
 
         controls.setVisibility(View.VISIBLE);
         otherVideos.setVisibility(View.GONE);
+
+        View gradientOtherVideos = root.findViewById(R.id.gradientOtherVideos);
+        if (gradientOtherVideos != null) {
+            gradientOtherVideos.setVisibility(View.GONE);
+        }
 
         ImageView arrowUpIcon = root.findViewById(R.id.arrowUpIcon);
         if (arrowUpIcon != null) {
@@ -1288,6 +1302,16 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
         }
 
         return 0;
+    }
+
+    /**
+     * Refresh layout.
+     */
+    private void refresh() {
+        if (newestProgramsScroll != null) {
+            newestProgramsScroll.invalidate();
+            newestProgramsScroll.requestLayout();
+        }
     }
 
     /**

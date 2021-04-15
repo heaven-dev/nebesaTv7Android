@@ -430,6 +430,7 @@ public class FavoritesFragment extends Fragment implements ArchiveDataLoadedList
     private void setSelectedPosition(int position) {
         if (favoritesScroll != null) {
             favoritesScroll.setSelectedPositionSmooth(position);
+            this.refresh();
         }
     }
 
@@ -440,6 +441,17 @@ public class FavoritesFragment extends Fragment implements ArchiveDataLoadedList
     private void scrollToPosition(int position) {
         if (favoritesScroll != null) {
             favoritesScroll.scrollToPosition(position);
+            this.refresh();
+        }
+    }
+
+    /**
+     * Refresh layout.
+     */
+    private void refresh() {
+        if (favoritesScroll != null) {
+            favoritesScroll.invalidate();
+            favoritesScroll.requestLayout();
         }
     }
 }
