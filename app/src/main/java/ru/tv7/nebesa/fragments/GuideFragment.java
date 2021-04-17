@@ -9,9 +9,11 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.leanback.widget.VerticalGridView;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -176,8 +178,18 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
                 ongoingProgramIndex = obj.getInt(ONGOING_PROGRAM_INDEX);
 
                 guideScroll = root.findViewById(R.id.guideScroll);
-                guideGridAdapter = new GuideGridAdapter(getActivity(), getContext(), guideData);
+                guideScroll.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                        super.onScrolled(recyclerView, dx, dy);
+                        if (guideScroll != null) {
+                            guideScroll.invalidate();
+                            guideScroll.requestLayout();
+                        }
+                    }
+                });
 
+                guideGridAdapter = new GuideGridAdapter(getActivity(), getContext(), guideData);
                 guideScroll.setAdapter(guideGridAdapter);
 
                 if (isPageLoad && obj.getInt(DATE_INDEX) == 0) {
@@ -506,7 +518,6 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
     private void setSelectedPosition(int position) {
         if (guideScroll != null) {
             guideScroll.setSelectedPositionSmooth(position);
-            this.refresh();
         }
     }
 
@@ -517,17 +528,6 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
     private void scrollToPosition(int position) {
         if (guideScroll != null) {
             guideScroll.scrollToPosition(position);
-            this.refresh();
-        }
-    }
-
-    /**
-     * Refresh layout.
-     */
-    private void refresh() {
-        if (guideScroll != null) {
-            guideScroll.invalidate();
-            guideScroll.requestLayout();
         }
     }
 

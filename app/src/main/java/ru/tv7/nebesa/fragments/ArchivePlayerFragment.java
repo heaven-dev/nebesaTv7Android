@@ -19,9 +19,11 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.leanback.widget.HorizontalGridView;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -495,9 +497,7 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
 
                     this.updateControls(videoPosition);
                 }
-                else if (controlsVisible == 2) {
-                    this.refresh();
-                }
+                else if (controlsVisible == 2) { }
                 else if (controlsVisible == 0) {
                     this.showControls();
                 }
@@ -523,9 +523,7 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
 
                     this.updateControls(videoPosition);
                 }
-                else if (controlsVisible == 2) {
-                    this.refresh();
-                }
+                else if (controlsVisible == 2) { }
                 else if (controlsVisible == 0) {
                     this.showControls();
                 }
@@ -725,8 +723,18 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
             }
             else if (type.equals(NEWEST_METHOD) && jsonArray != null) {
                 newestProgramsScroll = root.findViewById(R.id.newestProgramsScroll);
-                adapter = new NewestProgramsGridAdapter(getActivity(), getContext(), jsonArray);
+                newestProgramsScroll.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                        super.onScrolled(recyclerView, dx, dy);
+                        if (newestProgramsScroll != null) {
+                            newestProgramsScroll.invalidate();
+                            newestProgramsScroll.requestLayout();
+                        }
+                    }
+                });
 
+                adapter = new NewestProgramsGridAdapter(getActivity(), getContext(), jsonArray);
                 newestProgramsScroll.setAdapter(adapter);
 
                 newestProgramsLoaded = jsonArray.length() > 0;
@@ -1302,16 +1310,6 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
         }
 
         return 0;
-    }
-
-    /**
-     * Refresh layout.
-     */
-    private void refresh() {
-        if (newestProgramsScroll != null) {
-            newestProgramsScroll.invalidate();
-            newestProgramsScroll.requestLayout();
-        }
     }
 
     /**

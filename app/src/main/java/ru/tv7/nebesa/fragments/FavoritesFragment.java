@@ -9,9 +9,11 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.leanback.widget.VerticalGridView;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -164,6 +166,17 @@ public class FavoritesFragment extends Fragment implements ArchiveDataLoadedList
             }
 
             favoritesScroll = root.findViewById(R.id.favoritesScroll);
+            favoritesScroll.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    if (favoritesScroll != null) {
+                        favoritesScroll.invalidate();
+                        favoritesScroll.requestLayout();
+                    }
+                }
+            });
+
             favoritesGridAdapter = new FavoritesGridAdapter(getActivity(), getContext(), jsonArray);
             favoritesScroll.setAdapter(favoritesGridAdapter);
 
@@ -430,7 +443,6 @@ public class FavoritesFragment extends Fragment implements ArchiveDataLoadedList
     private void setSelectedPosition(int position) {
         if (favoritesScroll != null) {
             favoritesScroll.setSelectedPositionSmooth(position);
-            this.refresh();
         }
     }
 
@@ -441,17 +453,6 @@ public class FavoritesFragment extends Fragment implements ArchiveDataLoadedList
     private void scrollToPosition(int position) {
         if (favoritesScroll != null) {
             favoritesScroll.scrollToPosition(position);
-            this.refresh();
-        }
-    }
-
-    /**
-     * Refresh layout.
-     */
-    private void refresh() {
-        if (favoritesScroll != null) {
-            favoritesScroll.invalidate();
-            favoritesScroll.requestLayout();
         }
     }
 }

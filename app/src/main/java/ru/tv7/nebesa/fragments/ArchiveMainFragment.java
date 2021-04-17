@@ -11,11 +11,13 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.leanback.widget.HorizontalGridView;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -252,8 +254,18 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
 
         if (type.equals(BROADCAST_RECOMMENDATIONS_METHOD) || type.equals(RECOMMENDATIONS_METHOD)) {
             recommendScroll = root.findViewById(R.id.recommendScroll);
-            ArchiveMainProgramGridAdapter adapter = new ArchiveMainProgramGridAdapter(getActivity(), context, jsonArray);
+            recommendScroll.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    if (recommendScroll != null) {
+                        recommendScroll.invalidate();
+                        recommendScroll.requestLayout();
+                    }
+                }
+            });
 
+            ArchiveMainProgramGridAdapter adapter = new ArchiveMainProgramGridAdapter(getActivity(), context, jsonArray);
             recommendScroll.setAdapter(adapter);
 
             // Change row background to white
@@ -264,8 +276,18 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
         }
         else if(type.equals(MOST_VIEWED_METHOD)) {
             mostViewedScroll = root.findViewById(R.id.mostViewedScroll);
-            ArchiveMainProgramGridAdapter adapter = new ArchiveMainProgramGridAdapter(getActivity(), context, jsonArray);
+            mostViewedScroll.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    if (mostViewedScroll != null) {
+                        mostViewedScroll.invalidate();
+                        mostViewedScroll.requestLayout();
+                    }
+                }
+            });
 
+            ArchiveMainProgramGridAdapter adapter = new ArchiveMainProgramGridAdapter(getActivity(), context, jsonArray);
             mostViewedScroll.setAdapter(adapter);
 
             // Change row background to white
@@ -276,8 +298,18 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
         }
         else if(type.equals(NEWEST_METHOD)) {
             newestScroll = root.findViewById(R.id.newestScroll);
-            ArchiveMainProgramGridAdapter adapter = new ArchiveMainProgramGridAdapter(getActivity(), context, jsonArray);
+            newestScroll.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    if (newestScroll != null) {
+                        newestScroll.invalidate();
+                        newestScroll.requestLayout();
+                    }
+                }
+            });
 
+            ArchiveMainProgramGridAdapter adapter = new ArchiveMainProgramGridAdapter(getActivity(), context, jsonArray);
             newestScroll.setAdapter(adapter);
 
             // Change row background to white
@@ -303,8 +335,18 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
         Context context = getContext();
 
         categoriesScroll = root.findViewById(R.id.categoriesScroll);
-        ArchiveMainCategoryGridAdapter adapter = new ArchiveMainCategoryGridAdapter(getActivity(), context, jsonArray, this.getContentRowHeight());
+        categoriesScroll.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (categoriesScroll != null) {
+                    categoriesScroll.invalidate();
+                    categoriesScroll.requestLayout();
+                }
+            }
+        });
 
+        ArchiveMainCategoryGridAdapter adapter = new ArchiveMainCategoryGridAdapter(getActivity(), context, jsonArray, this.getContentRowHeight());
         categoriesScroll.setAdapter(adapter);
 
         // Change row background to white
@@ -789,8 +831,6 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
         if (grid != null) {
             grid.scrollToPosition(pos);
             Utils.requestFocus(grid);
-
-            this.refresh(grid);
         }
     }
 
@@ -803,7 +843,6 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
         HorizontalGridView grid = this.getScrollView(row);
         if (grid != null) {
             grid.scrollToPosition(column);
-            this.refresh(grid);
         }
     }
 
@@ -830,17 +869,6 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
         HorizontalGridView grid = this.getScrollView(focusedRow);
         if (grid != null) {
             grid.setSelectedPositionSmooth(position);
-            this.refresh(grid);
-        }
-    }
-
-    /**
-     * Refresh layout.
-     */
-    private void refresh(HorizontalGridView grid) {
-        if (grid != null) {
-            grid.invalidate();
-            grid.requestLayout();
         }
     }
 
