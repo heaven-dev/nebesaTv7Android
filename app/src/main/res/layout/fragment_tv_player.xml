@@ -101,8 +101,8 @@
                 android:layout_marginTop="6dp"
                 android:max="100"
                 android:progress="50"
-                android:indeterminateTint="@color/tv7_default"
-                android:background="@color/progressbar_background" />
+                android:theme="@style/ProgressBarTv7Color"
+                android:progressBackgroundTint="@color/white" />
 
             <TextView
                 android:id="@+id/comingOnChannelText"
