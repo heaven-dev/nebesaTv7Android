@@ -89,8 +89,7 @@
             android:max="100"
             android:layout_marginTop="10dp"
             android:layout_centerInParent="true"
-            android:indeterminateTintMode="src_atop"
-            android:indeterminateTint="@color/tv7_default"
+            android:theme="@style/ProgressBarTv7Color"
             android:progressBackgroundTint="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -98,7 +97,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="40dp"
-            android:scaleY="2.3"/>
+            android:scaleY="2.0"/>
 
         <ImageView
             android:id="@+id/arrowDownIcon"

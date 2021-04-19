@@ -3,4 +3,8 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
+    <style name="ProgressBarTv7Color">
+        <item name="colorAccent">@color/tv7_default</item>
+    </style>
 </resources>
