@@ -1166,7 +1166,9 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
             controlsVisible = 1;
             controls.setVisibility(View.VISIBLE);
 
-            this.addVideoControlsTimer();
+            if (!paused) {
+                this.addVideoControlsTimer();
+            }
         }
     }
 

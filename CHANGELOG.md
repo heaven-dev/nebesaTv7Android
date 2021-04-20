@@ -1,11 +1,12 @@
-# 19.04.2021 18:16
+# 20.04.2021 09:34
 
 ### Bug Fixes
 * Fixed grid views refresh bug.
-* New version 14.
+* Fixed pause/play bug on archive player fragment.
 
 ### Features
 * Changed progress bar color to TV7 default.
+* New version 14.
 
 
 # 15.04.2021 08:54
