@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements EpgDataLoadedList
                 Log.d(LOG_TAG, "MainActivity.onCreate() called.");
             }
 
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
             fragmentManager = Utils.getFragmentManager(this);
 

@@ -11,6 +11,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -295,6 +296,8 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "ArchivePlayerFragment.startVideo(): Called.");
             }
+
+            this.disableScreenSaver();
 
             String videoUrl = getVideoUrl();
 
@@ -917,6 +920,8 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
             page = PROGRAM_INFO_FRAGMENT;
         }
 
+        this.enableScreenSaver();
+
         Utils.toPage(page, getActivity(), true, false, null);
     }
 
@@ -1323,5 +1328,19 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
     private int calculateOtherVideoItemHeight() {
         float itemWidth = Utils.getScreenWidthDp() / (float)3.2;
         return Math.round((float)9 / (float)16 * (float)itemWidth);
+    }
+
+    /**
+     * Enables screen saver.
+     */
+    private void enableScreenSaver() {
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+    /**
+     * Disables screen saver.
+     */
+    private void disableScreenSaver() {
+        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 }

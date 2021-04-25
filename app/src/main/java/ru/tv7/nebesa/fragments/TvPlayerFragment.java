@@ -8,6 +8,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -132,6 +133,8 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
                 Log.d(LOG_TAG, "TvPlayerFragment.onStart(): Called.");
             }
 
+            this.disableScreenSaver();
+
             // get input parameters
             Bundle bundle = getArguments();
             if (bundle != null) {
@@ -198,6 +201,8 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
     public void onHomeButtonPressed() {
         this.releasePlayer();
         this.cancelTimer();
+
+        this.enableScreenSaver();
 
         sharedCacheViewModel.clearPageHistory();
         Utils.toPage(TV_MAIN_FRAGMENT, getActivity(), true, false,null);
@@ -352,6 +357,7 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
 
                     String page = sharedCacheViewModel.getPageFromHistory();
                     if (page != null) {
+                        this.enableScreenSaver();
                         Utils.toPage(page, getActivity(), true, false,null);
                     }
                 }
@@ -643,5 +649,19 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
 
             pauseStartIcon.startAnimation(animation);
         }
+    }
+
+    /**
+     * Enables screen saver.
+     */
+    private void enableScreenSaver() {
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+    /**
+     * Disables screen saver.
+     */
+    private void disableScreenSaver() {
+        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 }
