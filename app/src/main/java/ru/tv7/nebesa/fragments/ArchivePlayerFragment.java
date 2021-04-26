@@ -413,26 +413,22 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
     }
 
     /**
-     * Home button pressed => pause.
+     * Home button pressed => to program info page.
      */
     public void onHomeButtonPressed() {
-        if (controlsVisible == 0) {
-            this.showControls();
+        if (controlsVisible == 1) {
+            this.hideControls();
         }
         else if (controlsVisible == 2) {
             this.hideOtherVideos();
-            this.showControls();
+            this.hideControls();
         }
-
-        this.cancelVideoControlsTimer();
 
         if (seeking) {
             this.seekTo();
         }
 
-        if (!paused) {
-            this.pause();
-        }
+        this.toPreviousPage();
     }
 
     /**
