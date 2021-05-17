@@ -1,3 +1,15 @@
+# 26.04.2021 15:18
+
+### Bug Fixes
+* none
+
+### Features
+* Added Android version to app info page.
+* Updated the value of targetSdkVersion on build.gradle.
+* Updated version name of app to 1.0.0.
+* New version 17.
+
+
 # 26.04.2021 15:10
 
 ### Bug Fixes

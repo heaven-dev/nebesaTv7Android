@@ -118,6 +118,7 @@ public class AboutFragment extends Fragment {
 
             String osVersion = System.getProperty(OS_VERSION) + LEFT_BRACKET + android.os.Build.VERSION.INCREMENTAL + RIGHT_BRACKET;
             int apiLevel = android.os.Build.VERSION.SDK_INT;
+            String androidVersion = android.os.Build.VERSION.RELEASE;
             String device = android.os.Build.DEVICE;
             String modelAndProduct = android.os.Build.MODEL + SPACE + LEFT_BRACKET + android.os.Build.PRODUCT + RIGHT_BRACKET;
 
@@ -129,6 +130,11 @@ public class AboutFragment extends Fragment {
             tv = root.findViewById(R.id.apiLevel);
             if (tv != null) {
                 tv.setText(String.valueOf(apiLevel));
+            }
+
+            tv = root.findViewById(R.id.androidVersion);
+            if (tv != null) {
+                tv.setText(androidVersion);
             }
 
             tv = root.findViewById(R.id.device);

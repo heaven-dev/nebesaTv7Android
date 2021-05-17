@@ -52,6 +52,7 @@
     <string name="app_version_title">App version:</string>
     <string name="os_version_title">OS version:</string>
     <string name="os_api_level_title">OS API level:</string>
+    <string name="android_version_title">Android version:</string>
     <string name="device_title">Device:</string>
     <string name="model_and_product_title">Model (Product):</string>
 
