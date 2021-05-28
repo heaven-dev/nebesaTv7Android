@@ -741,7 +741,7 @@ public class ArchiveViewModel extends ViewModel {
             }
 
             String name = this.getValue(respObj, NAME);
-            if (seriesName != null && name != null && name.length() > 0) {
+            if (seriesName != null && name != null && name.length() > 0 && !seriesName.equals(name)) {
                 seriesAndName += (PIPE_WITH_SPACES + name);
             }
 

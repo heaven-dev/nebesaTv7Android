@@ -1,3 +1,12 @@
+# 28.05.2021 15:10
+
+### Bug Fixes
+* Fixed program title bug on search result page.
+
+### Features
+* New version 18.
+
+
 # 17.05.2021 15:28
 
 ### Bug Fixes
