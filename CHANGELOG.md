@@ -1,7 +1,8 @@
-# 28.05.2021 15:10
+# 29.05.2021 15:10
 
 ### Bug Fixes
 * Fixed program title bug on search result page.
+* Added app build timestamp to the info page of app.
 
 ### Features
 * New version 18.

@@ -33,6 +33,8 @@ abstract public class Constants {
     public static final String EPG_CHANNEL = "RU1";
     public static final String EPG_LANG = "ru";
 
+    public static final String NOT_AVAILABLE = "N/A";
+
     public static final String SUBTITLES_URL = "https://vod.tv7.fi:4430/vod/";
     public static final String SEARCH_URL = "https://edom.tv7.fi:8443/search1.2/SearchServlet";
 

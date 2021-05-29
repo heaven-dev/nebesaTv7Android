@@ -50,6 +50,7 @@
 
     <string name="app_package_title">App package:</string>
     <string name="app_version_title">App version:</string>
+    <string name="app_build_time">App build time:</string>
     <string name="os_version_title">OS version:</string>
     <string name="os_api_level_title">OS API level:</string>
     <string name="android_version_title">Android version:</string>
