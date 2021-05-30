@@ -28,6 +28,7 @@ public class SharedCacheViewModel extends ViewModel {
     private ArchiveMainPageStateItem archiveMainPage = null;
 
     private String searchString = null;
+    private String exitFragment = null;
 
     public String getPageFromHistory() {
         if (pageHistory.size() > 0) {
@@ -161,6 +162,15 @@ public class SharedCacheViewModel extends ViewModel {
 
     public void resetSearchString() {
         this.searchString = null;
+    }
+
+
+    public String getExitFragment() {
+        return exitFragment;
+    }
+
+    public void setExitFragment(String exitFragment) {
+        this.exitFragment = exitFragment;
     }
 
 

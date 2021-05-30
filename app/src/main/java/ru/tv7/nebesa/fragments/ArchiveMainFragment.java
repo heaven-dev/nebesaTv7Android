@@ -178,7 +178,11 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
     @Override
     public void onBackStackChanged() {
         View view = getView();
-        if (view != null && view.getId() == R.id.archiveMainFragment) {
+        String exitFragment = sharedCacheViewModel.getExitFragment();
+
+        if (view != null && view.getId() == R.id.archiveMainFragment && exitFragment != null && exitFragment.equals(ARCHIVE_MAIN_FRAGMENT)) {
+            Utils.requestFocusById(root, R.id.archiveMenuContainer);
+
             view.post(new Runnable() {
                 @Override
                 public void run() {
@@ -620,6 +624,8 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                     this.cachePageState();
 
                     sharedCacheViewModel.setPageToHistory(ARCHIVE_MAIN_FRAGMENT);
+                    sharedCacheViewModel.setExitFragment(ARCHIVE_MAIN_FRAGMENT);
+
                     Utils.toPage(EXIT_OVERLAY_FRAGMENT, getActivity(), false, false, null);
                 }
             }

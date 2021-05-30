@@ -200,7 +200,9 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
     @Override
     public void onBackStackChanged() {
         View view = getView();
-        if (view != null && view.getId() == R.id.tvMainFragment) {
+        String exitFragment = sharedCacheViewModel.getExitFragment();
+
+        if (view != null && view.getId() == R.id.tvMainFragment && exitFragment != null && exitFragment.equals(TV_MAIN_FRAGMENT)) {
             ImageView startButton = root.findViewById(R.id.startButton);
             if (startButton != null) {
                 startButton.post(new Runnable() {
@@ -657,6 +659,8 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
                 }
                 else {
                     sharedCacheViewModel.setPageToHistory(TV_MAIN_FRAGMENT);
+                    sharedCacheViewModel.setExitFragment(TV_MAIN_FRAGMENT);
+
                     Utils.toPage(EXIT_OVERLAY_FRAGMENT, getActivity(), false, false,null);
                 }
             }
