@@ -2,6 +2,7 @@ package ru.tv7.nebesa.adapter;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,11 +42,13 @@ public class GuideGridAdapter extends RecyclerView.Adapter<GuideGridAdapter.Simp
 
     private FragmentActivity activity = null;
     private Context context = null;
+    private Resources resources = null;
     private JSONArray elements = null;
 
-    public GuideGridAdapter(FragmentActivity activity, Context context, JSONArray jsonArray) {
+    public GuideGridAdapter(FragmentActivity activity, Context context, Resources resources, JSONArray jsonArray) {
         this.activity = activity;
         this.context = context;
+        this.resources = resources;
         this.elements = jsonArray;
     }
 
@@ -134,8 +138,8 @@ public class GuideGridAdapter extends RecyclerView.Adapter<GuideGridAdapter.Simp
 
                     GradientDrawable gdb = (GradientDrawable) holder.ongoingProgram.getBackground();
 
-                    int startColor = context.getColor(R.color.ongoing_program_icon_bg_start);
-                    int endColor = context.getColor(R.color.ongoing_program_icon_bg_end);
+                    int startColor = ResourcesCompat.getColor(resources, R.color.ongoing_program_icon_bg_start, null);
+                    int endColor = ResourcesCompat.getColor(resources, R.color.ongoing_program_icon_bg_end, null);
 
                     ValueAnimator animation = ValueAnimator.ofArgb(startColor, endColor);
                     animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {

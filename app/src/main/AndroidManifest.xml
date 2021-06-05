@@ -32,9 +32,9 @@
         android:configChanges="keyboard|keyboardHidden|navigation"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:versionCode="18"
-        android:versionName="1.0.1"
-        android:minSdkVersion="23"
+        android:versionCode="19"
+        android:versionName="1.0.2"
+        android:minSdkVersion="22"
         android:targetSdkVersion="29">
         <activity
             android:name="ru.tv7.nebesa.activities.MainActivity"

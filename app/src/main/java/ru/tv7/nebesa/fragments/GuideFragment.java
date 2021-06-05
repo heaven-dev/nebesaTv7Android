@@ -189,7 +189,7 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
                     }
                 });
 
-                guideGridAdapter = new GuideGridAdapter(getActivity(), getContext(), guideData);
+                guideGridAdapter = new GuideGridAdapter(getActivity(), getContext(), getResources(), guideData);
                 guideScroll.setAdapter(guideGridAdapter);
 
                 if (isPageLoad && obj.getInt(DATE_INDEX) == 0) {

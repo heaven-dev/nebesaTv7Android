@@ -12,7 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.leanback.widget.HorizontalGridView;
@@ -793,7 +793,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
     private void setRowWhiteBackground(Context context, int id) {
         RelativeLayout relativeLayout = root.findViewById(id);
         if (relativeLayout != null) {
-            relativeLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+            relativeLayout.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.white, null));
         }
     }
 

@@ -1,3 +1,13 @@
+# 05.06.2021 16:29
+
+### Bug Fixes
+* Fixed TV guide adapter bug.
+* minSdkVersion changed to 22 in the AndroidManifest.xml and the build.gradle files.
+
+### Features
+* New version 19.
+
+
 # 30.05.2021 19:20
 
 ### Bug Fixes

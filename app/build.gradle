@@ -6,10 +6,10 @@ android {
 
     defaultConfig {
         applicationId "ru.tv7.nebesa"
-        minSdkVersion 23
+        minSdkVersion 22
         targetSdkVersion 30
-        versionCode 18
-        versionName "1.0.1"
+        versionCode 19
+        versionName "1.0.2"
 
     }
 
