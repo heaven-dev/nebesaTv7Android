@@ -1,5 +1,6 @@
 package ru.tv7.nebesa.fragments;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -10,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.leanback.widget.VerticalGridView;
 import androidx.lifecycle.ViewModelProviders;
@@ -591,9 +593,27 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
      * Sets date item focused.
      */
     private void setDateSelection() {
+        Resources resources = getResources();
+
         for (int i = 0; i < GUIDE_DATE_IDS.size(); i++) {
             int id = GUIDE_DATE_IDS.get(i);
-            Utils.setSelectedById(root, id, id == selectedDateId);
+            this.setSelectedById(root, id, resources, id == selectedDateId);
+        }
+    }
+
+    /**
+     * Sets date item text color.
+     * @param root
+     * @param id
+     * @param resources
+     * @param selected
+     */
+    public void setSelectedById(View root, int id, Resources resources, boolean selected) {
+        if (root != null) {
+            TextView tv = root.findViewById(id);
+            if (tv != null) {
+                tv.setTextColor(ResourcesCompat.getColor(resources, selected ? R.color.tv7_default : R.color.toolbar_and_title_text, null));
+            }
         }
     }
 }

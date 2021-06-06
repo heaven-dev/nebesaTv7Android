@@ -157,15 +157,6 @@ public abstract class Utils {
         }
     }
 
-    public static void setSelectedById(View root, int id, boolean selected) {
-        if (root != null) {
-            View view = root.findViewById(id);
-            if (view != null) {
-                view.setSelected(selected);
-            }
-        }
-    }
-
     public static View getFocusedView(Activity activity) {
         return activity.getCurrentFocus();
     }
