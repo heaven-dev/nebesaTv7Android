@@ -304,6 +304,10 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
                 return false;
             }
 
+            if (Sidebar.isSideMenuOpen(menuTexts) && keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+                return false;
+            }
+
             View focusedDate = this.isDateFocused();
 
             if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
