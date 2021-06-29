@@ -50,7 +50,6 @@
 
     <string name="app_package_title">App package:</string>
     <string name="app_version_title">App version:</string>
-    <string name="app_build_time">App built:</string>
     <string name="os_version_title">OS version:</string>
     <string name="os_api_level_title">OS API level:</string>
     <string name="android_version_title">Android version:</string>
@@ -61,6 +60,7 @@
     <string name="no_network_connection">No network connection :-(</string>
     <string name="network_request_failed">Network request failed :-(</string>
     <string name="network_request_timeout">Network request timeout :-(</string>
+    <string name="restart">Restart</string>
     <string name="close">Close</string>
 
     <string name="title_1">О нас</string>
@@ -102,5 +102,5 @@
     <string name="title_7_chapter_14">До встречи в эфире! Пусть Бог обильно благословит вас!</string>
     <string name="title_7_chapter_15">С уважением, Мартти Оярес, основатель и генеральный директор «Heaven TV7».</string>
 
-    <string name="copyright">Copyright Небеса ТВ7. Unauthorized publication of programs or subtitles is prohibited.</string>
+    <string name="copyright">Copyright © Небеса ТВ7. Unauthorized publication of programs or subtitles is prohibited.</string>
 </resources>

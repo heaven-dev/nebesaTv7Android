@@ -86,31 +86,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@color/default_background"
-                        android:text="@string/app_build_time"
-                        android:textColor="@color/page_text"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/appBuildTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@color/default_background"
-                        android:paddingStart="18dp"
-                        android:paddingEnd="0dp"
-                        android:text=""
-                        android:textColor="@color/page_text"
-                        android:textSize="18sp" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@color/default_background"
                         android:text="@string/os_version_title"
                         android:textColor="@color/page_text"
                         android:textSize="18sp" />

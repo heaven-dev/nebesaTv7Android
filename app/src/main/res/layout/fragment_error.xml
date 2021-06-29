@@ -32,21 +32,44 @@
             android:textColor="@color/content_area_text"
             android:text="@string/something_went_wrong" />
 
-        <TextView
-            android:id="@+id/closeButton"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_gravity="center"
             android:layout_below="@+id/errorText"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
-            android:textSize="30sp"
-            android:focusable="true"
-            android:width="140dp"
-            android:textAllCaps="false"
-            android:background="@drawable/close_button"
-            android:textColor="@color/exit_overlay_controls"
-            android:text="@string/close" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/restartButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="28sp"
+                android:layout_marginEnd="10dp"
+                android:focusable="true"
+                android:width="130dp"
+                android:textAllCaps="false"
+                android:background="@drawable/error_button"
+                android:textColor="@color/error_page_controls"
+                android:text="@string/restart" />
+
+            <TextView
+                android:id="@+id/closeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="28sp"
+                android:layout_marginStart="10dp"
+                android:focusable="true"
+                android:width="130dp"
+                android:textAllCaps="false"
+                android:background="@drawable/error_button"
+                android:textColor="@color/error_page_controls"
+                android:text="@string/close" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 

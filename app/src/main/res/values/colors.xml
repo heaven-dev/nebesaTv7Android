@@ -12,6 +12,7 @@
     <color name="archive_main_content_bg">#eeeeee</color>
     <color name="sidebar_selected_item">#bbbbbb</color>
     <color name="exit_overlay_controls">#ffffff</color>
+    <color name="error_page_controls">#444444</color>
     <color name="player_text">#ffffff</color>
     <color name="tv_content_border">#444444</color>
     <color name="image_text_background">#444444</color>

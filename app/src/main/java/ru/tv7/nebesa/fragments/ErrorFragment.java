@@ -1,5 +1,6 @@
 package ru.tv7.nebesa.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -23,6 +24,7 @@ import static ru.tv7.nebesa.helpers.Constants.LOG_TAG;
 public class ErrorFragment extends Fragment {
 
     private View root = null;
+    private TextView restartButton = null;
     private TextView closeButton = null;
 
     /**
@@ -68,10 +70,8 @@ public class ErrorFragment extends Fragment {
                 }
             }
 
+            restartButton = root.findViewById(R.id.restartButton);
             closeButton = root.findViewById(R.id.closeButton);
-            if (closeButton != null) {
-                closeButton.requestFocus();
-            }
         }
         catch (Exception e) {
             if (BuildConfig.DEBUG) {
@@ -80,6 +80,20 @@ public class ErrorFragment extends Fragment {
             Utils.toErrorPage(getActivity());
         }
         return root;
+    }
+
+    /**
+     * onViewCreated() - Android lifecycle method.
+     * @param view
+     * @param savedInstanceState
+     */
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if (restartButton != null) {
+            restartButton.requestFocus();
+        }
     }
 
     /**
@@ -94,13 +108,32 @@ public class ErrorFragment extends Fragment {
                 Log.d(LOG_TAG, "ErrorFragment.onKeyDown(): keyCode: " + keyCode);
             }
 
+            View focusedView = root.findFocus();
+            if (focusedView == null) {
+                return false;
+            }
+
             if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
                 if (BuildConfig.DEBUG) {
                     Log.d(LOG_TAG, "ErrorFragment.onKeyDown(): KEYCODE_DPAD_CENTER: keyCode: " + keyCode);
                 }
 
-                View focusedView = root.findFocus();
-                if (focusedView == closeButton) {
+                if (focusedView == restartButton) {
+                    Activity activity = NebesaTv7.getInstance().getActivity();
+                    if (activity != null) {
+                        if (BuildConfig.DEBUG) {
+                            Log.d(LOG_TAG, "ErrorFragment.onKeyDown(): Restart app!");
+                        }
+
+                        activity.finish();
+                        activity.startActivity(activity.getIntent());
+                    }
+                }
+                else if (focusedView == closeButton) {
+                    if (BuildConfig.DEBUG) {
+                        Log.d(LOG_TAG, "ErrorFragment.onKeyDown(): Exit from app!");
+                    }
+
                     this.exitFromApplication();
                 }
             }
@@ -108,10 +141,18 @@ public class ErrorFragment extends Fragment {
                 if (BuildConfig.DEBUG) {
                     Log.d(LOG_TAG, "ErrorFragment.onKeyDown(): KEYCODE_DPAD_LEFT: keyCode: " + keyCode);
                 }
+
+                if (focusedView == closeButton) {
+                    restartButton.requestFocus();
+                }
             }
             else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
                 if (BuildConfig.DEBUG) {
                     Log.d(LOG_TAG, "ErrorFragment.onKeyDown(): KEYCODE_DPAD_RIGHT: keyCode: " + keyCode);
+                }
+
+                if (focusedView == restartButton) {
+                    closeButton.requestFocus();
                 }
             }
             else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
