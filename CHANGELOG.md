@@ -1,8 +1,9 @@
-# 29.06.2021 18:19
+# 30.06.2021 11:43
 
 ### Bug Fixes
 * Added restart button to the error page.
 * Removed app built time from the about fragment.
+* Changed the date format to d.m.yyyy on guides.
 
 ### Features
 * New version 20.

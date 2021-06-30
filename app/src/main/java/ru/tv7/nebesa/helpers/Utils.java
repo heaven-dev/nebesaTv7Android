@@ -319,6 +319,17 @@ public abstract class Utils {
         return prependZero(date) + DOT + prependZero(month) + DOT + year;
     }
 
+    public static String createLocalDateStringShort(String time) {
+        Calendar calendar = getLocalCalendar();
+        calendar.setTimeInMillis(stringToLong(time));
+
+        int date = calendar.get(Calendar.DATE);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int year = calendar.get(Calendar.YEAR);
+
+        return date + DOT + month + DOT + year;
+    }
+
     public static long getLocalTimeInMilliseconds(String time) {
         Calendar calendar = getLocalCalendar();
         calendar.setTimeInMillis(stringToLong(time));

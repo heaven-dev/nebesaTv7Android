@@ -10,6 +10,7 @@ public class EpgItem {
     private String localEndTime = null;
     private String localStartDate = null;
     private String localEndDate = null;
+    private String localStartDateShort = null;
     private Boolean isStartDateToday = null;
     private String title = null;
     private String desc = null;
@@ -18,13 +19,14 @@ public class EpgItem {
     private Integer ongoingProgress = null;
 
     public EpgItem(String start, String stop, String localStartTime, String localEndTime, String localStartDate, String localeEndDate,
-                   Boolean isStartDateToday, String title, String desc, String category, String icon) {
+                   String localStartDateShort, Boolean isStartDateToday, String title, String desc, String category, String icon) {
         this.start = start;
         this.stop = stop;
         this.localStartTime = localStartTime;
         this.localEndTime = localEndTime;
         this.localStartDate = localStartDate;
         this.localEndDate = localeEndDate;
+        this.localStartDateShort = localStartDateShort;
         this.isStartDateToday = isStartDateToday;
         this.title = title;
         this.desc = desc;
@@ -39,6 +41,7 @@ public class EpgItem {
         this.localEndTime = e.getLocalEndTime();
         this.localStartDate = e.getLocalStartDate();
         this.localEndDate = e.getLocalEndDate();
+        this.localStartDateShort = e.getLocalStartDateShort();
         this.isStartDateToday = e.getStartDateToday();
         this.title = e.getTitle();
         this.desc = e.getDesc();
@@ -70,6 +73,10 @@ public class EpgItem {
 
     public String getLocalEndDate() {
         return localEndDate;
+    }
+
+    public String getLocalStartDateShort() {
+        return localStartDateShort;
     }
 
     public Boolean getStartDateToday() {

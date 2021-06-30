@@ -396,8 +396,8 @@ public class ProgramScheduleViewModel extends ViewModel {
                     }
 
                     EpgItem epgItem = new EpgItem(start, stop, Utils.createLocalTimeString(start),
-                            Utils.createLocalTimeString(stop), Utils.createLocalDateString(start) , Utils.createLocalDateString(stop),
-                            this.isStartDateToday(start), title, desc, category, icon);
+                            Utils.createLocalTimeString(stop), Utils.createLocalDateString(start), Utils.createLocalDateString(stop),
+                            Utils.createLocalDateStringShort(start), this.isStartDateToday(start), title, desc, category, icon);
 
                     programmeList.add(epgItem);
                 }

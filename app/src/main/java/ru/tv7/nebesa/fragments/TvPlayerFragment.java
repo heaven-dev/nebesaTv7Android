@@ -454,7 +454,7 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
             if (timeAndTitle != null && desc != null) {
                 StringBuilder timeAndTitleStr = new StringBuilder(epgItem.getLocalStartTime() + DASH_WITH_SPACES + epgItem.getLocalEndTime() + SPACE + epgItem.getTitle());
                 if (!epgItem.getStartDateToday()) {
-                    timeAndTitleStr.insert(0, epgItem.getLocalStartDate() + PIPE_WITH_SPACES);
+                    timeAndTitleStr.insert(0, epgItem.getLocalStartDateShort() + PIPE_WITH_SPACES);
                 }
 
                 timeAndTitle.setText(timeAndTitleStr.toString());

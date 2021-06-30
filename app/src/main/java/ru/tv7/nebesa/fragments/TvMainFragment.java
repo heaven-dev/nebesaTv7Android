@@ -469,7 +469,7 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
                                 todayText.setText(getResources().getString(R.string.today));
                             }
                             else {
-                                todayText.setText(e.getLocalStartDate());
+                                todayText.setText(e.getLocalStartDateShort());
                             }
                         }
                     }
