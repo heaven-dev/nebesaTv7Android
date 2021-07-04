@@ -2,6 +2,8 @@ package ru.tv7.nebesa.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -9,10 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+
+import org.json.JSONArray;
 
 import java.util.List;
 
@@ -28,6 +33,10 @@ import static ru.tv7.nebesa.helpers.Constants.ARCHIVE_MAIN_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.BACKSPACE_BUTTON;
 import static ru.tv7.nebesa.helpers.Constants.EMPTY;
 import static ru.tv7.nebesa.helpers.Constants.LOG_TAG;
+import static ru.tv7.nebesa.helpers.Constants.SAVED_SEARCH_IDS;
+import static ru.tv7.nebesa.helpers.Constants.SAVED_SEARCH_MAX_COUNT;
+import static ru.tv7.nebesa.helpers.Constants.SAVED_SEARCH_SP_DEFAULT;
+import static ru.tv7.nebesa.helpers.Constants.SAVED_SEARCH_SP_TAG;
 import static ru.tv7.nebesa.helpers.Constants.SEARCH_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.SEARCH_RESULT_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.SEARCH_SPECIAL_CHAR_MODE_BUTTONS;
@@ -47,6 +56,8 @@ public class SearchFragment extends Fragment {
 
     private List<TextView> menuTexts = null;
     private SearchKeyboardType searchKeyboardType = SearchKeyboardType.LOWERCASE;
+
+    private boolean savedSearchContainerVisible = false;
 
     /**
      * Default constructor.
@@ -98,7 +109,7 @@ public class SearchFragment extends Fragment {
         try {
             root = inflater.inflate(R.layout.fragment_search, container, false);
 
-            LinearLayout contentContainer = root.findViewById(R.id.contentContainer);
+            RelativeLayout contentContainer = root.findViewById(R.id.contentContainer);
             if (contentContainer != null) {
                 Utils.fadePageAnimation(contentContainer);
             }
@@ -118,6 +129,14 @@ public class SearchFragment extends Fragment {
                 TextView searchText = root.findViewById(R.id.searchText);
                 if (searchText != null) {
                     searchText.setText(searchString);
+                }
+            }
+
+            JSONArray jsonArray = this.getSavedSearches();
+            if (jsonArray != null && jsonArray.length() > 0) {
+                LinearLayout savedSearchKey = root.findViewById(R.id.savedSearchKey);
+                if (savedSearchKey != null) {
+                    savedSearchKey.setVisibility(View.VISIBLE);
                 }
             }
         }
@@ -165,30 +184,31 @@ public class SearchFragment extends Fragment {
                         Sidebar.menuItemSelected(focusedMenu, getActivity(), sharedCacheViewModel);
                     }
                 }
+                else if (this.savedSearchContainerVisible) {
+                    TextView tv = root.findViewById(focusedView.getId());
+                    if (tv != null) {
+                        String savedSearchText = tv.getText().toString();
+                        tv = root.findViewById(R.id.searchText);
+                        if (tv != null) {
+                            tv.setText(savedSearchText);
+                            this.search(tv);
+                        }
+                    }
+                }
                 else {
                     int id = focusedView.getId();
                     TextView searchText = root.findViewById(R.id.searchText);
 
                     if (id == R.id.searchKey) {
-                        String searchString = searchText.getText().toString();
-                        if (searchText != null && searchString.length() > 0) {
-                            if (BuildConfig.DEBUG) {
-                                Log.d(LOG_TAG, "SearchFragment.onKeyDown(): KEYCODE_DPAD_CENTER: Search text: " + searchString);
-                            }
-
-                            sharedCacheViewModel.setSearchString(searchString);
-                            sharedCacheViewModel.setPageToHistory(SEARCH_FRAGMENT);
-
-                            Utils.toPage(SEARCH_RESULT_FRAGMENT, getActivity(), true, false,null);
-                        }
-                        else {
-                            searchText.setBackgroundResource(R.drawable.search_box_invalid);
-                        }
+                        this.search(searchText);
                     }
                     else if (id == R.id.clearKey) {
                         if (searchText != null) {
                             searchText.setText(EMPTY);
                         }
+                    }
+                    else if (id == R.id.savedSearchKey) {
+                        this.showHideSavedSearch();
                     }
                     else {
                         if (focusedView instanceof TextView) {
@@ -336,8 +356,13 @@ public class SearchFragment extends Fragment {
                     this.focusOutFromSideMenu();
                 }
                 else {
-                    sharedCacheViewModel.resetSearchString();
-                    Utils.toPage(ARCHIVE_MAIN_FRAGMENT, getActivity(), true, false,null);
+                    if (this.savedSearchContainerVisible) {
+                        this.showHideSavedSearch();
+                    }
+                    else {
+                        sharedCacheViewModel.resetSearchString();
+                        Utils.toPage(ARCHIVE_MAIN_FRAGMENT, getActivity(), true, false, null);
+                    }
                 }
             }
         }
@@ -491,5 +516,139 @@ public class SearchFragment extends Fragment {
             rowContainer.removeAllViews();
             rowContainer.addView(row);
         }
+    }
+
+    /**
+     * Saves search string and navigates to the search result page which makes the search.
+     * @param searchText
+     * @throws Exception
+     */
+    private void search(TextView searchText) throws Exception {
+        String searchString = searchText.getText().toString();
+        if (searchString.length() > 0) {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "SearchFragment.search(): Search text: " + searchString);
+            }
+
+            this.saveSearchValue(searchString);
+
+            sharedCacheViewModel.setSearchString(searchString);
+            sharedCacheViewModel.setPageToHistory(SEARCH_FRAGMENT);
+
+            Utils.toPage(SEARCH_RESULT_FRAGMENT, getActivity(), true, false,null);
+        }
+        else {
+            searchText.setBackgroundResource(R.drawable.search_box_invalid);
+        }
+    }
+
+    /**
+     * Shows and hides saved search container.
+     */
+    private void showHideSavedSearch() throws Exception {
+        RelativeLayout contentContainer = root.findViewById(R.id.contentContainer);
+        RelativeLayout savedSearchContainer = root.findViewById(R.id.savedSearchContainer);
+        if (contentContainer != null && savedSearchContainer != null) {
+            if (this.savedSearchContainerVisible) {
+                savedSearchContainer.setVisibility(View.GONE);
+                savedSearchContainer.getLayoutParams().width = 0;
+                Utils.requestFocusById(root, R.id.savedSearchKey);
+            }
+            else {
+                int widthPx = contentContainer.getWidth();
+                widthPx = Math.round((float)widthPx / (float)2);
+
+                savedSearchContainer.getLayoutParams().width = widthPx;
+                savedSearchContainer.setVisibility(View.VISIBLE);
+
+                final JSONArray jsonArray = getSavedSearches();
+                if (jsonArray != null) {
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        String str = jsonArray.getString(i);
+                        if (str == null) {
+                            continue;
+                        }
+
+                        TextView tv = root.findViewById(SAVED_SEARCH_IDS.get(i));
+                        if (tv == null) {
+                            continue;
+                        }
+
+                        tv.setText(str);
+                        tv.setVisibility(View.VISIBLE);
+                    }
+
+                    final Handler handler = new Handler(Looper.getMainLooper());
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Utils.requestFocusById(root, R.id.ss_0);
+                        }
+                    }, 0);
+                }
+            }
+
+            this.savedSearchContainerVisible = !this.savedSearchContainerVisible;
+        }
+    }
+
+    /**
+     * Saves saved searches to shared preferences as a JSON string.
+     * @param searchText
+     * @throws Exception
+     */
+    private void saveSearchValue(String searchText) throws Exception {
+        Context context = getContext();
+        if (context != null) {
+            JSONArray jsonArray = Utils.getSavedPrefs(SAVED_SEARCH_SP_TAG, SAVED_SEARCH_SP_DEFAULT, context);
+            if (jsonArray != null) {
+                // Remove existing value if found
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    String str = jsonArray.getString(i);
+                    if (str == null) {
+                        continue;
+                    }
+
+                    if (str.equals(searchText)) {
+                        if (BuildConfig.DEBUG) {
+                            Log.d(LOG_TAG, "SearchFragment.saveSearchValue(): Remove same string from JSON array: " + searchText);
+                        }
+
+                        jsonArray.remove(i);
+                        break;
+                    }
+                }
+
+                if (BuildConfig.DEBUG) {
+                    Log.d(LOG_TAG, "SearchFragment.saveSearchValue(): Add search string to JSON array: " + searchText);
+                }
+
+                JSONArray jsonFinal = new JSONArray();
+                jsonFinal.put(searchText);
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    jsonFinal.put(jsonArray.get(i));
+                }
+
+                if (jsonFinal.length() > SAVED_SEARCH_MAX_COUNT) {
+                    if (BuildConfig.DEBUG) {
+                        Log.d(LOG_TAG, "SearchFragment.saveSearchValue(): Too big list (more than 12). Remove the last item!");
+                    }
+
+                    jsonFinal.remove(jsonFinal.length() - 1);
+                }
+
+                Utils.savePrefs(SAVED_SEARCH_SP_TAG, context, jsonFinal);
+            }
+        }
+    }
+
+    /**
+     * Returns saved searched from shared preferences.
+     * @return JSONArray
+     * @throws Exception
+     */
+    private JSONArray getSavedSearches() throws Exception {
+        return Utils.getSavedPrefs(SAVED_SEARCH_SP_TAG, SAVED_SEARCH_SP_DEFAULT, getContext());
     }
 }

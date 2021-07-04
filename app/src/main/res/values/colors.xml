@@ -35,4 +35,5 @@
     <color name="page_text">#444444</color>
     <color name="title_background">#eeeeee</color>
     <color name="date_item_border">#444444</color>
+    <color name="saved_search_item_bg">#eeeeee</color>
 </resources>

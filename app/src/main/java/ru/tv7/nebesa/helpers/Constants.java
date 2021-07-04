@@ -104,7 +104,7 @@ abstract public class Constants {
 
     public static final String AUDIO_INDEX_ENABLE_LANG = "RU1";
 
-    public static final String TV_BRAND = "Android";
+    public static final String TV_BRAND = "AndroidTV";
 
     public static final String OS_VERSION = "os.version";
     public static final String LEFT_BRACKET = "(";
@@ -151,6 +151,10 @@ abstract public class Constants {
 
     public static final String VIDEO_STATUSES_SP_TAG = "video_statuses_shared_pref";
     public static final String VIDEO_STATUSES_SP_DEFAULT = "[]";
+
+    public static final String SAVED_SEARCH_SP_TAG = "saved_search_shared_pref";
+    public static final String SAVED_SEARCH_SP_DEFAULT = "[]";
+    public static final int SAVED_SEARCH_MAX_COUNT = 12;
 
     public static final int TOOLBAR_HEIGHT = 60;
     public static final int ARCHIVE_MAIN_TITLE_HEIGHT = 30;
@@ -296,6 +300,21 @@ abstract public class Constants {
         R.id.date_4,
         R.id.date_5,
         R.id.date_6
+    ));
+
+    public static final List<Integer> SAVED_SEARCH_IDS = new ArrayList<>(Arrays.asList(
+        R.id.ss_0,
+        R.id.ss_1,
+        R.id.ss_2,
+        R.id.ss_3,
+        R.id.ss_4,
+        R.id.ss_5,
+        R.id.ss_6,
+        R.id.ss_7,
+        R.id.ss_8,
+        R.id.ss_9,
+        R.id.ss_10,
+        R.id.ss_11
     ));
 
     public static final int SPACE_BUTTON = 1;

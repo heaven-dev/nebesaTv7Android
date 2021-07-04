@@ -32,6 +32,7 @@ import ru.tv7.nebesa.model.SharedCacheViewModel;
 
 import static ru.tv7.nebesa.helpers.Constants.ID;
 import static ru.tv7.nebesa.helpers.Constants.LOG_TAG;
+import static ru.tv7.nebesa.helpers.Constants.PIPE_WITH_SPACES;
 import static ru.tv7.nebesa.helpers.Constants.PROGRAM_INFO_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.PROGRAM_INFO_METHOD;
 import static ru.tv7.nebesa.helpers.Constants.SEARCH_RESULT_FRAGMENT;
@@ -147,6 +148,15 @@ public class SearchResultFragment extends Fragment implements ArchiveDataLoadedL
         try {
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "SearchResultFragment.addElements(): Archive data loaded. Data length: " + jsonArray.length());
+            }
+
+            TextView searchResultTitle = root.findViewById(R.id.searchResultTitle);
+            if (searchResultTitle != null) {
+                String searchString = sharedCacheViewModel.getSearchString();
+                if (searchString != null) {
+                    searchString = searchResultTitle.getText() + PIPE_WITH_SPACES + searchString;
+                    searchResultTitle.setText(searchString);
+                }
             }
 
             if (jsonArray == null) {

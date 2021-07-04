@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/contentContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -515,15 +515,320 @@
                         android:focusable="true"
                         android:nextFocusUp="@+id/k_2_0"
                         android:nextFocusLeft="@+id/searchKey"
+                        android:nextFocusRight="@id/savedSearchKey"
                         android:text=""
                         android:textSize="22sp"
                         android:textColor="@color/content_area_text"
                         android:background="@drawable/keyboard_item"/>
+
+                    <LinearLayout
+                        android:id="@+id/savedSearchKey"
+                        android:layout_width="46dp"
+                        android:layout_height="46dp"
+                        android:layout_marginStart="3dp"
+                        android:layout_marginEnd="3dp"
+                        android:gravity="center"
+                        android:visibility="gone"
+                        android:focusable="true"
+                        android:nextFocusUp="@+id/k_2_0"
+                        android:nextFocusLeft="@+id/clearKey"
+                        android:background="@drawable/keyboard_item">
+                        <ImageView
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
+                            android:src="@drawable/saved_search" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
             </LinearLayout>
 
-        </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/savedSearchContainer"
+            android:layout_width="400dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:visibility="gone"
+            android:alpha="0.97"
+            android:background="@color/white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:contentDescription="@string/search"
+                    android:scaleType="fitXY"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="3dp"
+                    android:src="@drawable/search" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="24sp"
+                    android:text="@string/search"
+                    android:textSize="18sp"
+                    android:layout_marginStart="2dp"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/content_area_text"
+                    android:ellipsize="end" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:orientation="vertical"
+                android:weightSum="12">
+
+                <TextView
+                    android:id="@+id/ss_0"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:focusable="true"
+                    android:layout_marginBottom="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/content_area_text"
+                    android:gravity="center_vertical"
+                    android:nextFocusDown="@+id/ss_1"
+                    android:visibility="gone"
+                    android:background="@drawable/saved_search_item"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <TextView
+                    android:id="@+id/ss_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:focusable="true"
+                    android:layout_marginBottom="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/content_area_text"
+                    android:gravity="center_vertical"
+                    android:nextFocusUp="@+id/ss_0"
+                    android:nextFocusDown="@+id/ss_2"
+                    android:visibility="gone"
+                    android:background="@drawable/saved_search_item"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <TextView
+                    android:id="@+id/ss_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:focusable="true"
+                    android:layout_marginBottom="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/content_area_text"
+                    android:gravity="center_vertical"
+                    android:nextFocusUp="@+id/ss_1"
+                    android:nextFocusDown="@+id/ss_3"
+                    android:visibility="gone"
+                    android:background="@drawable/saved_search_item"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <TextView
+                    android:id="@+id/ss_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:focusable="true"
+                    android:layout_marginBottom="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/content_area_text"
+                    android:gravity="center_vertical"
+                    android:nextFocusUp="@+id/ss_2"
+                    android:nextFocusDown="@+id/ss_4"
+                    android:visibility="gone"
+                    android:background="@drawable/saved_search_item"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <TextView
+                    android:id="@+id/ss_4"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:focusable="true"
+                    android:layout_marginBottom="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/content_area_text"
+                    android:gravity="center_vertical"
+                    android:nextFocusUp="@+id/ss_3"
+                    android:nextFocusDown="@+id/ss_5"
+                    android:visibility="gone"
+                    android:background="@drawable/saved_search_item"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <TextView
+                    android:id="@+id/ss_5"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:focusable="true"
+                    android:layout_marginBottom="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/content_area_text"
+                    android:gravity="center_vertical"
+                    android:nextFocusUp="@+id/ss_4"
+                    android:nextFocusDown="@+id/ss_6"
+                    android:visibility="gone"
+                    android:background="@drawable/saved_search_item"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <TextView
+                    android:id="@+id/ss_6"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:focusable="true"
+                    android:layout_marginBottom="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/content_area_text"
+                    android:gravity="center_vertical"
+                    android:nextFocusUp="@+id/ss_5"
+                    android:nextFocusDown="@+id/ss_7"
+                    android:visibility="gone"
+                    android:background="@drawable/saved_search_item"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <TextView
+                    android:id="@+id/ss_7"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:focusable="true"
+                    android:layout_marginBottom="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/content_area_text"
+                    android:gravity="center_vertical"
+                    android:nextFocusUp="@+id/ss_6"
+                    android:nextFocusDown="@+id/ss_8"
+                    android:visibility="gone"
+                    android:background="@drawable/saved_search_item"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <TextView
+                    android:id="@+id/ss_8"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:focusable="true"
+                    android:layout_marginBottom="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/content_area_text"
+                    android:gravity="center_vertical"
+                    android:nextFocusUp="@+id/ss_7"
+                    android:nextFocusDown="@+id/ss_9"
+                    android:visibility="gone"
+                    android:background="@drawable/saved_search_item"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <TextView
+                    android:id="@+id/ss_9"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:focusable="true"
+                    android:layout_marginBottom="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/content_area_text"
+                    android:gravity="center_vertical"
+                    android:nextFocusUp="@+id/ss_8"
+                    android:nextFocusDown="@+id/ss_10"
+                    android:visibility="gone"
+                    android:background="@drawable/saved_search_item"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <TextView
+                    android:id="@+id/ss_10"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:focusable="true"
+                    android:layout_marginBottom="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/content_area_text"
+                    android:gravity="center_vertical"
+                    android:nextFocusUp="@+id/ss_9"
+                    android:nextFocusDown="@+id/ss_11"
+                    android:visibility="gone"
+                    android:background="@drawable/saved_search_item"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+                <TextView
+                    android:id="@+id/ss_11"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:focusable="true"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/content_area_text"
+                    android:gravity="center_vertical"
+                    android:nextFocusUp="@+id/ss_10"
+                    android:visibility="gone"
+                    android:background="@drawable/saved_search_item"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
         <include layout="@layout/fragment_sidebar"/>
 

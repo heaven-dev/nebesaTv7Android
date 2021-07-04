@@ -1,11 +1,23 @@
+# 04.07.2021 11:57
+
+### Bug Fixes
+* none
+
+### Features
+* Search string appended to the title of search result page.
+* Search history is available on the search page.
+* New version 21.
+
+
 # 30.06.2021 11:43
 
 ### Bug Fixes
+* none
+
+### Features
 * Added restart button to the error page.
 * Removed app built time from the about fragment.
 * Changed the date format to d.m.yyyy on guides.
-
-### Features
 * New version 20.
 
 
