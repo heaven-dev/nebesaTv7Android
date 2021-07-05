@@ -23,6 +23,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.leanback.widget.HorizontalGridView;
+import androidx.leanback.widget.OnChildViewHolderSelectedListener;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -729,6 +730,33 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
                         if (newestProgramsScroll != null) {
                             newestProgramsScroll.invalidate();
                             newestProgramsScroll.requestLayout();
+                        }
+                    }
+                });
+
+                newestProgramsScroll.addOnChildViewHolderSelectedListener(new OnChildViewHolderSelectedListener() {
+                    @Override
+                    public void onChildViewHolderSelectedAndPositioned(RecyclerView parent, RecyclerView.ViewHolder child, int position, int subposition) {
+                        super.onChildViewHolderSelectedAndPositioned(parent, child, position, subposition);
+
+                        if (parent != null && child != null) {
+                            int count = parent.getChildCount();
+
+                            for(int i = 0; i < count; i++) {
+                                View item = parent.getChildAt(i);
+                                if (item != null) {
+                                    ImageView playButton = item.findViewById(R.id.programPlayButton);
+                                    if (playButton != null) {
+                                        playButton.setVisibility(View.GONE);
+                                    }
+                                }
+                            }
+
+                            // Set play button visible on the selected item view
+                            ImageView playButton = child.itemView.findViewById(R.id.programPlayButton);
+                            if (playButton != null) {
+                                playButton.setVisibility(View.VISIBLE);
+                            }
                         }
                     }
                 });
