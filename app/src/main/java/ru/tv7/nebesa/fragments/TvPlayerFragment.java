@@ -40,14 +40,13 @@ import java.util.TimerTask;
 
 import ru.tv7.nebesa.BuildConfig;
 import ru.tv7.nebesa.R;
-import ru.tv7.nebesa.helpers.EpgItem;
+import ru.tv7.nebesa.helpers.GuideItem;
 import ru.tv7.nebesa.helpers.Utils;
-import ru.tv7.nebesa.model.ProgramScheduleViewModel;
+import ru.tv7.nebesa.model.GuideViewModel;
 import ru.tv7.nebesa.model.SharedCacheViewModel;
 
 import static ru.tv7.nebesa.helpers.Constants.CHANNEL_URL_PARAM;
 import static ru.tv7.nebesa.helpers.Constants.COLON;
-import static ru.tv7.nebesa.helpers.Constants.DASH_WITH_SPACES;
 import static ru.tv7.nebesa.helpers.Constants.DOT;
 import static ru.tv7.nebesa.helpers.Constants.GUIDE_TIMER_TIMEOUT;
 import static ru.tv7.nebesa.helpers.Constants.LOG_TAG;
@@ -67,7 +66,7 @@ import static ru.tv7.nebesa.helpers.Constants.TV_MAIN_FRAGMENT;
 public class TvPlayerFragment extends Fragment implements Player.EventListener {
 
     private View root = null;
-    private ProgramScheduleViewModel viewModel = null;
+    private GuideViewModel guideViewModel = null;
     private SharedCacheViewModel sharedCacheViewModel = null;
 
     private Timer timer = null;
@@ -106,7 +105,7 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
                 Log.d(LOG_TAG, "TvPlayerFragment.onCreateView(): Called.");
             }
 
-            viewModel = ViewModelProviders.of(requireActivity()).get(ProgramScheduleViewModel.class);
+            guideViewModel = ViewModelProviders.of(requireActivity()).get(GuideViewModel.class);
             sharedCacheViewModel = ViewModelProviders.of(requireActivity()).get(SharedCacheViewModel.class);
 
             root = inflater.inflate(R.layout.fragment_tv_player, container, false);
@@ -237,7 +236,7 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
                     // show top bar
                     guideIndex = 0;
 
-                    this.setTopBarContent(viewModel.getEpgItemByIndex(guideIndex));
+                    this.setTopBarContent(guideViewModel.getEpgItemByIndex(guideIndex));
                     this.showGuideTopBar();
                 }
             }
@@ -249,14 +248,14 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
                 if (isTopGuideBarVisible()) {
                     if (guideIndex > 0) {
                         guideIndex--;
-                        this.setTopBarContent(viewModel.getEpgItemByIndex(guideIndex));
+                        this.setTopBarContent(guideViewModel.getEpgItemByIndex(guideIndex));
                     }
                 }
                 else {
                     // show top bar
                     guideIndex = 0;
 
-                    this.setTopBarContent(viewModel.getEpgItemByIndex(guideIndex));
+                    this.setTopBarContent(guideViewModel.getEpgItemByIndex(guideIndex));
                     this.showGuideTopBar();
                 }
             }
@@ -266,16 +265,16 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
                 }
 
                 if (isTopGuideBarVisible()) {
-                    if (viewModel.isListItemInIndex(guideIndex + 1)) {
+                    if (guideViewModel.isListItemInIndex(guideIndex + 1)) {
                         guideIndex++;
-                        this.setTopBarContent(viewModel.getEpgItemByIndex(guideIndex));
+                        this.setTopBarContent(guideViewModel.getEpgItemByIndex(guideIndex));
                     }
                 }
                 else {
                     // show top bar
                     guideIndex = 0;
 
-                    this.setTopBarContent(viewModel.getEpgItemByIndex(guideIndex));
+                    this.setTopBarContent(guideViewModel.getEpgItemByIndex(guideIndex));
                     this.showGuideTopBar();
                 }
             }
@@ -288,7 +287,7 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
                     // show top bar
                     guideIndex = 0;
 
-                    this.setTopBarContent(viewModel.getEpgItemByIndex(guideIndex));
+                    this.setTopBarContent(guideViewModel.getEpgItemByIndex(guideIndex));
                     this.showGuideTopBar();
                 }
             }
@@ -301,7 +300,7 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
                     // show top bar
                     guideIndex = 0;
 
-                    this.setTopBarContent(viewModel.getEpgItemByIndex(guideIndex));
+                    this.setTopBarContent(guideViewModel.getEpgItemByIndex(guideIndex));
                     this.showGuideTopBar();
                 }
             }
@@ -419,7 +418,7 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
 
                 /*
                 if (httpError.type == HttpDataSource.HttpDataSourceException.TYPE_OPEN || httpError.type == HttpDataSource.HttpDataSourceException.TYPE_READ) {
-                    NebesaTv7.getInstance().setErrorCode(NO_NETWORK_CONNECTION_ERROR);
+                    TaivasTv7.getInstance().setErrorCode(NO_NETWORK_CONNECTION_ERROR);
                     Utils.toErrorPage(getActivity());
                 }
                 */
@@ -430,42 +429,42 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
     /**
      * Sets top bar content.
      */
-    private void setTopBarContent(EpgItem epgItem) {
+    private void setTopBarContent(GuideItem guideItem) {
         if (BuildConfig.DEBUG) {
             Log.d(LOG_TAG, "TvPlayerFragment.setTopBarContent() called.");
         }
 
-        int removedCount = viewModel.removePastProgramItems();
+        int removedCount = guideViewModel.removePastProgramItems();
         if (removedCount > 0) {
             int ngi = guideIndex - removedCount;
             guideIndex = ngi >= 0 ? ngi : 0;
-            epgItem = viewModel.getEpgItemByIndex(guideIndex);
+            guideItem = guideViewModel.getEpgItemByIndex(guideIndex);
         }
 
-        if (epgItem != null) {
+        if (guideItem != null) {
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "TvPlayerFragment.setTopBarContent(): EpgItem time: " +
-                        epgItem.getLocalStartTime() + DASH_WITH_SPACES + epgItem.getLocalEndTime() + " Title: " + epgItem.getTitle());
+                        guideItem.getStartAndEndTime() + " Title: " + guideItem.getSeriesAndName());
             }
 
             // time, title and description texts
             TextView timeAndTitle = root.findViewById(R.id.timeAndTitle);
             TextView desc = root.findViewById(R.id.description);
             if (timeAndTitle != null && desc != null) {
-                StringBuilder timeAndTitleStr = new StringBuilder(epgItem.getLocalStartTime() + DASH_WITH_SPACES + epgItem.getLocalEndTime() + SPACE + epgItem.getTitle());
-                if (!epgItem.getStartDateToday()) {
-                    timeAndTitleStr.insert(0, epgItem.getLocalStartDateShort() + PIPE_WITH_SPACES);
+                StringBuilder timeAndTitleStr = new StringBuilder(guideItem.getStartAndEndTime() + SPACE + guideItem.getSeriesAndName());
+                if (!guideItem.getStartDateToday()) {
+                    timeAndTitleStr.insert(0, guideItem.getStartDate() + PIPE_WITH_SPACES);
                 }
 
                 timeAndTitle.setText(timeAndTitleStr.toString());
-                desc.setText(epgItem.getDesc());
+                desc.setText(guideItem.getCaption());
             }
 
             // progressbar and coming on channel text
             ProgressBar ongoingProgress = root.findViewById(R.id.ongoingProgress);
             TextView comingOnChannelText = root.findViewById(R.id.comingOnChannelText);
             if (ongoingProgress != null && comingOnChannelText != null) {
-                Integer progressValue = epgItem.getOngoingProgress();
+                Integer progressValue = guideItem.getOngoingProgress();
 
                 if (guideIndex == 0 && progressValue != null) {
                     // show progress bar
@@ -576,7 +575,7 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
             @Override
             public void run() {
                 try {
-                    setTopBarContent(viewModel.getEpgItemByIndex(guideIndex));
+                    setTopBarContent(guideViewModel.getEpgItemByIndex(guideIndex));
                 }
                 catch(Exception e) {
                     if (BuildConfig.DEBUG) {

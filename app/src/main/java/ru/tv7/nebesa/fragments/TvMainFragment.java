@@ -19,6 +19,9 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.bumptech.glide.Glide;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -27,43 +30,66 @@ import ru.tv7.nebesa.BuildConfig;
 import ru.tv7.nebesa.R;
 import ru.tv7.nebesa.enums.CallOrigin;
 import ru.tv7.nebesa.helpers.ComingProgramImageAndTextId;
-import ru.tv7.nebesa.helpers.EpgItem;
+import ru.tv7.nebesa.helpers.GuideItem;
 import ru.tv7.nebesa.helpers.GuideRowId;
 import ru.tv7.nebesa.helpers.Sidebar;
 import ru.tv7.nebesa.helpers.Utils;
-import ru.tv7.nebesa.interfaces.EpgDataLoadedListener;
-import ru.tv7.nebesa.model.ProgramScheduleViewModel;
+import ru.tv7.nebesa.interfaces.ArchiveDataLoadedListener;
+import ru.tv7.nebesa.model.ArchiveViewModel;
+import ru.tv7.nebesa.model.GuideViewModel;
 import ru.tv7.nebesa.model.SharedCacheViewModel;
 
+import static ru.tv7.nebesa.helpers.Constants.BROADCAST_DATE;
+import static ru.tv7.nebesa.helpers.Constants.BROADCAST_DATE_TIME;
+import static ru.tv7.nebesa.helpers.Constants.CAPTION;
 import static ru.tv7.nebesa.helpers.Constants.CHANNEL_URL_PARAM;
 import static ru.tv7.nebesa.helpers.Constants.COMING_PROGRAM_IMAGE_AND_TEXT;
+import static ru.tv7.nebesa.helpers.Constants.DATE_INDEX;
+import static ru.tv7.nebesa.helpers.Constants.DURATION;
 import static ru.tv7.nebesa.helpers.Constants.EMPTY;
+import static ru.tv7.nebesa.helpers.Constants.END_DATE;
+import static ru.tv7.nebesa.helpers.Constants.END_TIME;
+import static ru.tv7.nebesa.helpers.Constants.EPISODE_NUMBER;
 import static ru.tv7.nebesa.helpers.Constants.EXIT_OVERLAY_FRAGMENT;
+import static ru.tv7.nebesa.helpers.Constants.FORMATTED_END_TIME;
+import static ru.tv7.nebesa.helpers.Constants.FORMATTED_START_TIME;
+import static ru.tv7.nebesa.helpers.Constants.GUIDE_DATA;
 import static ru.tv7.nebesa.helpers.Constants.GUIDE_ELEMENT_COUNT;
 import static ru.tv7.nebesa.helpers.Constants.GUIDE_ROWS;
 import static ru.tv7.nebesa.helpers.Constants.GUIDE_TIMER_TIMEOUT;
 import static ru.tv7.nebesa.helpers.Constants.HTTP;
 import static ru.tv7.nebesa.helpers.Constants.HTTPS;
 import static ru.tv7.nebesa.helpers.Constants.ID_NULL;
+import static ru.tv7.nebesa.helpers.Constants.IMAGE_PATH;
+import static ru.tv7.nebesa.helpers.Constants.IS_VISIBLE_ON_VOD;
 import static ru.tv7.nebesa.helpers.Constants.LOG_TAG;
+import static ru.tv7.nebesa.helpers.Constants.NAME;
 import static ru.tv7.nebesa.helpers.Constants.NULL_VALUE;
 import static ru.tv7.nebesa.helpers.Constants.PIPE_WITH_SPACES;
 import static ru.tv7.nebesa.helpers.Constants.PROGRAM_LIST_MIN_SIZE;
 import static ru.tv7.nebesa.helpers.Constants.PROGRAM_VISIBLE_IMAGE_COUNT;
+import static ru.tv7.nebesa.helpers.Constants.SERIES;
+import static ru.tv7.nebesa.helpers.Constants.SERIES_AND_NAME;
+import static ru.tv7.nebesa.helpers.Constants.SID;
 import static ru.tv7.nebesa.helpers.Constants.SPACE;
+import static ru.tv7.nebesa.helpers.Constants.START_DATE;
+import static ru.tv7.nebesa.helpers.Constants.START_END_TIME;
 import static ru.tv7.nebesa.helpers.Constants.STREAM_URL;
+import static ru.tv7.nebesa.helpers.Constants.TIME;
 import static ru.tv7.nebesa.helpers.Constants.TV_MAIN_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.TV_PLAYER_FRAGMENT;
 
 /**
  * Tv main fragment. Main view of application.
  */
-public class TvMainFragment extends Fragment implements EpgDataLoadedListener, FragmentManager.OnBackStackChangedListener {
+public class TvMainFragment extends Fragment implements ArchiveDataLoadedListener, FragmentManager.OnBackStackChangedListener {
 
     private View root = null;
-    private ProgramScheduleViewModel viewModel = null;
+    private GuideViewModel guideViewModel = null;
+    private ArchiveViewModel archiveViewModel = null;
+
     private SharedCacheViewModel sharedCacheViewModel = null;
-    private EpgDataLoadedListener epgDataLoadedListener = null;
+    private ArchiveDataLoadedListener archiveDataLoadedListener = null;
 
     private String programStart = null;
     private int guideIndex = 0;
@@ -100,7 +126,8 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
                 Log.d(LOG_TAG, "TvMainFragment.onCreate() called.");
             }
 
-            viewModel = ViewModelProviders.of(requireActivity()).get(ProgramScheduleViewModel.class);
+            guideViewModel = ViewModelProviders.of(requireActivity()).get(GuideViewModel.class);
+            archiveViewModel = ViewModelProviders.of(requireActivity()).get(ArchiveViewModel.class);
             sharedCacheViewModel = ViewModelProviders.of(requireActivity()).get(SharedCacheViewModel.class);
 
             FragmentManager fragmentManager = Utils.getFragmentManager(getActivity());
@@ -155,7 +182,7 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
 
             Sidebar.setSelectedMenuItem(root, R.id.tvMenuContainer);
 
-            viewModel.removePastProgramItems();
+            guideViewModel.removePastProgramItems();
         }
         catch(Exception e) {
             if (BuildConfig.DEBUG) {
@@ -216,17 +243,25 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
     }
 
     /**
-     * Callback to success epg date load.
+     * Archive data guide by date load response.
      */
     @Override
-    public void onEpgDataLoaded() {
+    public void onArchiveDataLoaded(JSONArray jsonArray, String type) {
         try {
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "TvMainFragment.onEpgDataLoaded(): EpgData load/parse ok.");
             }
 
-            viewModel.removePastProgramItems();
+            if (jsonArray != null && jsonArray.length() == 1) {
+                JSONObject obj = jsonArray.getJSONObject(0);
+                if (obj != null) {
+                    if (obj.getInt(DATE_INDEX) == 1) {
+                        this.addGuideData(obj.getJSONArray(GUIDE_DATA));
+                    }
+                }
+            }
 
+            guideViewModel.removePastProgramItems();
             this.createMainView(CallOrigin.Timer);
         }
         catch(Exception e) {
@@ -239,10 +274,10 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
     }
 
     /**
-     * Callback to error epg date load.
+     * Archive data load error response.
      */
     @Override
-    public void onEpgDataLoadError(String message) {
+    public void onArchiveDataLoadError(String message, String type) {
         if (BuildConfig.DEBUG) {
             Log.d(LOG_TAG, "TvMainFragment.onEpgDataLoadError(): EpgData load/parse error: " + message);
         }
@@ -254,7 +289,7 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
      * Archive data load network error response.
      */
     @Override
-    public void onNetworkError() {
+    public void onNetworkError(String type) {
         if (BuildConfig.DEBUG) {
             Log.d(LOG_TAG, "TvMainFragment.onNetworkError(): ***Network error!***");
         }
@@ -272,6 +307,45 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
     }
 
     /**
+     * Adds guide data to view model.
+     * @param guideData
+     * @throws Exception
+     */
+    private void addGuideData(JSONArray guideData) throws  Exception {
+        if (guideData == null) {
+            Utils.toErrorPage(getActivity());
+        }
+
+        for (int i = 0; i < guideData.length(); i++) {
+            JSONObject obj = guideData.getJSONObject(i);
+            if (obj != null) {
+                GuideItem g = new GuideItem(
+                    Utils.getJsonStringValue(obj, TIME),
+                    Utils.getJsonStringValue(obj, END_TIME),
+                    Utils.getJsonStringValue(obj, IMAGE_PATH),
+                    Utils.getJsonStringValue(obj, CAPTION),
+                    Utils.getJsonStringValue(obj, START_END_TIME),
+                    Utils.getJsonStringValue(obj, START_DATE),
+                    Utils.getJsonStringValue(obj, END_DATE),
+                    Utils.getJsonStringValue(obj, FORMATTED_START_TIME),
+                    Utils.getJsonStringValue(obj, FORMATTED_END_TIME),
+                    Utils.getJsonStringValue(obj, BROADCAST_DATE),
+                    Utils.getJsonStringValue(obj, BROADCAST_DATE_TIME),
+                    Utils.getJsonStringValue(obj, DURATION),
+                    Utils.getJsonStringValue(obj, SERIES),
+                    Utils.getJsonStringValue(obj, NAME),
+                    Utils.getJsonIntValue(obj, SID),
+                    Utils.getJsonIntValue(obj, EPISODE_NUMBER),
+                    Utils.getJsonIntValue(obj, IS_VISIBLE_ON_VOD),
+                    Utils.getJsonStringValue(obj, SERIES_AND_NAME),
+                    Utils.isStartDateToday(Utils.getJsonStringValue(obj, TIME)));
+
+                guideViewModel.addItemToGuide(g);
+            }
+        }
+    }
+
+    /**
      * Creates a main view.
      * @param callOrigin
      * @throws Exception
@@ -282,24 +356,24 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
         }
 
         boolean updateContent = false;
-        List<EpgItem> programs = viewModel.getOngoingAndComingPrograms(PROGRAM_VISIBLE_IMAGE_COUNT);
+        List<GuideItem> programs = guideViewModel.getOngoingAndComingPrograms(PROGRAM_VISIBLE_IMAGE_COUNT);
 
         if (programs.size() == PROGRAM_VISIBLE_IMAGE_COUNT) {
 
             for(int index = 0; index < programs.size(); index++) {
-                EpgItem epgItem = programs.get(index);
+                GuideItem guideItem = programs.get(index);
 
                 if (index == 0) {
                     // update progress bar
                     ProgressBar programProgress = root.findViewById(R.id.programProgress);
                     if (programProgress != null) {
-                        Integer progressValue = epgItem.getOngoingProgress();
+                        Integer progressValue = guideItem.getOngoingProgress();
                         if (progressValue != null) {
                             programProgress.setProgress(progressValue);
                         }
                     }
 
-                    String time = epgItem.getStart();
+                    String time = guideItem.getStart();
                     if (!time.equals(programStart)) {
                         // ongoing program changed from previous check - updated images and guide
                         updateContent = true;
@@ -312,7 +386,7 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
                         Log.d(LOG_TAG, "TvMainFragment.createMainView(): Update content.");
                     }
 
-                    String imageUrl = epgItem.getIcon();
+                    String imageUrl = guideItem.getImagePath();
 
                     if (imageUrl != null && !imageUrl.equals(EMPTY) && !imageUrl.equals(NULL_VALUE) && !imageUrl.contains(ID_NULL)) {
                         // Change scheme from http to https
@@ -325,10 +399,10 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
                     }
 
                     if (index == 0) {
-                        this.addOngoingProgramImage(imageUrl, epgItem);
+                        this.addOngoingProgramImage(imageUrl, guideItem);
                     }
                     else {
-                        this.addComingProgramImages(index - 1, imageUrl, epgItem);
+                        this.addComingProgramImages(index - 1, imageUrl, guideItem);
                     }
                 }
             }
@@ -336,8 +410,8 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
             if (updateContent) {
                 if (callOrigin == CallOrigin.Timer) {
                     // remove past epg items from the program list
-                    viewModel.removePastProgramItems();
-                    guideIndex = viewModel.getOngoingProgramIndex();
+                    guideViewModel.removePastProgramItems();
+                    guideIndex = guideViewModel.getOngoingProgramIndex();
                 }
 
                 this.updateGuide();
@@ -348,9 +422,9 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
     /**
      * Adds ongoing program image and texts to view.
      * @param icon
-     * @param epgItem
+     * @param guideItem
      */
-    private void addOngoingProgramImage(String icon, EpgItem epgItem) {
+    private void addOngoingProgramImage(String icon, GuideItem guideItem) {
         try {
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "TvMainFragment.addOngoingProgramImage() called.");
@@ -368,11 +442,7 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
 
             TextView tvText = root.findViewById(R.id.tvText);
             if (tvText != null) {
-                String text = epgItem.getLocalStartTime() + SPACE + epgItem.getTitle();
-                String desc = epgItem.getDesc();
-                if (desc != null) {
-                    text += (PIPE_WITH_SPACES + desc);
-                }
+                String text = guideItem.getStartTime() + SPACE + guideItem.getSeriesAndName();
                 tvText.setText(text);
             }
         }
@@ -388,9 +458,9 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
      * Add coming program images and texts.
      * @param index
      * @param icon
-     * @param epgItem
+     * @param guideItem
      */
-    private void addComingProgramImages(int index, String icon, EpgItem epgItem)  {
+    private void addComingProgramImages(int index, String icon, GuideItem guideItem)  {
         try {
             if (BuildConfig.DEBUG) {
                 Log.d(LOG_TAG, "TvMainFragment.addComingProgramImages() called.");
@@ -410,7 +480,7 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
 
                 TextView textView = root.findViewById(cpi.getTextId());
                 if (textView != null) {
-                    String text = epgItem.getLocalStartTime() + SPACE + epgItem.getTitle();
+                    String text = guideItem.getStartTime() + SPACE + guideItem.getSeriesAndName();
                     textView.setText(text);
                 }
             }
@@ -432,7 +502,7 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
                 Log.d(LOG_TAG, "TvMainFragment.updateGuide() called.");
             }
 
-            List<EpgItem> guideElements  = viewModel.getGuideData(guideIndex, GUIDE_ELEMENT_COUNT);
+            List<GuideItem> guideElements  = guideViewModel.getGuideData(guideIndex, GUIDE_ELEMENT_COUNT);
 
             if (guideElements != null && guideElements.size() == GUIDE_ELEMENT_COUNT) {
 
@@ -441,23 +511,31 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
                 }
 
                 for (int i = 0; i < guideElements.size(); i++) {
-                    EpgItem e = guideElements.get(i);
+                    GuideItem g = guideElements.get(i);
                     GuideRowId gd = GUIDE_ROWS.get(i);
 
                     TextView rowTime = root.findViewById(gd.getTimeId());
-                    TextView rowTitle = root.findViewById(gd.getTitleId());
-                    TextView rowDesc = root.findViewById(gd.getDescId());
-                    if (rowTime != null && rowTitle != null && rowDesc != null) {
-                        rowTime.setText(e.getLocalStartTime());
-                        rowTitle.setText(e.getTitle());
+                    TextView rowSeries = root.findViewById(gd.getTitleId());
+                    TextView rowName = root.findViewById(gd.getDescId());
+                    if (rowTime != null && rowSeries != null && rowName != null) {
+                        rowTime.setText(g.getStartTime());
 
-                        String desc = e.getDesc();
-                        if (desc != null && desc.length() > 0) {
-                            desc = PIPE_WITH_SPACES + desc;
-                            rowDesc.setText(desc);
+                        String series = g.getSeries();
+                        if(series != null && series.length() > 0) {
+                            rowSeries.setText(series);
+
+                            String name = g.getName();
+                            if (name != null && name.length() > 0) {
+                                name = PIPE_WITH_SPACES + name;
+                                rowName.setText(name);
+                            }
+                            else {
+                                rowName.setText(EMPTY);
+                            }
                         }
                         else {
-                            rowDesc.setText(EMPTY);
+                            rowSeries.setText(g.getName());
+                            rowName.setText(EMPTY);
                         }
                     }
 
@@ -465,11 +543,11 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
                         // First row - set today text or date
                         TextView todayText = root.findViewById(R.id.todayText);
                         if (todayText != null) {
-                            if (e.getStartDateToday()) {
+                            if (g.getStartDateToday()) {
                                 todayText.setText(getResources().getString(R.string.today));
                             }
                             else {
-                                todayText.setText(e.getLocalStartDateShort());
+                                todayText.setText(g.getStartDate());
                             }
                         }
                     }
@@ -502,10 +580,13 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
                     Log.d(LOG_TAG, "Timer.run() called.");
                 }
 
-                int count = viewModel.getCountOfNextPrograms();
+                int count = guideViewModel.getCountOfNextPrograms();
                 if (count <= PROGRAM_LIST_MIN_SIZE) {
-                    // get program data
-                    viewModel.getEpgData(TvMainFragment.this);
+                    String date = Utils.getTomorrowUtcFormattedLocalDate();
+                    if (BuildConfig.DEBUG) {
+                        Log.d(LOG_TAG, "Timer.run() Add items to guide. Date to add: " + date);
+                    }
+                    archiveViewModel.getGuideByDate(date, 1, TvMainFragment.this);
                 }
 
                 updateUiInMainThread();
@@ -626,7 +707,7 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
                 else {
                     focusedView = Utils.getFocusedView(getActivity());
 
-                    if (focusedView == upDownArrows && viewModel.isListItemInIndex(guideIndex + GUIDE_ELEMENT_COUNT)) {
+                    if (focusedView == upDownArrows && guideViewModel.isListItemInIndex(guideIndex + GUIDE_ELEMENT_COUNT)) {
                         guideIndex++;
                         this.updateGuide();
                     }
@@ -687,9 +768,9 @@ public class TvMainFragment extends Fragment implements EpgDataLoadedListener, F
 
     /**
      * Creates epg data load listener.
-     * @param epgDataLoadedListener
+     * @param archiveDataLoadedListener
      */
-    private void setEpgDataLoadedListener(EpgDataLoadedListener epgDataLoadedListener) {
-        this.epgDataLoadedListener = epgDataLoadedListener;
+    private void setEpgDataLoadedListener(ArchiveDataLoadedListener archiveDataLoadedListener) {
+        this.archiveDataLoadedListener = archiveDataLoadedListener;
     }
 }

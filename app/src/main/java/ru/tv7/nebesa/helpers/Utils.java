@@ -54,6 +54,7 @@ import static ru.tv7.nebesa.helpers.Constants.CHANNEL_INFO_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.COLON;
 import static ru.tv7.nebesa.helpers.Constants.DASH;
 import static ru.tv7.nebesa.helpers.Constants.DOT;
+import static ru.tv7.nebesa.helpers.Constants.EMPTY;
 import static ru.tv7.nebesa.helpers.Constants.ERROR_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.EXIT_OVERLAY_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.FADE_IN_ANIMATION_DURATION;
@@ -269,6 +270,14 @@ public abstract class Utils {
         return today.get(Calendar.YEAR) + DASH + prependZero(today.get(Calendar.MONTH) + 1) + DASH + prependZero(today.get(Calendar.DATE));
     }
 
+    public static String getTomorrowUtcFormattedLocalDate() {
+        Calendar cal = getLocalCalendar();
+        cal.setTime(new Date());
+        cal.add(Calendar.DATE, 1);
+
+        return cal.get(Calendar.YEAR) + DASH + prependZero(cal.get(Calendar.MONTH) + 1) + DASH + prependZero(cal.get(Calendar.DATE));
+    }
+
     public static String getDateByCalendar(Calendar calendar) {
         return calendar.get(Calendar.YEAR) + DASH + prependZero(calendar.get(Calendar.MONTH) + 1) + DASH + prependZero(calendar.get(Calendar.DATE));
     }
@@ -337,6 +346,18 @@ public abstract class Utils {
         return calendar.getTimeInMillis();
     }
 
+    public static boolean isStartDateToday(String time) {
+        Calendar today = Utils.getLocalCalendar();
+        today.setTime(new Date());
+
+        Calendar calendar = Utils.getLocalCalendar();
+        calendar.setTimeInMillis(Utils.stringToLong(time));
+
+        return today.get(Calendar.DATE) == calendar.get(Calendar.DATE)
+                && today.get(Calendar.MONTH) + 1 == calendar.get(Calendar.MONTH) + 1
+                && today.get(Calendar.YEAR) == calendar.get(Calendar.YEAR);
+    }
+
     public static Calendar getLocalCalendar() {
         return GregorianCalendar.getInstance(TimeZone.getDefault());
     }
@@ -351,6 +372,30 @@ public abstract class Utils {
 
     public static long stringToLong(String value) {
         return Long.parseLong(value);
+    }
+
+    public static String getJsonStringValue(JSONObject obj, String key) {
+        try {
+            if (obj != null && key != null) {
+                return obj.getString(key);
+            }
+        }
+        catch (Exception e) {
+            return EMPTY;
+        }
+        return EMPTY;
+    }
+
+    public static Integer getJsonIntValue(JSONObject obj, String key) {
+        try {
+            if (obj != null && key != null) {
+                return obj.getInt(key);
+            }
+        }
+        catch (Exception e) {
+            return null;
+        }
+        return null;
     }
 
     public static JSONArray getSavedPrefs(String tag, String defaultValue, Context context) throws Exception {

@@ -30,10 +30,6 @@ abstract public class Constants {
 
     public static final String ARCHIVE_LANGUAGE = "RU1";
     public static final String TRANSLATION_LANG_ID = "ru";
-    public static final String EPG_CHANNEL = "RU1";
-    public static final String EPG_LANG = "ru";
-
-    public static final String NOT_AVAILABLE = "N/A";
 
     public static final String SUBTITLES_URL = "https://vod.tv7.fi:4430/vod/";
     public static final String SEARCH_URL = "https://edom.tv7.fi:8443/search1.2/SearchServlet";
@@ -94,11 +90,6 @@ abstract public class Constants {
 
     public static final int PROGRAM_LIST_MIN_SIZE = 22;
 
-    public static final String EPG_URL = "https://helsinki.tv7.fi/exodus-interfaces/xmltv.xml";
-    public static final String EPG_DURATION = "2d";
-    public static final String EPG_CHANNEL_PARAM = "channel";
-    public static final String EPG_LANG_PARAM = "lang";
-    public static final String EPG_DURATION_PARAM = "duration";
     public static final String PNID_PARAM = "pnid";
     public static final String AUDIO_INDEX_PARAM = "audioindex";
 
@@ -119,28 +110,17 @@ abstract public class Constants {
     public static final String DASH = "-";
     public static final String DASH_WITH_SPACES = " - ";
     public static final String SLASH_WITH_SPACES = " / ";
-    public static final String T_CHAR = "T";
     public static final String COLON = ":";
     public static final String COLON_WITH_SPACE = ": ";
     public static final String DOT = ".";
-    public static final String MS_STR = "000";
     public static final String ZERO_STR = "0";
     public static final String NEGATIVE_ONE_STR = "-1";
-    public static final String STR_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS";
     public static final String UTC = "UTC";
     public static final String HTTP = "http";
     public static final String HTTPS = "https";
     public static final String UTF_8 = "UTF-8";
     public static final String ID_NULL = "id=null";
 
-    public static final String PROGRAMME = "programme";
-    public static final String START = "start";
-    public static final String STOP = "stop";
-    public static final String TITLE = "title";
-    public static final String DESC = "desc";
-    public static final String CATEGORY = "category";
-    public static final String ICON = "icon";
-    public static final String SRC = "src";
     public static final String ONE_STR = "1";
     public static final String TWO_STR = "2";
     public static final String POSITION = "position";
@@ -225,6 +205,8 @@ abstract public class Constants {
     public static final String CATEGORY_NAME = "category_name";
     public static final String TIME = "time";
     public static final String END_TIME = "end_time";
+    public static final String FORMATTED_START_TIME = "formatted_start_time";
+    public static final String FORMATTED_END_TIME = "formatted_end_time";
     public static final String START_END_TIME = "start_end_time";
     public static final String ONGOING_PROGRAM = "ongoing_program";
     public static final String ONGOING_PROGRAM_INDEX = "ongoing_program_index";
