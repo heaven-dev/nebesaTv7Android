@@ -65,14 +65,17 @@ import static ru.tv7.nebesa.helpers.Constants.FAVORITES_SP_DEFAULT;
 import static ru.tv7.nebesa.helpers.Constants.FAVORITES_SP_TAG;
 import static ru.tv7.nebesa.helpers.Constants.GUIDE_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.ID;
+import static ru.tv7.nebesa.helpers.Constants.IS_SERIES;
 import static ru.tv7.nebesa.helpers.Constants.LOG_TAG;
 import static ru.tv7.nebesa.helpers.Constants.NULL_VALUE;
+import static ru.tv7.nebesa.helpers.Constants.ONE_STR;
 import static ru.tv7.nebesa.helpers.Constants.PROGRAM_INFO_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.SEARCH_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.SEARCH_RESULT_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.SERIES_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.SERIES_INFO_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.SHOW_ANIMATIONS;
+import static ru.tv7.nebesa.helpers.Constants.SID;
 import static ru.tv7.nebesa.helpers.Constants.TIME_STAMP_FORMAT;
 import static ru.tv7.nebesa.helpers.Constants.TV_MAIN_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.TV_PLAYER_FRAGMENT;
@@ -450,8 +453,16 @@ public abstract class Utils {
                         continue;
                     }
 
-                    if (value.equals(id)) {
-                        return i;
+                    if (key.equals(SID)) {
+                        String series = Utils.getJsonStringValue(obj, IS_SERIES);
+                        if (series != null && series.equals(ONE_STR) && value.equals(id)) {
+                            return i;
+                        }
+                    }
+                    else {
+                        if (value.equals(id)) {
+                            return i;
+                        }
                     }
                 }
             }
