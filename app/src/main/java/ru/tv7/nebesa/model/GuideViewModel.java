@@ -20,7 +20,7 @@ public class GuideViewModel extends ViewModel {
     private List<GuideItem> guide = new ArrayList<>();
 
     @Override
-    synchronized protected void onCleared() {
+    protected void onCleared() {
         super.onCleared();
         this.clearCache();
     }

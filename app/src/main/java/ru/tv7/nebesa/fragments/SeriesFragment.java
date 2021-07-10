@@ -61,7 +61,7 @@ public class SeriesFragment extends Fragment implements ArchiveDataLoadedListene
     private int offset = 0;
     private int dataLength = 0;
 
-    private JSONObject selectedProgram = null;
+    private JSONObject selectedSeries = null;
 
     private boolean loadingData = false;
 
@@ -130,8 +130,8 @@ public class SeriesFragment extends Fragment implements ArchiveDataLoadedListene
             dataLength = 0;
             offset = 0;
 
-            selectedProgram = sharedCacheViewModel.getSelectedProgram();
-            if (selectedProgram != null) {
+            selectedSeries = sharedCacheViewModel.getSelectedSeries();
+            if (selectedSeries != null) {
                 PageStateItem pageStateItem = sharedCacheViewModel.getSeriesPageStateItem();
                 if (pageStateItem != null) {
                     Utils.showProgressBar(root, R.id.seriesProgress);
@@ -448,7 +448,7 @@ public class SeriesFragment extends Fragment implements ArchiveDataLoadedListene
      */
     private void loadProgramInfo(JSONObject obj) throws Exception {
         Utils.showProgressBar(root, R.id.seriesProgress);
-        String programId = Utils.getValue(obj, ID);
+        String programId = Utils.getJsonStringValue(obj, ID);
         if (programId != null) {
             archiveViewModel.getProgramInfo(programId, this);
         }
@@ -496,7 +496,7 @@ public class SeriesFragment extends Fragment implements ArchiveDataLoadedListene
      */
     private void addTitleText(JSONObject jsonObject) throws Exception {
         if (jsonObject != null) {
-            String seriesName = Utils.getValue(jsonObject, SERIES_NAME);
+            String seriesName = Utils.getJsonStringValue(jsonObject, SERIES_NAME);
             if (seriesName != null) {
                 Resources resources = getResources();
                 String text = resources.getString(R.string.series) + COLON_WITH_SPACE + seriesName;
@@ -516,9 +516,9 @@ public class SeriesFragment extends Fragment implements ArchiveDataLoadedListene
      */
     private int getSeriesId() throws Exception {
         int seriesId = 0;
-        String seriesIdStr = Utils.getValue(selectedProgram, SID);
+        String seriesIdStr = Utils.getJsonStringValue(selectedSeries, SID);
         if (seriesIdStr == null) {
-            seriesIdStr = Utils.getValue(selectedProgram, SERIES_ID);
+            seriesIdStr = Utils.getJsonStringValue(selectedSeries, SERIES_ID);
         }
 
         if (seriesIdStr != null) {

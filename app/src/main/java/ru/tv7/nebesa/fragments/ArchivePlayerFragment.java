@@ -227,7 +227,7 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
             throw new Exception("Archive player page. Not selected program passed to this fragment!");
         }
 
-        String programId = Utils.getValue(selectedProgram, ID);
+        String programId = Utils.getJsonStringValue(selectedProgram, ID);
         if (programId == null) {
             throw new Exception("Archive player page. Not selected program id passed to this fragment!");
         }
@@ -236,7 +236,7 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
 
         TextView episode = root.findViewById(R.id.episode);
         if (episode != null) {
-            String episodeNbr = Utils.getValue(selectedProgram, EPISODE_NUMBER);
+            String episodeNbr = Utils.getJsonStringValue(selectedProgram, EPISODE_NUMBER);
             if (episodeNbr != null) {
                 String text = resources.getString(R.string.episode) + COLON_WITH_SPACE + episodeNbr;
                 episode.setText(text);
@@ -250,7 +250,7 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
 
         TextView caption = root.findViewById(R.id.caption);
         if (caption != null) {
-            String captionText = Utils.getValue(selectedProgram, CAPTION);
+            String captionText = Utils.getJsonStringValue(selectedProgram, CAPTION);
             if (captionText != null && captionText.length() > 0) {
                 caption.setText(captionText);
                 caption.setVisibility(View.VISIBLE);
@@ -263,7 +263,7 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
 
         TextView seriesAndName = root.findViewById(R.id.seriesAndName);
         if (seriesAndName != null) {
-            String name = Utils.getValue(selectedProgram, SERIES_AND_NAME);
+            String name = Utils.getJsonStringValue(selectedProgram, SERIES_AND_NAME);
             if (name != null && name.length() > 0) {
                 seriesAndName.setText(name);
                 seriesAndName.setVisibility(View.VISIBLE);
@@ -836,7 +836,7 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
     private JSONObject getVideoStatus() {
         JSONObject statusItem = null;
         try {
-            String value = Utils.getValue(selectedProgram, ID);
+            String value = Utils.getJsonStringValue(selectedProgram, ID);
             if (value != null) {
                 statusItem = Utils.getVideoStatus(Utils.stringToInt(value), getContext());
             }
@@ -858,7 +858,7 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
             JSONArray jsonArray = Utils.getSavedPrefs(VIDEO_STATUSES_SP_TAG, VIDEO_STATUSES_SP_DEFAULT, getContext());
             if (jsonArray != null) {
                 int programId = 0;
-                String value = Utils.getValue(selectedProgram, ID);
+                String value = Utils.getJsonStringValue(selectedProgram, ID);
                 if (value != null) {
                     programId = Utils.stringToInt(value);
                 }
@@ -870,7 +870,7 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
                         continue;
                     }
 
-                    value = Utils.getValue(obj, ID);
+                    value = Utils.getJsonStringValue(obj, ID);
                     if (value == null) {
                         continue;
                     }

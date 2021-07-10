@@ -35,6 +35,7 @@ import ru.tv7.nebesa.fragments.ProgramInfoFragment;
 import ru.tv7.nebesa.fragments.SearchFragment;
 import ru.tv7.nebesa.fragments.SearchResultFragment;
 import ru.tv7.nebesa.fragments.SeriesFragment;
+import ru.tv7.nebesa.fragments.SeriesInfoFragment;
 import ru.tv7.nebesa.fragments.TvMainFragment;
 import ru.tv7.nebesa.fragments.TvPlayerFragment;
 import ru.tv7.nebesa.helpers.GuideItem;
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements ArchiveDataLoaded
 
     private FragmentManager fragmentManager = null;
     private ArchiveViewModel archiveViewModel = null;
-    private GuideViewModel guidViewModel = null;
+    private GuideViewModel guideViewModel = null;
 
     private ArchiveDataLoadedListener guideDataLoadedListener = null;
 
@@ -104,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements ArchiveDataLoaded
             fragmentManager = Utils.getFragmentManager(this);
 
             archiveViewModel = ViewModelProviders.of(this).get(ArchiveViewModel.class);
-            guidViewModel = ViewModelProviders.of(this).get(GuideViewModel.class);
+            guideViewModel = ViewModelProviders.of(this).get(GuideViewModel.class);
 
             this.setGuideByDateDataLoadedListener(this);
 
@@ -163,6 +164,10 @@ public class MainActivity extends AppCompatActivity implements ArchiveDataLoaded
                 else if (fragment instanceof ProgramInfoFragment) {
                     // Program info fragment visible
                     return ((ProgramInfoFragment) fragment).onKeyDown(keyCode, events);
+                }
+                else if (fragment instanceof SeriesInfoFragment) {
+                    // Series info fragment visible
+                    return ((SeriesInfoFragment) fragment).onKeyDown(keyCode, events);
                 }
                 else if (fragment instanceof CategoriesFragment) {
                     // Categories fragment visible
@@ -258,6 +263,8 @@ public class MainActivity extends AppCompatActivity implements ArchiveDataLoaded
                     else {
                         this.addGuideData(guideData);
 
+                        archiveViewModel.initializeSeriesData(guideViewModel.getGuide());
+
                         this.prepareUi();
                         Utils.toPage(TV_MAIN_FRAGMENT, this, false, false, null);
                     }
@@ -335,7 +342,7 @@ public class MainActivity extends AppCompatActivity implements ArchiveDataLoaded
                     Utils.getJsonStringValue(obj, SERIES_AND_NAME),
                     Utils.isStartDateToday(Utils.getJsonStringValue(obj, TIME)));
 
-                guidViewModel.addItemToGuide(g);
+                guideViewModel.addItemToGuide(g);
             }
         }
     }

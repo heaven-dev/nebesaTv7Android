@@ -152,7 +152,7 @@ public class ProgramInfoFragment extends Fragment {
 
             backgroundImage = root.findViewById(R.id.backgroundImage);
             if (backgroundImage != null) {
-                String imagePath = Utils.getValue(selectedProgram, IMAGE_PATH);
+                String imagePath = Utils.getJsonStringValue(selectedProgram, IMAGE_PATH);
                 if (imagePath != null && !imagePath.equals(EMPTY) && !imagePath.equals(NULL_VALUE) && !imagePath.contains(ID_NULL)) {
                     Glide.with(this).asBitmap().load(imagePath).into(backgroundImage);
                 }
@@ -173,7 +173,7 @@ public class ProgramInfoFragment extends Fragment {
 
             showFavoriteButton = true;
 
-            String isVisibleInVod = Utils.getValue(selectedProgram, IS_VISIBLE_ON_VOD);
+            String isVisibleInVod = Utils.getJsonStringValue(selectedProgram, IS_VISIBLE_ON_VOD);
             if (isVisibleInVod != null) {
                 if (isVisibleInVod.equals(ZERO_STR)) {
                     videoAvailable = false;
@@ -202,9 +202,9 @@ public class ProgramInfoFragment extends Fragment {
 
                 favoriteButton = root.findViewById(R.id.favoriteButton);
                 if (favoriteButton != null) {
-                    String programId = Utils.getValue(selectedProgram, ID);
+                    String programId = Utils.getJsonStringValue(selectedProgram, ID);
                     if (programId != null) {
-                        programFavoritesIndex = Utils.isProgramInFavorites(getContext(), programId);
+                        programFavoritesIndex = Utils.isItemInFavorites(getContext(), programId, ID);
 
                         if (programFavoritesIndex != -1) {
                             this.setFavoritesButtonImage(R.drawable.favorites);
@@ -237,7 +237,7 @@ public class ProgramInfoFragment extends Fragment {
 
                     TextView firstBroadcast = root.findViewById(R.id.firstBroadcast);
                     if (firstBroadcast != null) {
-                        valueText = Utils.getValue(selectedProgram, BROADCAST_DATE_TIME);
+                        valueText = Utils.getJsonStringValue(selectedProgram, BROADCAST_DATE_TIME);
                         if (valueText != null && valueText.length() > 0) {
                             titleText = resources.getString(comingProgram ? R.string.coming_on_channel : R.string.first_broadcast);
                             valueText = titleText + COLON_WITH_SPACE + valueText;
@@ -251,7 +251,7 @@ public class ProgramInfoFragment extends Fragment {
 
                     TextView duration = root.findViewById(R.id.duration);
                     if (duration != null) {
-                        valueText = Utils.getValue(selectedProgram, DURATION);
+                        valueText = Utils.getJsonStringValue(selectedProgram, DURATION);
                         if (valueText != null && valueText.length() > 0) {
                             titleText = resources.getString(R.string.duration);
                             valueText = titleText + COLON_WITH_SPACE + valueText;
@@ -265,7 +265,7 @@ public class ProgramInfoFragment extends Fragment {
 
                     TextView episodeNbr = root.findViewById(R.id.episode);
                     if (episodeNbr != null) {
-                        valueText = Utils.getValue(selectedProgram, EPISODE_NUMBER);
+                        valueText = Utils.getJsonStringValue(selectedProgram, EPISODE_NUMBER);
                         if (valueText != null && valueText.length() > 0 && !valueText.equals(ZERO_STR)) {
                             titleText = resources.getString(R.string.episode);
                             valueText = titleText + COLON_WITH_SPACE + valueText;
@@ -279,7 +279,7 @@ public class ProgramInfoFragment extends Fragment {
 
                     TextView aspectRatio = root.findViewById(R.id.aspectRatio);
                     if (aspectRatio != null) {
-                        valueText = Utils.getValue(selectedProgram, ASPECT_RATIO);
+                        valueText = Utils.getJsonStringValue(selectedProgram, ASPECT_RATIO);
                         if (valueText != null && valueText.length() > 0 && !valueText.equals(ZERO_STR) && !valueText.equals(ASPECT_RATIO_16_9)) {
                             titleText = resources.getString(R.string.aspect_ratio);
                             valueText = titleText + COLON_WITH_SPACE + valueText;
@@ -293,7 +293,7 @@ public class ProgramInfoFragment extends Fragment {
 
                     TextView caption = root.findViewById(R.id.caption);
                     if (caption != null) {
-                        valueText = Utils.getValue(selectedProgram, CAPTION);
+                        valueText = Utils.getJsonStringValue(selectedProgram, CAPTION);
                         if (valueText != null && valueText.length() > 0) {
                             caption.setText(valueText);
                         }
@@ -304,7 +304,7 @@ public class ProgramInfoFragment extends Fragment {
 
                     TextView seriesAndName = root.findViewById(R.id.seriesAndName);
                     if (seriesAndName != null) {
-                        valueText = Utils.getValue(selectedProgram, SERIES_AND_NAME);
+                        valueText = Utils.getJsonStringValue(selectedProgram, SERIES_AND_NAME);
                         if (valueText != null) {
                             seriesAndName.setText(valueText);
                         }
@@ -452,14 +452,14 @@ public class ProgramInfoFragment extends Fragment {
     private JSONObject getVideoStatus() {
         JSONObject statusItem = null;
         try {
-            String value = Utils.getValue(selectedProgram, ID);
+            String value = Utils.getJsonStringValue(selectedProgram, ID);
             if (value != null) {
                 statusItem = Utils.getVideoStatus(Utils.stringToInt(value), getContext());
             }
         }
         catch(Exception e) {
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "ArchivePlayerFragment.getVideoStatus(): Exception: " + e);
+                Log.d(LOG_TAG, "ProgramInfoFragment.getVideoStatus(): Exception: " + e);
             }
             Utils.toErrorPage(getActivity());
         }

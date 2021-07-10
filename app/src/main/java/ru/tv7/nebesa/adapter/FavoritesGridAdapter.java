@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,10 +24,11 @@ import static ru.tv7.nebesa.helpers.Constants.CAPTION;
 import static ru.tv7.nebesa.helpers.Constants.EMPTY;
 import static ru.tv7.nebesa.helpers.Constants.ID_NULL;
 import static ru.tv7.nebesa.helpers.Constants.IMAGE_PATH;
+import static ru.tv7.nebesa.helpers.Constants.IS_SERIES;
+import static ru.tv7.nebesa.helpers.Constants.NAME;
 import static ru.tv7.nebesa.helpers.Constants.NULL_VALUE;
-import static ru.tv7.nebesa.helpers.Constants.SERIES;
+import static ru.tv7.nebesa.helpers.Constants.ONE_STR;
 import static ru.tv7.nebesa.helpers.Constants.SERIES_AND_NAME;
-import static ru.tv7.nebesa.helpers.Constants.TYPE;
 
 /**
  * Grid adapter for favorite items.
@@ -57,6 +59,7 @@ public class FavoritesGridAdapter extends RecyclerView.Adapter<FavoritesGridAdap
     public static class SimpleViewHolder extends RecyclerView.ViewHolder {
         public RelativeLayout favoriteContainer = null;
         public ImageView favoriteImage = null;
+        public ImageView itemIcon = null;
         public TextView seriesAndName = null;
         public TextView caption = null;
 
@@ -65,6 +68,7 @@ public class FavoritesGridAdapter extends RecyclerView.Adapter<FavoritesGridAdap
 
             favoriteContainer = view.findViewById(R.id.favoriteContainer);
             favoriteImage = view.findViewById(R.id.favoriteImage);
+            itemIcon = view.findViewById(R.id.itemIcon);
             seriesAndName = view.findViewById(R.id.seriesAndName);
             caption = view.findViewById(R.id.caption);
 
@@ -100,7 +104,7 @@ public class FavoritesGridAdapter extends RecyclerView.Adapter<FavoritesGridAdap
             JSONObject obj = elements.getJSONObject(position);
             if (obj != null) {
 
-                String value = Utils.getValue(obj, IMAGE_PATH);
+                String value = Utils.getJsonStringValue(obj, IMAGE_PATH);
                 if (value != null && !value.equals(EMPTY) && !value.equals(NULL_VALUE) && !value.contains(ID_NULL)) {
                     Glide.with(context).asBitmap().load(value).into(holder.favoriteImage);
                 }
@@ -108,18 +112,27 @@ public class FavoritesGridAdapter extends RecyclerView.Adapter<FavoritesGridAdap
                     Glide.with(context).asBitmap().load(R.drawable.fallback).into(holder.favoriteImage);
                 }
 
-                int imageSrc = 0;
-                value = Utils.getValue(obj, TYPE);
-                if (value != null) {
-                    imageSrc = value.equals(SERIES) ? R.drawable.series : R.drawable.program;
+                int drawableId = 0;
+
+                value = Utils.getJsonStringValue(obj, IS_SERIES);
+                if (value != null && value.equals(ONE_STR)) {
+                    // series
+                    drawableId = R.drawable.series;
+                    value = Utils.getJsonStringValue(obj, NAME);
+                }
+                else {
+                    // program
+                    drawableId = R.drawable.program;
+                    value = Utils.getJsonStringValue(obj, SERIES_AND_NAME);
                 }
 
-                value = Utils.getValue(obj, SERIES_AND_NAME);
+                holder.itemIcon.setImageDrawable(ResourcesCompat.getDrawable(holder.itemIcon.getResources(), drawableId, null));
+
                 if (value != null) {
                     holder.seriesAndName.setText(value);
                 }
 
-                value = Utils.getValue(obj, CAPTION);
+                value = Utils.getJsonStringValue(obj, CAPTION);
                 if (value != null && value.length() > 0) {
                     holder.caption.setText(value);
                 }

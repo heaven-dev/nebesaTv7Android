@@ -114,7 +114,7 @@ public class GuideGridAdapter extends RecyclerView.Adapter<GuideGridAdapter.Simp
             if (obj != null) {
                 holder.ongoingProgram.setVisibility(View.GONE);
 
-                String value = Utils.getValue(obj, IMAGE_PATH);
+                String value = Utils.getJsonStringValue(obj, IMAGE_PATH);
                 if (value != null && !value.equals(EMPTY) && !value.equals(NULL_VALUE) && !value.contains(ID_NULL)) {
                     Glide.with(context).asBitmap().load(value).into(holder.guideImage);
                 }
@@ -122,17 +122,17 @@ public class GuideGridAdapter extends RecyclerView.Adapter<GuideGridAdapter.Simp
                     Glide.with(context).asBitmap().load(R.drawable.fallback).into(holder.guideImage);
                 }
 
-                value = Utils.getValue(obj, SERIES_AND_NAME);
+                value = Utils.getJsonStringValue(obj, SERIES_AND_NAME);
                 if (value != null) {
                     holder.seriesAndName.setText(value);
                 }
 
-                value = Utils.getValue(obj, START_END_TIME);
+                value = Utils.getJsonStringValue(obj, START_END_TIME);
                 if (value != null) {
                     holder.startEndTime.setText(value);
                 }
 
-                value = Utils.getValue(obj, ONGOING_PROGRAM);
+                value = Utils.getJsonStringValue(obj, ONGOING_PROGRAM);
                 if (value != null && value.equals(ONE_STR)) {
                     holder.ongoingProgram.setVisibility(View.VISIBLE);
 
@@ -157,7 +157,7 @@ public class GuideGridAdapter extends RecyclerView.Adapter<GuideGridAdapter.Simp
                     animation.start();
                 }
 
-                value = Utils.getValue(obj, CAPTION);
+                value = Utils.getJsonStringValue(obj, CAPTION);
                 if (value != null && value.length() > 0) {
                     holder.caption.setText(value);
                 }

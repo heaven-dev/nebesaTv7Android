@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/seriesInfoFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/default_background">
+
+    <include layout="@layout/fragment_toolbar"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/contentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="38dp"
+            android:background="@color/default_background"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/backgroundImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="6dp"
+                    android:focusable="true"
+                    android:scaleType="fitXY"
+                    android:contentDescription="@string/tv7_logo" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="6dp"
+                    android:alpha="0.8"
+                    android:background="@drawable/gradient_background"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="22dp">
+
+                    <TextView
+                        android:id="@+id/seriesName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@id/caption"
+                        android:text=""
+                        android:textColor="@color/white"
+                        android:textSize="22sp" />
+
+                    <TextView
+                        android:id="@+id/caption"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/description"
+                        android:layout_marginTop="8dp"
+                        android:text=""
+                        android:textColor="@color/white"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/bottomAlign"
+                        android:layout_marginTop="8dp"
+                        android:text=""
+                        android:textColor="@color/white"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/bottomAlign"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_alignParentBottom="true" />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/addedRemovedFavorites"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:gravity="center"
+                android:elevation="8dp"
+                android:visibility="gone"
+                android:text=""
+                android:textColor="@color/white"
+                android:background="@drawable/labeled_text"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/favoriteButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:padding="8dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:alpha="0.8"
+                android:focusable="true"
+                android:background="@drawable/selectable_button"
+                android:contentDescription="@string/favorites"
+                android:src="@drawable/favorites_not_selected" />
+
+            <ImageView
+                android:id="@+id/seriesButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:alpha="0.8"
+                android:focusable="true"
+                android:background="@drawable/selectable_button"
+                android:contentDescription="@string/series"
+                android:src="@drawable/series" />
+
+        </RelativeLayout>
+
+        <include layout="@layout/fragment_sidebar"/>
+
+    </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainArchiveSeriesContainer"
+    android:orientation="vertical"
+    android:layout_width="250dp"
+    android:layout_height="match_parent"
+    android:layout_marginEnd="10dp"
+    android:focusable="true"
+    android:background="@drawable/list_item">
+
+    <ImageView
+        android:id="@+id/mainArchiveSeriesImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="6dp"
+        android:scaleType="fitXY"/>
+
+    <TextView
+        android:id="@+id/mainArchiveSeriesDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:paddingTop="1dp"
+        android:paddingBottom="1dp"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp"
+        android:gravity="center_vertical"
+        android:background="@color/image_text_background"
+        android:textColor="@color/image_text"
+        android:textSize="13sp"
+        android:alpha="0.8"
+        android:text="" />
+
+    <TextView
+        android:id="@+id/mainArchiveSeriesDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:paddingTop="1dp"
+        android:paddingBottom="1dp"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp"
+        android:gravity="center_vertical"
+        android:background="@color/image_text_background"
+        android:textColor="@color/image_text"
+        android:textSize="13sp"
+        android:alpha="0.8"
+        android:text="" />
+
+    <TextView
+        android:id="@+id/mainArchiveSeriesText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="6dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="6dp"
+        android:paddingTop="1dp"
+        android:paddingBottom="1dp"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp"
+        android:gravity="center_vertical"
+        android:background="@color/image_text_background"
+        android:textColor="@color/image_text"
+        android:textSize="13sp"
+        android:alpha="0.8"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="" />
+</RelativeLayout>

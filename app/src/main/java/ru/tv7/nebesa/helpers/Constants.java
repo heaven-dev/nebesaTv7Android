@@ -62,6 +62,7 @@ abstract public class Constants {
     public static final String SERIES_FRAGMENT = "series_fragment";
     public static final String GUIDE_FRAGMENT = "guide_fragment";
     public static final String PROGRAM_INFO_FRAGMENT = "program_info_fragment";
+    public static final String SERIES_INFO_FRAGMENT = "series_info_fragment";
     public static final String SEARCH_FRAGMENT = "search_fragment";
     public static final String SEARCH_RESULT_FRAGMENT = "search_result_fragment";
     public static final String FAVORITES_FRAGMENT = "favorites_fragment";
@@ -144,6 +145,7 @@ abstract public class Constants {
     public static final String BROADCAST_RECOMMENDATIONS_METHOD = "tv7_broadcast_recommendations";
     public static final String MOST_VIEWED_METHOD = "get_tv7_vod_previousweek_stats";
     public static final String NEWEST_METHOD = "tv7_vod_new";
+    public static final String SERIES_METHOD = "tv7_series";
     public static final String PARENT_CATEGORIES_METHOD = "tv7_parent_categories";
     public static final String SUB_CATEGORIES_METHOD = "tv7_sub_categories";
     public static final String TRANSLATION_METHOD = "tv7_translation";
@@ -192,6 +194,7 @@ abstract public class Constants {
     public static final String SNAME = "sname";
     public static final String SERIES_AND_NAME = "series_and_name";
     public static final String CAPTION = "caption";
+    public static final String DESCRIPTION = "description";
     public static final String IS_VISIBLE_ON_VOD = "is_visible_on_vod";
     public static final String VISIBLE_ON_VOD_SINCE = "visible_on_vod_since";
     public static final String TYPE = "type";
@@ -216,16 +219,18 @@ abstract public class Constants {
     public static final String RESULTS = "results";
     public static final String ASPECT_RATIO = "aspect_ratio";
     public static final String ASPECT_RATIO_16_9 = "16:9";
+    public static final String IS_SERIES = "is_series";
 
     public static final long CACHE_EXPIRATION_TIME = 1800000;
 
-    public static final int ARCHIVE_MAIN_ROW_COUNT = 4;
+    public static final int ARCHIVE_MAIN_ROW_COUNT = 5;
     public static final int VIDEO_SEEK_STEP_SECONDS = 10;
 
     public static final int RECOMMENDATIONS_ROW_ID = 0;
     public static final int MOST_VIEWED_ROW_ID = 1;
     public static final int NEWEST_ROW_ID = 2;
     public static final int CATEGORIES_ROW_ID = 3;
+    public static final int SERIES_ROW_ID = 4;
 
     public static final float CATEGORY_IMAGE_SIZE_IN_PERCENT = 0.6f;
 
@@ -271,7 +276,8 @@ abstract public class Constants {
         R.id.recommendContainer,
         R.id.mostViewedContainer,
         R.id.newestContainer,
-        R.id.categoriesContainer
+        R.id.categoriesContainer,
+        R.id.topicalSeriesContainer
     ));
 
     public static final List<Integer> GUIDE_DATE_IDS = new ArrayList<>(Arrays.asList(

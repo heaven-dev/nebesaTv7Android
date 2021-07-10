@@ -30,6 +30,7 @@ import ru.tv7.nebesa.BuildConfig;
 import ru.tv7.nebesa.R;
 import ru.tv7.nebesa.adapter.ArchiveMainCategoryGridAdapter;
 import ru.tv7.nebesa.adapter.ArchiveMainProgramGridAdapter;
+import ru.tv7.nebesa.adapter.ArchiveMainSeriesGridAdapter;
 import ru.tv7.nebesa.helpers.ArchiveMainPageStateItem;
 import ru.tv7.nebesa.helpers.Sidebar;
 import ru.tv7.nebesa.helpers.Utils;
@@ -65,6 +66,11 @@ import static ru.tv7.nebesa.helpers.Constants.PROGRAM_INFO_METHOD;
 import static ru.tv7.nebesa.helpers.Constants.RECOMMENDATIONS_METHOD;
 import static ru.tv7.nebesa.helpers.Constants.RECOMMENDATIONS_ROW_ID;
 import static ru.tv7.nebesa.helpers.Constants.SCROLL_Y;
+import static ru.tv7.nebesa.helpers.Constants.SERIES_INFO_FRAGMENT;
+import static ru.tv7.nebesa.helpers.Constants.SERIES_INFO_METHOD;
+import static ru.tv7.nebesa.helpers.Constants.SERIES_METHOD;
+import static ru.tv7.nebesa.helpers.Constants.SERIES_ROW_ID;
+import static ru.tv7.nebesa.helpers.Constants.SID;
 import static ru.tv7.nebesa.helpers.Constants.SUB_CATEGORIES_METHOD;
 import static ru.tv7.nebesa.helpers.Constants.TOOLBAR_HEIGHT;
 
@@ -81,6 +87,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
     private HorizontalGridView mostViewedScroll = null;
     private HorizontalGridView newestScroll = null;
     private HorizontalGridView categoriesScroll = null;
+    private HorizontalGridView topicalSeriesScroll = null;
 
     private JSONArray visibleSubCategories = null;
 
@@ -162,6 +169,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
             this.loadNewestPrograms();
             this.loadCategories(true);
             this.loadCategories(false);
+            this.loadSeries();
         }
         catch(Exception e) {
             if (BuildConfig.DEBUG) {
@@ -217,7 +225,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                     if (visibleSubCategories != null) {
                         this.addCategories(visibleSubCategories, SUB_CATEGORIES_METHOD, true, false);
 
-                        String titleText = Utils.getValue(visibleSubCategories.getJSONObject(0), PARENT_NAME);
+                        String titleText = Utils.getJsonStringValue(visibleSubCategories.getJSONObject(0), PARENT_NAME);
                         this.setCategoriesText(titleText);
                     }
                 }
@@ -325,6 +333,28 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
         else if(type.equals(PARENT_CATEGORIES_METHOD)) {
             this.addCategories(jsonArray, type, true, true);
         }
+        else if(type.equals(SERIES_METHOD)) {
+            topicalSeriesScroll = root.findViewById(R.id.topicalSeriesScroll);
+            topicalSeriesScroll.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    if (topicalSeriesScroll != null) {
+                        topicalSeriesScroll.invalidate();
+                        topicalSeriesScroll.requestLayout();
+                    }
+                }
+            });
+
+            ArchiveMainSeriesGridAdapter adapter = new ArchiveMainSeriesGridAdapter(getActivity(), context, jsonArray);
+            topicalSeriesScroll.setAdapter(adapter);
+
+            // Change row background to white
+            this.setRowWhiteBackground(context, R.id.topicalSeriesContainer);
+
+            this.restorePageState(SERIES_ROW_ID);
+            Utils.hideProgressBar(root, R.id.topicalSeriesProgress);
+        }
     }
 
     /**
@@ -386,6 +416,18 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                         sharedCacheViewModel.setSelectedProgram(obj);
 
                         Utils.toPage(PROGRAM_INFO_FRAGMENT, getActivity(), true, false, null);
+                    }
+                }
+            }
+            if (type.equals(SERIES_INFO_METHOD)) {
+                Utils.hideProgressBar(root, this.getProgressBarByRow());
+
+                if (jsonArray != null && jsonArray.length() == 1) {
+                    JSONObject obj = jsonArray.getJSONObject(0);
+                    if (obj != null) {
+                        sharedCacheViewModel.setSelectedSeries(obj);
+
+                        Utils.toPage(SERIES_INFO_FRAGMENT, getActivity(), true, false, null);
                     }
                 }
             }
@@ -474,7 +516,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                         return false;
                     }
 
-                    if (focusedRow != CATEGORIES_ROW_ID) {
+                    if (focusedRow == RECOMMENDATIONS_ROW_ID || focusedRow == MOST_VIEWED_ROW_ID || focusedRow == NEWEST_ROW_ID) {
                         JSONObject program = this.getProgramByIndex(pos);
                         if (program != null) {
                             sharedCacheViewModel.setPageToHistory(ARCHIVE_MAIN_FRAGMENT);
@@ -482,6 +524,16 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                             this.cachePageState();
 
                             this.loadProgramInfo(program);
+                        }
+                    }
+                    else if (focusedRow == SERIES_ROW_ID) {
+                        JSONObject series = archiveViewModel.getSeriesByIndex(pos);
+                        if (series != null) {
+                            sharedCacheViewModel.setPageToHistory(ARCHIVE_MAIN_FRAGMENT);
+
+                            this.cachePageState();
+
+                            this.loadSeriesInfo(series);
                         }
                     }
                     else {
@@ -512,7 +564,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                         else {
                             JSONObject obj = visibleSubCategories.getJSONObject(pos);
                             if (obj != null) {
-                                if (Utils.getValue(obj, BACK_TEXT) != null) {
+                                if (Utils.getJsonStringValue(obj, BACK_TEXT) != null) {
 
                                     result = archiveViewModel.getParentCategories();
                                     if (result != null) {
@@ -668,6 +720,9 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
         else if (row == CATEGORIES_ROW_ID) {
             grid = categoriesScroll;
         }
+        else if (row == SERIES_ROW_ID) {
+            grid = topicalSeriesScroll;
+        }
         return grid;
     }
 
@@ -710,15 +765,36 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
     }
 
     /**
+     * Get series data from cache.
+     */
+    private void loadSeries() {
+        Utils.showProgressBar(root, R.id.topicalSeriesProgress);
+        this.addElements(archiveViewModel.getSeriesData(), SERIES_METHOD);
+    }
+
+    /**
      * Calls get program info method.
      * @param obj
      * @throws Exception
      */
     private void loadProgramInfo(JSONObject obj) throws Exception {
         Utils.showProgressBar(root, this.getProgressBarByRow());
-        String programId = Utils.getValue(obj, ID);
+        String programId = Utils.getJsonStringValue(obj, ID);
         if (programId != null) {
             archiveViewModel.getProgramInfo(programId, this);
+        }
+    }
+
+    /**
+     * Calls get series info method.
+     * @param obj
+     * @throws Exception
+     */
+    private void loadSeriesInfo(JSONObject obj) throws Exception {
+        Utils.showProgressBar(root, this.getProgressBarByRow());
+        String sid = Utils.getJsonStringValue(obj, SID);
+        if (sid != null) {
+            archiveViewModel.getSeriesInfo(sid, this);
         }
     }
 
@@ -732,6 +808,9 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
         }
         else if (focusedRow == NEWEST_ROW_ID) {
             progressBarId = R.id.newestProgress;
+        }
+        else if (focusedRow == SERIES_ROW_ID) {
+            progressBarId = R.id.topicalSeriesProgress;
         }
 
         return progressBarId;
@@ -761,7 +840,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
             }
         }
 
-        int contentContainerHeight = (contentRowHeightPx + 30) * 5;
+        int contentContainerHeight = (contentRowHeightPx + 30) * 6;
 
         RelativeLayout contentContainer = root.findViewById(R.id.contentContainer);
         if (contentContainer != null) {
@@ -925,7 +1004,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
     private void setCategoriesTextByIndex(int index) throws Exception {
         JSONObject obj = archiveViewModel.getParentCategoryByIndex(index);
         if (obj != null) {
-            String name = Utils.getValue(obj, NAME);
+            String name = Utils.getJsonStringValue(obj, NAME);
             if (name != null) {
                 this.setCategoriesText(name);
             }

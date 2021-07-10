@@ -17,6 +17,7 @@ public class SharedCacheViewModel extends ViewModel {
     private Stack<String> pageHistory = new Stack<>();
 
     private JSONObject selectedProgram = null;
+    private JSONObject selectedSeries = null;
     private JSONObject selectedCategory = null;
 
     private PageStateItem seriesPage = null;
@@ -59,6 +60,18 @@ public class SharedCacheViewModel extends ViewModel {
 
     public void removeSelectedProgram() {
         selectedProgram = null;
+    }
+
+    public JSONObject getSelectedSeries() {
+        return selectedSeries;
+    }
+
+    public void setSelectedSeries(JSONObject selectedSeries) {
+        this.selectedSeries = selectedSeries;
+    }
+
+    public void removeSelectedSeries() {
+        selectedSeries = null;
     }
 
     public JSONObject getSelectedCategory() {

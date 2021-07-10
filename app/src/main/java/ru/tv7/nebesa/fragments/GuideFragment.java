@@ -496,7 +496,7 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
      */
     private void loadProgramInfo(JSONObject obj) throws Exception {
         Utils.showProgressBar(root, R.id.guideProgress);
-        String programId = Utils.getValue(obj, ID);
+        String programId = Utils.getJsonStringValue(obj, ID);
         if (programId != null) {
             archiveViewModel.getProgramInfo(programId, this);
         }

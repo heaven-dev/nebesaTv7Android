@@ -16,12 +16,15 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import ru.tv7.nebesa.BuildConfig;
 import ru.tv7.nebesa.NebesaTv7;
 import ru.tv7.nebesa.helpers.ArchiveDataCacheItem;
+import ru.tv7.nebesa.helpers.GuideItem;
 import ru.tv7.nebesa.helpers.Utils;
 import ru.tv7.nebesa.interfaces.ArchiveDataLoadedListener;
 
@@ -55,6 +58,7 @@ import static ru.tv7.nebesa.helpers.Constants.GUIDE_DATA;
 import static ru.tv7.nebesa.helpers.Constants.GUIDE_DATE_METHOD;
 import static ru.tv7.nebesa.helpers.Constants.ID;
 import static ru.tv7.nebesa.helpers.Constants.IMAGE_PATH;
+import static ru.tv7.nebesa.helpers.Constants.IS_SERIES;
 import static ru.tv7.nebesa.helpers.Constants.IS_VISIBLE_ON_VOD;
 import static ru.tv7.nebesa.helpers.Constants.LIMIT_PARAM;
 import static ru.tv7.nebesa.helpers.Constants.LINK_PATH;
@@ -122,6 +126,7 @@ public class ArchiveViewModel extends ViewModel {
 
     private ArchiveDataCacheItem parentCategories = null;
     private ArchiveDataCacheItem subCategories = null;
+    private ArchiveDataCacheItem seriesData = null;
 
     public JSONObject getRecommendedByIndex(int index) throws Exception {
         JSONObject jsonObject = null;
@@ -199,13 +204,33 @@ public class ArchiveViewModel extends ViewModel {
         return jsonObject;
     }
 
+    public JSONObject getSeriesByIndex(int index) throws Exception {
+        JSONObject jsonObject = null;
+
+        if (seriesData != null) {
+            if (!seriesData.isDataInIndex(index)) {
+                if (BuildConfig.DEBUG) {
+                    Log.d(LOG_TAG, "*** ArchiveViewModel.getSeriesByIndex(): No series data in index!");
+                }
+                throw new Exception("No series data in index!");
+            }
+
+            JSONArray jsonArray = seriesData.getData();
+            if (jsonArray != null) {
+                jsonObject = jsonArray.getJSONObject(index);
+            }
+        }
+
+        return jsonObject;
+    }
+
     public JSONArray hasSubCategories(int index) throws Exception {
         JSONArray result = new JSONArray();
 
         if (parentCategories != null) {
             JSONObject obj = parentCategories.getData().getJSONObject(index);
             if (obj != null) {
-                String id = Utils.getValue(obj, ID);
+                String id = Utils.getJsonStringValue(obj, ID);
                 if (id != null) {
                     result = this.getSubCategoriesByParentId(id);
                 }
@@ -226,7 +251,7 @@ public class ArchiveViewModel extends ViewModel {
         for( int i = 0; sc != null && i < sc.length(); i++) {
             JSONObject obj = sc.getJSONObject(i);
             if (obj != null) {
-                String parentId = Utils.getValue(obj, PARENT_ID);
+                String parentId = Utils.getJsonStringValue(obj, PARENT_ID);
                 if (parentId != null && parentId.equals(id)) {
                     result.put(obj);
                 }
@@ -266,6 +291,54 @@ public class ArchiveViewModel extends ViewModel {
         return null;
     }
 
+    public JSONArray getSeriesData() {
+        if (seriesData != null) {
+            return seriesData.getData();
+        }
+        return new JSONArray();
+    }
+
+    public void initializeSeriesData(List<GuideItem> guideData) throws Exception {
+        if (guideData != null) {
+            List<Integer> seen = new ArrayList<>();
+            JSONArray jsonArray = new JSONArray();
+
+            for(int i = 0; i < guideData.size(); i++) {
+                GuideItem g = guideData.get(i);
+                if (g == null) {
+                    continue;
+                }
+
+                Integer sid = g.getSid();
+                Integer episodeNumber = g.getEpisodeNumber();
+                Integer isVisibleOnVod = g.getIsVisibleOnVod();
+
+                if (sid == null || episodeNumber == null || isVisibleOnVod == null) {
+                    continue;
+                }
+
+                String visibleOnVod = String.valueOf(isVisibleOnVod);
+
+                if (episodeNumber > 1 && visibleOnVod.length() > 0 && !visibleOnVod.equals(NEGATIVE_ONE_STR) && !seen.contains(sid)) {
+                    JSONObject obj = new JSONObject();
+                    obj.put(SID, g.getSid());
+                    obj.put(EPISODE_NUMBER, g.getEpisodeNumber());
+                    obj.put(IS_VISIBLE_ON_VOD, g.getIsVisibleOnVod());
+                    obj.put(SERIES, g.getSeries());
+                    obj.put(IMAGE_PATH, g.getImagePath());
+                    obj.put(SERIES_AND_NAME, g.getSeriesAndName());
+                    obj.put(START_DATE, g.getStartDate());
+                    obj.put(DURATION, g.getDuration());
+
+                    jsonArray.put(obj);
+                    seen.add(sid);
+                }
+            }
+
+            seriesData = new ArchiveDataCacheItem(jsonArray);
+        }
+    }
+
     /**
      * View model clear lifecycle method.
      */
@@ -273,7 +346,6 @@ public class ArchiveViewModel extends ViewModel {
     protected void onCleared() {
         super.onCleared();
     }
-
 
     /**
      * Broadcast recommendations programs query.
@@ -485,7 +557,7 @@ public class ArchiveViewModel extends ViewModel {
      * @param seriesId
      * @param archiveDataLoadedListener
      */
-    public void getSeriesInfo(final int seriesId, final ArchiveDataLoadedListener archiveDataLoadedListener) {
+    public void getSeriesInfo(final String seriesId, final ArchiveDataLoadedListener archiveDataLoadedListener) {
         String type = SERIES_INFO_METHOD;
 
         String url = ARCHIVE_BASE_URL + GET_ + type + QUESTION_MARK + SERIES_ID_PARAM + EQUAL + seriesId;
@@ -597,8 +669,13 @@ public class ArchiveViewModel extends ViewModel {
 
                                         archiveDataLoadedListener.onArchiveDataLoaded(filtered, type);
                                     }
-                                    else if (type.equals(TRANSLATION_METHOD) || type.equals(SERIES_INFO_METHOD)) {
+                                    else if (type.equals(TRANSLATION_METHOD)) {
                                         JSONArray filtered = response.getJSONArray(type);
+
+                                        archiveDataLoadedListener.onArchiveDataLoaded(filtered, type);
+                                    }
+                                    else if (type.equals(SERIES_INFO_METHOD)) {
+                                        JSONArray filtered = filterSeriesResponse(response, type);
 
                                         archiveDataLoadedListener.onArchiveDataLoaded(filtered, type);
                                     }
@@ -829,6 +906,18 @@ public class ArchiveViewModel extends ViewModel {
             }
 
             respArray.put(respObj);
+        }
+
+        return respArray;
+    }
+
+    private JSONArray filterSeriesResponse(JSONObject jsonObject, String type) throws Exception {
+        JSONArray respArray = jsonObject.getJSONArray(type);
+
+        JSONObject obj = respArray.getJSONObject(0);
+        if (obj != null) {
+            setValue(obj, IS_SERIES, ONE_STR, false);
+            setValue(obj, SID, this.getValue(obj, ID), false);
         }
 
         return respArray;

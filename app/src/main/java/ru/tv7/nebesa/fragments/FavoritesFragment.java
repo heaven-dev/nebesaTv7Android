@@ -35,9 +35,14 @@ import static ru.tv7.nebesa.helpers.Constants.FAVORITES_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.FAVORITES_SP_DEFAULT;
 import static ru.tv7.nebesa.helpers.Constants.FAVORITES_SP_TAG;
 import static ru.tv7.nebesa.helpers.Constants.ID;
+import static ru.tv7.nebesa.helpers.Constants.IS_SERIES;
 import static ru.tv7.nebesa.helpers.Constants.LOG_TAG;
+import static ru.tv7.nebesa.helpers.Constants.ONE_STR;
 import static ru.tv7.nebesa.helpers.Constants.PROGRAM_INFO_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.PROGRAM_INFO_METHOD;
+import static ru.tv7.nebesa.helpers.Constants.SERIES_INFO_FRAGMENT;
+import static ru.tv7.nebesa.helpers.Constants.SERIES_INFO_METHOD;
+import static ru.tv7.nebesa.helpers.Constants.SID;
 import static ru.tv7.nebesa.helpers.PageStateItem.SELECTED_POS;
 
 /**
@@ -223,6 +228,18 @@ public class FavoritesFragment extends Fragment implements ArchiveDataLoadedList
                     }
                 }
             }
+            else if (type.equals(SERIES_INFO_METHOD)) {
+                Utils.hideProgressBar(root, R.id.favoritesProgress);
+
+                if (jsonArray != null && jsonArray.length() == 1) {
+                    JSONObject obj = jsonArray.getJSONObject(0);
+                    if (obj != null) {
+                        sharedCacheViewModel.setSelectedSeries(obj);
+
+                        Utils.toPage(SERIES_INFO_FRAGMENT, getActivity(), true, false, null);
+                    }
+                }
+            }
         }
         catch (Exception e) {
             if (BuildConfig.DEBUG) {
@@ -314,7 +331,13 @@ public class FavoritesFragment extends Fragment implements ArchiveDataLoadedList
                                 null,
                                 pos));
 
-                        this.loadProgramInfo(obj);
+                        String isSeries = Utils.getJsonStringValue(obj, IS_SERIES);
+                        if (isSeries != null && isSeries.equals(ONE_STR)) {
+                            this.loadSeriesInfo(obj);
+                        }
+                        else {
+                            this.loadProgramInfo(obj);
+                        }
                     }
                 }
             }
@@ -415,9 +438,23 @@ public class FavoritesFragment extends Fragment implements ArchiveDataLoadedList
     private void loadProgramInfo(JSONObject obj) throws Exception {
         Utils.showProgressBar(root, R.id.favoritesProgress);
 
-        String programId = Utils.getValue(obj, ID);
+        String programId = Utils.getJsonStringValue(obj, ID);
         if (programId != null) {
             archiveViewModel.getProgramInfo(programId, this);
+        }
+    }
+
+    /**
+     * Calls get series info method.
+     * @param obj
+     * @throws Exception
+     */
+    private void loadSeriesInfo(JSONObject obj) throws Exception {
+        Utils.showProgressBar(root, R.id.favoritesProgress);
+
+        String sid = Utils.getJsonStringValue(obj, SID);
+        if (sid != null) {
+            archiveViewModel.getSeriesInfo(sid, this);
         }
     }
 

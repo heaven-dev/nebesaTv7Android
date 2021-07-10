@@ -32,6 +32,7 @@
     <string name="categories">Категории</string>
     <string name="category">Категория</string>
     <string name="series">Серия</string>
+    <string name="topical_series">Текущая серия</string>
 
     <string name="first_broadcast">Первая трансляция</string>
     <string name="duration">Продолжительность</string>

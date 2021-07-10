@@ -76,14 +76,14 @@ public class ArchiveMainCategoryGridAdapter extends RecyclerView.Adapter<Archive
         try {
             JSONObject obj = elements.getJSONObject(position);
             if (obj != null) {
-                String categoryText = Utils.getValue(obj, NAME);
+                String categoryText = Utils.getJsonStringValue(obj, NAME);
                 if (categoryText == null) {
-                    categoryText = Utils.getValue(obj, CATEGORY_NAME);
+                    categoryText = Utils.getJsonStringValue(obj, CATEGORY_NAME);
                 }
 
                 boolean isBackElement = false;
                 if (categoryText == null) {
-                    categoryText = Utils.getValue(obj, BACK_TEXT);
+                    categoryText = Utils.getJsonStringValue(obj, BACK_TEXT);
                     isBackElement = true;
                 }
 

@@ -115,7 +115,7 @@ public class SeriesGridAdapter extends RecyclerView.Adapter<SeriesGridAdapter.Si
             JSONObject obj = elements.getJSONObject(position);
             if (obj != null) {
 
-                String value = Utils.getValue(obj, IMAGE_PATH);
+                String value = Utils.getJsonStringValue(obj, IMAGE_PATH);
                 if (value != null && !value.equals(EMPTY) && !value.equals(NULL_VALUE) && !value.contains(ID_NULL)) {
                     Glide.with(context).asBitmap().load(value).into(holder.seriesImage);
                 }
@@ -123,7 +123,7 @@ public class SeriesGridAdapter extends RecyclerView.Adapter<SeriesGridAdapter.Si
                     Glide.with(context).asBitmap().load(R.drawable.fallback).into(holder.seriesImage);
                 }
 
-                value = Utils.getValue(obj, SERIES_AND_NAME);
+                value = Utils.getJsonStringValue(obj, SERIES_AND_NAME);
                 if (value != null) {
                     holder.seriesAndName.setText(value);
                 }
@@ -131,7 +131,7 @@ public class SeriesGridAdapter extends RecyclerView.Adapter<SeriesGridAdapter.Si
                 Resources resources = context.getResources();
 
                 String text = null;
-                value = Utils.getValue(obj, BROADCAST_DATE_TIME);
+                value = Utils.getJsonStringValue(obj, BROADCAST_DATE_TIME);
                 if (value != null) {
                     text = resources.getString(R.string.first_broadcast);
                     text += (COLON_WITH_SPACE + value);
@@ -139,7 +139,7 @@ public class SeriesGridAdapter extends RecyclerView.Adapter<SeriesGridAdapter.Si
                     holder.firstBroadcast.setText(text);
                 }
 
-                value = Utils.getValue(obj, DURATION);
+                value = Utils.getJsonStringValue(obj, DURATION);
                 if (value != null) {
                     text = resources.getString(R.string.duration);
                     text += (COLON_WITH_SPACE + value);
@@ -147,7 +147,7 @@ public class SeriesGridAdapter extends RecyclerView.Adapter<SeriesGridAdapter.Si
                     holder.duration.setText(text);
                 }
 
-                value = Utils.getValue(obj, EPISODE_NUMBER);
+                value = Utils.getJsonStringValue(obj, EPISODE_NUMBER);
                 if (value != null) {
                     text = resources.getString(R.string.episode);
                     text += (COLON_WITH_SPACE + value);

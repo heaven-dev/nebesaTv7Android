@@ -43,7 +43,9 @@ import static ru.tv7.nebesa.helpers.Constants.PIPE_WITH_SPACES;
 import static ru.tv7.nebesa.helpers.Constants.PLAY;
 import static ru.tv7.nebesa.helpers.Constants.PROGRAM_INFO_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.PROGRAM_INFO_METHOD;
-import static ru.tv7.nebesa.helpers.Constants.SERIES_FRAGMENT;
+import static ru.tv7.nebesa.helpers.Constants.SERIES_INFO_FRAGMENT;
+import static ru.tv7.nebesa.helpers.Constants.SERIES_INFO_METHOD;
+import static ru.tv7.nebesa.helpers.Constants.SID;
 import static ru.tv7.nebesa.helpers.Constants.ZERO_STR;
 import static ru.tv7.nebesa.helpers.PageStateItem.DATA;
 import static ru.tv7.nebesa.helpers.PageStateItem.DATA_LENGTH;
@@ -147,7 +149,7 @@ public class CategoriesFragment extends Fragment implements ArchiveDataLoadedLis
                     offset = (Integer)pageStateItem.getValue(OFFSET);
                 }
                 else {
-                    this.loadCategoryPrograms(Utils.stringToInt(Utils.getValue(selectedCategory, CATEGORY_ID)));
+                    this.loadCategoryPrograms(Utils.stringToInt(Utils.getJsonStringValue(selectedCategory, CATEGORY_ID)));
                 }
             }
         }
@@ -246,6 +248,18 @@ public class CategoriesFragment extends Fragment implements ArchiveDataLoadedLis
                     }
                 }
             }
+            if (type.equals(SERIES_INFO_METHOD)) {
+                Utils.hideProgressBar(root, R.id.categoriesProgress);
+
+                if (jsonArray != null && jsonArray.length() == 1) {
+                    JSONObject obj = jsonArray.getJSONObject(0);
+                    if (obj != null) {
+                        sharedCacheViewModel.setSelectedSeries(obj);
+
+                        Utils.toPage(SERIES_INFO_FRAGMENT, getActivity(), true, false, null);
+                    }
+                }
+            }
             else {
                 this.addElements(jsonArray);
             }
@@ -328,8 +342,7 @@ public class CategoriesFragment extends Fragment implements ArchiveDataLoadedLis
                                 offset));
 
                         if (this.isSeries(obj)) {
-                            sharedCacheViewModel.setSelectedProgram(obj);
-                            Utils.toPage(SERIES_FRAGMENT, getActivity(), true, false,null);
+                            this.loadSeriesInfo(obj);
                         }
                         else {
                             this.loadProgramInfo(obj);
@@ -374,7 +387,7 @@ public class CategoriesFragment extends Fragment implements ArchiveDataLoadedLis
                         if (pos > 0 && offset != NO_MORE_PAGING_DATA && pos + CATEGORY_PROGRAMS_SEARCH_LIMIT / 2 == dataLength) {
                             loadingData = true;
 
-                            this.loadCategoryPrograms(Utils.stringToInt(Utils.getValue(selectedCategory, CATEGORY_ID)));
+                            this.loadCategoryPrograms(Utils.stringToInt(Utils.getJsonStringValue(selectedCategory, CATEGORY_ID)));
                         }
                     }
                 }
@@ -451,9 +464,23 @@ public class CategoriesFragment extends Fragment implements ArchiveDataLoadedLis
      */
     private void loadProgramInfo(JSONObject obj) throws Exception {
         Utils.showProgressBar(root, R.id.categoriesProgress);
-        String programId = Utils.getValue(obj, ID);
+        String programId = Utils.getJsonStringValue(obj, ID);
         if (programId != null) {
             archiveViewModel.getProgramInfo(programId, this);
+        }
+    }
+
+    /**
+     * Calls get series info method.
+     * @param obj
+     * @throws Exception
+     */
+    private void loadSeriesInfo(JSONObject obj) throws Exception {
+        Utils.showProgressBar(root, R.id.categoriesProgress);
+
+        String sid = Utils.getJsonStringValue(obj, SID);
+        if (sid != null) {
+            archiveViewModel.getSeriesInfo(sid, this);
         }
     }
 
@@ -510,8 +537,8 @@ public class CategoriesFragment extends Fragment implements ArchiveDataLoadedLis
         TextView categoriesTitle = root.findViewById(R.id.categoriesTitle);
         if (categoriesTitle != null) {
 
-            String categoryName = Utils.getValue(selectedCategory, CATEGORY_NAME);
-            String parentName = Utils.getValue(selectedCategory, PARENT_NAME);
+            String categoryName = Utils.getJsonStringValue(selectedCategory, CATEGORY_NAME);
+            String parentName = Utils.getJsonStringValue(selectedCategory, PARENT_NAME);
             if (categoryName != null && parentName != null && !categoryName.equals(parentName)) {
                 categoryName = parentName + PIPE_WITH_SPACES + categoryName;
             }

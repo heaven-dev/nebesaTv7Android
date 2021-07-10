@@ -418,7 +418,7 @@ public class TvPlayerFragment extends Fragment implements Player.EventListener {
 
                 /*
                 if (httpError.type == HttpDataSource.HttpDataSourceException.TYPE_OPEN || httpError.type == HttpDataSource.HttpDataSourceException.TYPE_READ) {
-                    TaivasTv7.getInstance().setErrorCode(NO_NETWORK_CONNECTION_ERROR);
+                    NebesaTv7.getInstance().setErrorCode(NO_NETWORK_CONNECTION_ERROR);
                     Utils.toErrorPage(getActivity());
                 }
                 */

@@ -102,7 +102,7 @@ public class SearchResultGridAdapter extends RecyclerView.Adapter<SearchResultGr
             JSONObject obj = elements.getJSONObject(position);
             if (obj != null) {
 
-                String value = Utils.getValue(obj, IMAGE_PATH);
+                String value = Utils.getJsonStringValue(obj, IMAGE_PATH);
                 if (value != null && !value.equals(EMPTY) && !value.equals(NULL_VALUE) && !value.contains(ID_NULL)) {
                     Glide.with(context).asBitmap().load(value).into(holder.searchResultImage);
                 }
@@ -111,19 +111,19 @@ public class SearchResultGridAdapter extends RecyclerView.Adapter<SearchResultGr
                 }
 
                 int imageSrc = 0;
-                value = Utils.getValue(obj, TYPE);
+                value = Utils.getJsonStringValue(obj, TYPE);
                 if (value != null) {
                     imageSrc = value.equals(SERIES) ? R.drawable.series : R.drawable.program;
                 }
 
                 holder.seriesOrProgram.setImageResource(imageSrc);
 
-                value = Utils.getValue(obj, SERIES_AND_NAME);
+                value = Utils.getJsonStringValue(obj, SERIES_AND_NAME);
                 if (value != null) {
                     holder.seriesAndName.setText(value);
                 }
 
-                value = Utils.getValue(obj, CAPTION);
+                value = Utils.getJsonStringValue(obj, CAPTION);
                 if (value != null && value.length() > 0) {
                     holder.caption.setText(value);
                 }

@@ -165,8 +165,43 @@
 
             </RelativeLayout>
 
+
+            <TextView
+                android:id="@+id/topicalSeriesText"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_below="@id/categoriesContainer"
+                android:layout_marginStart="10dp"
+                android:gravity="start|center_vertical"
+                android:text="@string/topical_series"
+                android:textColor="@color/content_area_text"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:id="@+id/topicalSeriesContainer"
+                android:layout_width="match_parent"
+                android:layout_height="156.338012dp"
+                android:layout_below="@id/topicalSeriesText"
+                android:layout_marginStart="10dp"
+                android:background="@color/archive_main_content_bg"
+                android:orientation="horizontal">
+
+                <androidx.leanback.widget.HorizontalGridView
+                    android:id="@+id/topicalSeriesScroll"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ProgressBar
+                    android:id="@+id/topicalSeriesProgress"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:visibility="gone"
+                    android:layout_centerInParent="true"
+                    android:indeterminateTint="@color/tv7_default"
+                    android:indeterminateTintMode="src_atop" />
+            </RelativeLayout>
+
         </RelativeLayout>
 
     </LinearLayout>
 </LinearLayout>
-

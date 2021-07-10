@@ -37,7 +37,9 @@ import static ru.tv7.nebesa.helpers.Constants.PROGRAM_INFO_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.PROGRAM_INFO_METHOD;
 import static ru.tv7.nebesa.helpers.Constants.SEARCH_RESULT_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.SERIES;
-import static ru.tv7.nebesa.helpers.Constants.SERIES_FRAGMENT;
+import static ru.tv7.nebesa.helpers.Constants.SERIES_ID;
+import static ru.tv7.nebesa.helpers.Constants.SERIES_INFO_FRAGMENT;
+import static ru.tv7.nebesa.helpers.Constants.SERIES_INFO_METHOD;
 import static ru.tv7.nebesa.helpers.Constants.TYPE;
 import static ru.tv7.nebesa.helpers.PageStateItem.DATA;
 import static ru.tv7.nebesa.helpers.PageStateItem.SELECTED_POS;
@@ -227,6 +229,18 @@ public class SearchResultFragment extends Fragment implements ArchiveDataLoadedL
                     }
                 }
             }
+            if (type.equals(SERIES_INFO_METHOD)) {
+                Utils.hideProgressBar(root, R.id.searchResultProgress);
+
+                if (jsonArray != null && jsonArray.length() == 1) {
+                    JSONObject obj = jsonArray.getJSONObject(0);
+                    if (obj != null) {
+                        sharedCacheViewModel.setSelectedSeries(obj);
+
+                        Utils.toPage(SERIES_INFO_FRAGMENT, getActivity(), true, false, null);
+                    }
+                }
+            }
             else {
                 this.addElements(jsonArray);
             }
@@ -311,10 +325,8 @@ public class SearchResultFragment extends Fragment implements ArchiveDataLoadedL
                                 searchResultGridAdapter.getElements(),
                                 pos));
 
-                        sharedCacheViewModel.setSelectedProgram(obj);
-
                         if (this.isSeries(obj)) {
-                            Utils.toPage(SERIES_FRAGMENT, getActivity(), true, false,null);
+                            this.loadSeriesInfo(obj);
                         }
                         else {
                             this.loadProgramInfo(obj);
@@ -430,9 +442,23 @@ public class SearchResultFragment extends Fragment implements ArchiveDataLoadedL
      */
     private void loadProgramInfo(JSONObject obj) throws Exception {
         Utils.showProgressBar(root, R.id.searchResultProgress);
-        String programId = Utils.getValue(obj, ID);
+        String programId = Utils.getJsonStringValue(obj, ID);
         if (programId != null) {
             archiveViewModel.getProgramInfo(programId, this);
+        }
+    }
+
+    /**
+     * Calls get series info method.
+     * @param obj
+     * @throws Exception
+     */
+    private void loadSeriesInfo(JSONObject obj) throws Exception {
+        Utils.showProgressBar(root, R.id.searchResultProgress);
+
+        String sid = Utils.getJsonStringValue(obj, SERIES_ID);
+        if (sid != null) {
+            archiveViewModel.getSeriesInfo(sid, this);
         }
     }
 
