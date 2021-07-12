@@ -63,6 +63,15 @@
     <string name="network_request_timeout">Network request timeout :-(</string>
     <string name="restart">Restart</string>
     <string name="close">Close</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="delete_configurations">Delete configurations</string>
+    <string name="video_status">Video status</string>
+    <string name="favorites_eng">Favorites</string>
+    <string name="search_history">Search history</string>
+    <string name="items">items</string>
+    <string name="delete_configuration_question">Delete configuration?</string>
 
     <string name="title_1">О нас</string>
     <string name="title_1_chapter_1">«Heaven TV7» − всемирный, независимый от политики, телеканал. Мы стремимся выступать в качестве платформы для объединения христиан различных конфессий так, чтобы они могли учиться друг у друга и вместе составляли единое тело Иисуса Христа (Матфея 22:36-40).</string>

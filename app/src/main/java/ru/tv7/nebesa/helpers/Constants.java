@@ -305,6 +305,12 @@ abstract public class Constants {
         R.id.ss_11
     ));
 
+    public static final List<Integer> CLEAR_MENU_IDS = new ArrayList<>(Arrays.asList(
+        R.id.cm_0,
+        R.id.cm_1,
+        R.id.cm_2
+    ));
+
     public static final int SPACE_BUTTON = 1;
     public static final int BACKSPACE_BUTTON = 2;
     public static final int UPPERCASE_BUTTON = 3;

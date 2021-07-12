@@ -8,8 +8,8 @@ android {
         applicationId "ru.tv7.nebesa"
         minSdkVersion 22
         targetSdkVersion 30
-        versionCode 22
-        versionName "1.0.5"
+        versionCode 23
+        versionName "1.0.6"
 
     }
 

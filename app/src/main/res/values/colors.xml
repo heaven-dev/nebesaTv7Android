@@ -36,4 +36,6 @@
     <color name="title_background">#eeeeee</color>
     <color name="date_item_border">#444444</color>
     <color name="saved_search_item_bg">#eeeeee</color>
+    <color name="clear_conf_button_text">#444444</color>
+    <color name="clear_conf_controls">#444444</color>
 </resources>

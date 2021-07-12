@@ -425,7 +425,7 @@ public abstract class Utils {
                 }
 
                 editor.putString(tag, jsonStr);
-                editor.commit();
+                editor.apply();
             }
         }
     }
@@ -496,5 +496,26 @@ public abstract class Utils {
         }
 
         return result;
+    }
+
+    public static int getCountOfPrefs(String tag, String defaultValue, Context context) throws Exception {
+        JSONArray jsonArray = getSavedPrefs(tag, defaultValue, context);
+        if (jsonArray != null) {
+            return jsonArray.length();
+        }
+        return 0;
+    }
+
+    public static void deleteSavedPrefs(String tag, Context context) {
+        if (context != null) {
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+            if (sharedPref != null) {
+                SharedPreferences.Editor editor = sharedPref.edit();
+                if (editor != null) {
+                    editor.remove(tag);
+                    editor.apply();
+                }
+            }
+        }
     }
 }
