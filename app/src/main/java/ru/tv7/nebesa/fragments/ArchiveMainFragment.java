@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,7 @@ import ru.tv7.nebesa.adapter.ArchiveMainCategoryGridAdapter;
 import ru.tv7.nebesa.adapter.ArchiveMainProgramGridAdapter;
 import ru.tv7.nebesa.adapter.ArchiveMainSeriesGridAdapter;
 import ru.tv7.nebesa.helpers.ArchiveMainPageStateItem;
+import ru.tv7.nebesa.helpers.GuideItem;
 import ru.tv7.nebesa.helpers.Sidebar;
 import ru.tv7.nebesa.helpers.Utils;
 import ru.tv7.nebesa.interfaces.ArchiveDataLoadedListener;
@@ -46,6 +48,9 @@ import static ru.tv7.nebesa.helpers.Constants.ARCHIVE_MAIN_ROW_COUNT;
 import static ru.tv7.nebesa.helpers.Constants.ARCHIVE_MAIN_SCROLL_Y_DURATION;
 import static ru.tv7.nebesa.helpers.Constants.ARCHIVE_MAIN_TITLE_HEIGHT;
 import static ru.tv7.nebesa.helpers.Constants.BACK_TEXT;
+import static ru.tv7.nebesa.helpers.Constants.DATE_INDEX;
+import static ru.tv7.nebesa.helpers.Constants.GUIDE_DATA;
+import static ru.tv7.nebesa.helpers.Constants.GUIDE_DATE_METHOD;
 import static ru.tv7.nebesa.helpers.Constants.RECOMMENDED_PROGRAMS_LIMIT;
 import static ru.tv7.nebesa.helpers.Constants.BROADCAST_RECOMMENDATIONS_METHOD;
 import static ru.tv7.nebesa.helpers.Constants.CATEGORIES_FRAGMENT;
@@ -70,7 +75,6 @@ import static ru.tv7.nebesa.helpers.Constants.SERIES_INFO_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.SERIES_INFO_METHOD;
 import static ru.tv7.nebesa.helpers.Constants.SERIES_METHOD;
 import static ru.tv7.nebesa.helpers.Constants.SERIES_ROW_ID;
-import static ru.tv7.nebesa.helpers.Constants.SID;
 import static ru.tv7.nebesa.helpers.Constants.SUB_CATEGORIES_METHOD;
 import static ru.tv7.nebesa.helpers.Constants.TOOLBAR_HEIGHT;
 
@@ -333,7 +337,18 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
         else if(type.equals(PARENT_CATEGORIES_METHOD)) {
             this.addCategories(jsonArray, type, true, true);
         }
-        else if(type.equals(SERIES_METHOD)) {
+    }
+
+    /**
+     * Creates and adds data to grids.
+     * @param guideList
+     * @param type
+     * @throws Exception
+     */
+    private void addGuideItemElements(List<GuideItem> guideList, String type) {
+        Context context = getContext();
+
+        if(type.equals(SERIES_METHOD)) {
             topicalSeriesScroll = root.findViewById(R.id.topicalSeriesScroll);
             topicalSeriesScroll.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
@@ -346,7 +361,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                 }
             });
 
-            ArchiveMainSeriesGridAdapter adapter = new ArchiveMainSeriesGridAdapter(getActivity(), context, jsonArray);
+            ArchiveMainSeriesGridAdapter adapter = new ArchiveMainSeriesGridAdapter(getActivity(), context, guideList);
             topicalSeriesScroll.setAdapter(adapter);
 
             // Change row background to white
@@ -419,7 +434,27 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                     }
                 }
             }
-            if (type.equals(SERIES_INFO_METHOD)) {
+            else if (type.equals(GUIDE_DATE_METHOD)) {
+                Utils.hideProgressBar(root, this.getProgressBarByRow());
+
+                if (jsonArray != null && jsonArray.length() == 1) {
+                    JSONObject obj = jsonArray.getJSONObject(0);
+                    if (obj != null && obj.getInt(DATE_INDEX) == -1) {
+                        JSONArray guideData = obj.getJSONArray(GUIDE_DATA);
+
+                        this.addYesterdayGuideData(guideData);
+
+                        List<GuideItem> seriesData = archiveViewModel.getSeriesData();
+                        if (seriesData == null) {
+                            archiveViewModel.initializeSeriesData(archiveViewModel.getThreeDaysGuide());
+                            seriesData = archiveViewModel.getSeriesData();
+                        }
+
+                        this.addGuideItemElements(seriesData, SERIES_METHOD);
+                    }
+                }
+            }
+            else if (type.equals(SERIES_INFO_METHOD)) {
                 Utils.hideProgressBar(root, this.getProgressBarByRow());
 
                 if (jsonArray != null && jsonArray.length() == 1) {
@@ -527,7 +562,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                         }
                     }
                     else if (focusedRow == SERIES_ROW_ID) {
-                        JSONObject series = archiveViewModel.getSeriesByIndex(pos);
+                        GuideItem series = archiveViewModel.getSeriesByIndex(pos);
                         if (series != null) {
                             sharedCacheViewModel.setPageToHistory(ARCHIVE_MAIN_FRAGMENT);
 
@@ -693,6 +728,28 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
     }
 
     /**
+     * Adds guide data to view model.
+     * @param guideData
+     * @throws Exception
+     */
+    private void addYesterdayGuideData(JSONArray guideData) throws Exception {
+        if (guideData == null) {
+            Utils.toErrorPage(getActivity());
+        }
+
+        List<GuideItem> guideList = new ArrayList<>();
+
+        for (int i = 0; i < guideData.length(); i++) {
+            JSONObject obj = guideData.getJSONObject(i);
+            if (obj != null) {
+                guideList.add(Utils.getGuideItemByJsonObj(obj));
+            }
+        }
+
+        archiveViewModel.addGuideData(guideList, false);
+    }
+
+    /**
      * Handles focus out from side menu.
      */
     private void focusOutFromSideMenu() {
@@ -765,11 +822,18 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
     }
 
     /**
-     * Get series data from cache.
+     * Calls get guide by date (yesterday).
      */
     private void loadSeries() {
         Utils.showProgressBar(root, R.id.topicalSeriesProgress);
-        this.addElements(archiveViewModel.getSeriesData(), SERIES_METHOD);
+
+        List<GuideItem> seriesData = archiveViewModel.getSeriesData();
+        if (seriesData != null && seriesData.size() > 0) {
+            this.addGuideItemElements(seriesData, SERIES_METHOD);
+        }
+        else {
+            archiveViewModel.getGuideByDate(Utils.getYesterdayUtcFormattedLocalDate(), -1, this);
+        }
     }
 
     /**
@@ -787,12 +851,12 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
 
     /**
      * Calls get series info method.
-     * @param obj
+     * @param guideItem
      * @throws Exception
      */
-    private void loadSeriesInfo(JSONObject obj) throws Exception {
+    private void loadSeriesInfo(GuideItem guideItem) throws Exception {
         Utils.showProgressBar(root, this.getProgressBarByRow());
-        String sid = Utils.getJsonStringValue(obj, SID);
+        String sid = guideItem.getSid().toString();
         if (sid != null) {
             archiveViewModel.getSeriesInfo(sid, this);
         }

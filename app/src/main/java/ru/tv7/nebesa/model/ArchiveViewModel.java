@@ -126,7 +126,9 @@ public class ArchiveViewModel extends ViewModel {
 
     private ArchiveDataCacheItem parentCategories = null;
     private ArchiveDataCacheItem subCategories = null;
-    private ArchiveDataCacheItem seriesData = null;
+
+    private List<GuideItem> threeDaysGuide = null;
+    private List<GuideItem> seriesData = null;
 
     public JSONObject getRecommendedByIndex(int index) throws Exception {
         JSONObject jsonObject = null;
@@ -204,24 +206,21 @@ public class ArchiveViewModel extends ViewModel {
         return jsonObject;
     }
 
-    public JSONObject getSeriesByIndex(int index) throws Exception {
-        JSONObject jsonObject = null;
+    public GuideItem getSeriesByIndex(int index) throws Exception {
+        GuideItem guideItem = null;
 
         if (seriesData != null) {
-            if (!seriesData.isDataInIndex(index)) {
+            if (index > seriesData.size() - 1) {
                 if (BuildConfig.DEBUG) {
                     Log.d(LOG_TAG, "*** ArchiveViewModel.getSeriesByIndex(): No series data in index!");
                 }
                 throw new Exception("No series data in index!");
             }
 
-            JSONArray jsonArray = seriesData.getData();
-            if (jsonArray != null) {
-                jsonObject = jsonArray.getJSONObject(index);
-            }
+            guideItem = seriesData.get(index);
         }
 
-        return jsonObject;
+        return guideItem;
     }
 
     public JSONArray hasSubCategories(int index) throws Exception {
@@ -291,17 +290,20 @@ public class ArchiveViewModel extends ViewModel {
         return null;
     }
 
-    public JSONArray getSeriesData() {
+    public List<GuideItem> getSeriesData() {
         if (seriesData != null) {
-            return seriesData.getData();
+            return seriesData;
         }
-        return new JSONArray();
+        return null;
     }
 
     public void initializeSeriesData(List<GuideItem> guideData) throws Exception {
+        if (seriesData == null) {
+            seriesData = new ArrayList<>();
+        }
+
         if (guideData != null) {
             List<Integer> seen = new ArrayList<>();
-            JSONArray jsonArray = new JSONArray();
 
             for(int i = 0; i < guideData.size(); i++) {
                 GuideItem g = guideData.get(i);
@@ -320,22 +322,32 @@ public class ArchiveViewModel extends ViewModel {
                 String visibleOnVod = String.valueOf(isVisibleOnVod);
 
                 if (episodeNumber > 1 && visibleOnVod.length() > 0 && !visibleOnVod.equals(NEGATIVE_ONE_STR) && !seen.contains(sid)) {
-                    JSONObject obj = new JSONObject();
-                    obj.put(SID, g.getSid());
-                    obj.put(EPISODE_NUMBER, g.getEpisodeNumber());
-                    obj.put(IS_VISIBLE_ON_VOD, g.getIsVisibleOnVod());
-                    obj.put(SERIES, g.getSeries());
-                    obj.put(IMAGE_PATH, g.getImagePath());
-                    obj.put(SERIES_AND_NAME, g.getSeriesAndName());
-                    obj.put(START_DATE, g.getStartDate());
-                    obj.put(DURATION, g.getDuration());
-
-                    jsonArray.put(obj);
+                    seriesData.add(g);
                     seen.add(sid);
                 }
             }
+        }
+    }
 
-            seriesData = new ArchiveDataCacheItem(jsonArray);
+    public List<GuideItem> getThreeDaysGuide() {
+        if (threeDaysGuide != null) {
+            return threeDaysGuide;
+        }
+        return new ArrayList<>();
+    }
+
+    public void addGuideData(List<GuideItem> guideData, boolean toEnd) {
+        if (threeDaysGuide == null) {
+            threeDaysGuide = new ArrayList<>();
+        }
+
+        if (guideData != null) {
+            if (toEnd) {
+                threeDaysGuide.addAll(guideData);
+            }
+            else {
+                threeDaysGuide.addAll(0, guideData);
+            }
         }
     }
 

@@ -38,35 +38,16 @@ import ru.tv7.nebesa.fragments.SeriesFragment;
 import ru.tv7.nebesa.fragments.SeriesInfoFragment;
 import ru.tv7.nebesa.fragments.TvMainFragment;
 import ru.tv7.nebesa.fragments.TvPlayerFragment;
-import ru.tv7.nebesa.helpers.GuideItem;
 import ru.tv7.nebesa.helpers.Utils;
 import ru.tv7.nebesa.interfaces.ArchiveDataLoadedListener;
 import ru.tv7.nebesa.model.ArchiveViewModel;
 import ru.tv7.nebesa.model.GuideViewModel;
 
-import static ru.tv7.nebesa.helpers.Constants.BROADCAST_DATE;
-import static ru.tv7.nebesa.helpers.Constants.BROADCAST_DATE_TIME;
-import static ru.tv7.nebesa.helpers.Constants.CAPTION;
 import static ru.tv7.nebesa.helpers.Constants.DATE_INDEX;
-import static ru.tv7.nebesa.helpers.Constants.DURATION;
-import static ru.tv7.nebesa.helpers.Constants.END_DATE;
-import static ru.tv7.nebesa.helpers.Constants.END_TIME;
-import static ru.tv7.nebesa.helpers.Constants.EPISODE_NUMBER;
 import static ru.tv7.nebesa.helpers.Constants.EXIT_OVERLAY_FRAGMENT;
-import static ru.tv7.nebesa.helpers.Constants.FORMATTED_END_TIME;
-import static ru.tv7.nebesa.helpers.Constants.FORMATTED_START_TIME;
 import static ru.tv7.nebesa.helpers.Constants.GUIDE_DATA;
-import static ru.tv7.nebesa.helpers.Constants.IMAGE_PATH;
-import static ru.tv7.nebesa.helpers.Constants.IS_VISIBLE_ON_VOD;
 import static ru.tv7.nebesa.helpers.Constants.LOG_TAG;
-import static ru.tv7.nebesa.helpers.Constants.NAME;
 import static ru.tv7.nebesa.helpers.Constants.PROGRESS_BAR_SIZE;
-import static ru.tv7.nebesa.helpers.Constants.SERIES;
-import static ru.tv7.nebesa.helpers.Constants.SERIES_AND_NAME;
-import static ru.tv7.nebesa.helpers.Constants.SID;
-import static ru.tv7.nebesa.helpers.Constants.START_DATE;
-import static ru.tv7.nebesa.helpers.Constants.START_END_TIME;
-import static ru.tv7.nebesa.helpers.Constants.TIME;
 import static ru.tv7.nebesa.helpers.Constants.TV_MAIN_FRAGMENT;
 
 /**
@@ -263,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements ArchiveDataLoaded
                     else {
                         this.addGuideData(guideData);
 
-                        archiveViewModel.initializeSeriesData(guideViewModel.getGuide());
+                        archiveViewModel.addGuideData(guideViewModel.getGuide(), true);
 
                         this.prepareUi();
                         Utils.toPage(TV_MAIN_FRAGMENT, this, false, false, null);
@@ -321,28 +302,7 @@ public class MainActivity extends AppCompatActivity implements ArchiveDataLoaded
         for (int i = 0; i < guideData.length(); i++) {
             JSONObject obj = guideData.getJSONObject(i);
             if (obj != null) {
-                GuideItem g = new GuideItem(
-                    Utils.getJsonStringValue(obj, TIME),
-                    Utils.getJsonStringValue(obj, END_TIME),
-                    Utils.getJsonStringValue(obj, IMAGE_PATH),
-                    Utils.getJsonStringValue(obj, CAPTION),
-                    Utils.getJsonStringValue(obj, START_END_TIME),
-                    Utils.getJsonStringValue(obj, START_DATE),
-                    Utils.getJsonStringValue(obj, END_DATE),
-                    Utils.getJsonStringValue(obj, FORMATTED_START_TIME),
-                    Utils.getJsonStringValue(obj, FORMATTED_END_TIME),
-                    Utils.getJsonStringValue(obj, BROADCAST_DATE),
-                    Utils.getJsonStringValue(obj, BROADCAST_DATE_TIME),
-                    Utils.getJsonStringValue(obj, DURATION),
-                    Utils.getJsonStringValue(obj, SERIES),
-                    Utils.getJsonStringValue(obj, NAME),
-                    Utils.getJsonIntValue(obj, SID),
-                    Utils.getJsonIntValue(obj, EPISODE_NUMBER),
-                    Utils.getJsonIntValue(obj, IS_VISIBLE_ON_VOD),
-                    Utils.getJsonStringValue(obj, SERIES_AND_NAME),
-                    Utils.isStartDateToday(Utils.getJsonStringValue(obj, TIME)));
-
-                guideViewModel.addItemToGuide(g);
+                guideViewModel.addItemToGuide(Utils.getGuideItemByJsonObj(obj));
             }
         }
     }

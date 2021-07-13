@@ -13,19 +13,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import java.util.List;
 
 import ru.tv7.nebesa.R;
+import ru.tv7.nebesa.helpers.GuideItem;
 import ru.tv7.nebesa.helpers.Utils;
 
-import static ru.tv7.nebesa.helpers.Constants.DURATION;
 import static ru.tv7.nebesa.helpers.Constants.EMPTY;
 import static ru.tv7.nebesa.helpers.Constants.ID_NULL;
-import static ru.tv7.nebesa.helpers.Constants.IMAGE_PATH;
 import static ru.tv7.nebesa.helpers.Constants.NULL_VALUE;
-import static ru.tv7.nebesa.helpers.Constants.SERIES_AND_NAME;
-import static ru.tv7.nebesa.helpers.Constants.START_DATE;
 
 /**
  * Grid adapter for archive main series.
@@ -34,9 +30,9 @@ public class ArchiveMainSeriesGridAdapter extends RecyclerView.Adapter<ArchiveMa
 
     private FragmentActivity activity = null;
     private Context context = null;
-    private JSONArray elements = null;
+    private List<GuideItem> elements = null;
 
-    public ArchiveMainSeriesGridAdapter(FragmentActivity activity, Context context, JSONArray series) {
+    public ArchiveMainSeriesGridAdapter(FragmentActivity activity, Context context, List<GuideItem> series) {
         this.activity = activity;
         this.context = context;
         this.elements = series;
@@ -78,9 +74,9 @@ public class ArchiveMainSeriesGridAdapter extends RecyclerView.Adapter<ArchiveMa
     @Override
     public void onBindViewHolder(final SimpleViewHolder holder, final int position) {
         try {
-            JSONObject obj = elements.getJSONObject(position);
-            if (obj != null) {
-                String imagePath = Utils.getJsonStringValue(obj, IMAGE_PATH);
+            GuideItem guideItem = elements.get(position);
+            if (guideItem != null) {
+                String imagePath = guideItem.getImagePath();
                 if (imagePath != null && !imagePath.equals(EMPTY) && !imagePath.equals(NULL_VALUE) && !imagePath.contains(ID_NULL)) {
                     Glide.with(context).asBitmap().load(imagePath).into(holder.seriesImage);
                 }
@@ -88,17 +84,17 @@ public class ArchiveMainSeriesGridAdapter extends RecyclerView.Adapter<ArchiveMa
                     Glide.with(context).asBitmap().load(R.drawable.fallback).into(holder.seriesImage);
                 }
 
-                String startDate = Utils.getJsonStringValue(obj, START_DATE);
+                String startDate = guideItem.getStartDate();
                 if (startDate != null) {
                     holder.seriesDateText.setText(startDate);
                 }
 
-                String duration = Utils.getJsonStringValue(obj, DURATION);
+                String duration = guideItem.getDuration();
                 if (duration != null) {
                     holder.seriesDurationText.setText(duration);
                 }
 
-                String seriesAndName = Utils.getJsonStringValue(obj, SERIES_AND_NAME);
+                String seriesAndName = guideItem.getSeriesAndName();
                 if (seriesAndName != null) {
                     holder.seriesText.setText(seriesAndName);
                 }
@@ -116,7 +112,7 @@ public class ArchiveMainSeriesGridAdapter extends RecyclerView.Adapter<ArchiveMa
 
     @Override
     public int getItemCount() {
-        return this.elements.length();
+        return this.elements.size();
     }
 
     private static double calculateItemWidth() {
