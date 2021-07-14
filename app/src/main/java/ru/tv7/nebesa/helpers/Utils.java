@@ -54,9 +54,12 @@ import static ru.tv7.nebesa.helpers.Constants.BROADCAST_DATE;
 import static ru.tv7.nebesa.helpers.Constants.BROADCAST_DATE_TIME;
 import static ru.tv7.nebesa.helpers.Constants.CAPTION;
 import static ru.tv7.nebesa.helpers.Constants.CATEGORIES_FRAGMENT;
+import static ru.tv7.nebesa.helpers.Constants.CATEGORY;
 import static ru.tv7.nebesa.helpers.Constants.CHANNEL_INFO_FRAGMENT;
+import static ru.tv7.nebesa.helpers.Constants.CID;
 import static ru.tv7.nebesa.helpers.Constants.COLON;
 import static ru.tv7.nebesa.helpers.Constants.DASH;
+import static ru.tv7.nebesa.helpers.Constants.DATE_INDEX;
 import static ru.tv7.nebesa.helpers.Constants.DOT;
 import static ru.tv7.nebesa.helpers.Constants.DURATION;
 import static ru.tv7.nebesa.helpers.Constants.END_DATE;
@@ -306,11 +309,15 @@ public abstract class Utils {
                 Utils.getJsonStringValue(obj, DURATION),
                 Utils.getJsonStringValue(obj, SERIES),
                 Utils.getJsonStringValue(obj, NAME),
+                Utils.getJsonStringValue(obj, CATEGORY),
                 Utils.getJsonIntValue(obj, SID),
+                Utils.getJsonIntValue(obj, CID),
+                Utils.getJsonIntValue(obj, ID),
                 Utils.getJsonIntValue(obj, EPISODE_NUMBER),
                 Utils.getJsonIntValue(obj, IS_VISIBLE_ON_VOD),
                 Utils.getJsonStringValue(obj, SERIES_AND_NAME),
-                Utils.isStartDateToday(Utils.getJsonStringValue(obj, TIME)));
+                Utils.isStartDateToday(Utils.getJsonStringValue(obj, TIME)),
+                Utils.getJsonIntValue(obj, DATE_INDEX));
         }
         return guideItem;
     }

@@ -181,6 +181,8 @@ abstract public class Constants {
     public static final String LINK_PATH = "link_path";
     public static final String EPISODE_NUMBER = "episode_number";
     public static final String SID = "sid";
+    public static final String CID = "cid";
+    public static final String CATEGORY = "category";
     public static final String SERIES_ID = "series_id";
     public static final String FIRST_BROADCAST = "first_broadcast";
     public static final String START_DATE = "start_date";
@@ -231,6 +233,19 @@ abstract public class Constants {
     public static final int NEWEST_ROW_ID = 2;
     public static final int CATEGORIES_ROW_ID = 3;
     public static final int SERIES_ROW_ID = 4;
+    public static final int DYNAMIC_ROW_ONE_ID = 5;
+    public static final int DYNAMIC_ROW_TWO_ID = 6;
+    public static final int DYNAMIC_ROW_THREE_ID = 7;
+    public static final int DYNAMIC_ROW_FOUR_ID = 8;
+    public static final int DYNAMIC_ROW_FIVE_ID = 9;
+
+    public static final int DYNAMIC_ROW_ONE = 1;
+    public static final int DYNAMIC_ROW_TWO = 2;
+    public static final int DYNAMIC_ROW_THREE = 3;
+    public static final int DYNAMIC_ROW_FOUR = 4;
+    public static final int DYNAMIC_ROW_FIVE = 5;
+
+    public static final int DYNAMIC_ROW_MIN_PROGRAMS = 4;
 
     public static final float CATEGORY_IMAGE_SIZE_IN_PERCENT = 0.6f;
 

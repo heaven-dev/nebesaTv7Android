@@ -18,11 +18,15 @@ public class GuideItem {
     private String duration = null;
     private String series = null;
     private String name = null;
+    private String category = null;
     private Integer sid = null;
+    private Integer cid = null;
+    private Integer id = null;
     private Integer episodeNumber = null;
     private Integer isVisibleOnVod = null;
     private String seriesAndName = null;
     private Boolean isStartDateToday = null;
+    private Integer dateIndex = null;
     private Integer ongoingProgress = null;
 
     public GuideItem(
@@ -40,11 +44,15 @@ public class GuideItem {
             String duration,
             String series,
             String name,
+            String category,
             Integer sid,
+            Integer cid,
+            Integer id,
             Integer episodeNumber,
             Integer isVisibleOnVod,
             String seriesAndName,
-            Boolean isStartDateToday) {
+            Boolean isStartDateToday,
+            Integer dateIndex) {
         this.start = start;
         this.stop = stop;
         this.imagePath = imagePath;
@@ -59,11 +67,15 @@ public class GuideItem {
         this.duration = duration;
         this.series = series;
         this.name = name;
+        this.category = category;
         this.sid = sid;
+        this.cid = cid;
+        this.id = id;
         this.episodeNumber = episodeNumber;
         this.isVisibleOnVod = isVisibleOnVod;
         this.seriesAndName = seriesAndName;
         this.isStartDateToday = isStartDateToday;
+        this.dateIndex = dateIndex;
     }
 
     public String getStart() {
@@ -122,8 +134,20 @@ public class GuideItem {
         return name;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
     public Integer getSid() {
         return sid;
+    }
+
+    public Integer getCid() {
+        return cid;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public Integer getEpisodeNumber() {
@@ -144,6 +168,10 @@ public class GuideItem {
 
     public Integer getOngoingProgress() {
         return ongoingProgress;
+    }
+
+    public Integer getDateIndex() {
+        return dateIndex;
     }
 
     public void setOngoingProgress(Integer ongoingProgress) {

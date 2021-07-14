@@ -201,6 +201,196 @@
                     android:indeterminateTintMode="src_atop" />
             </RelativeLayout>
 
+
+            <TextView
+                android:id="@+id/dynamicRowOneText"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_below="@id/topicalSeriesContainer"
+                android:layout_marginStart="10dp"
+                android:gravity="start|center_vertical"
+                android:text=""
+                android:textColor="@color/content_area_text"
+                android:visibility="gone"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:id="@+id/dynamicRowOneContainer"
+                android:layout_width="match_parent"
+                android:layout_height="156.338012dp"
+                android:layout_below="@id/dynamicRowOneText"
+                android:layout_marginStart="10dp"
+                android:background="@color/archive_main_content_bg"
+                android:visibility="gone"
+                android:orientation="horizontal">
+
+                <androidx.leanback.widget.HorizontalGridView
+                    android:id="@+id/dynamicRowOneScroll"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ProgressBar
+                    android:id="@+id/dynamicRowOneProgress"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:visibility="gone"
+                    android:layout_centerInParent="true"
+                    android:indeterminateTint="@color/tv7_default"
+                    android:indeterminateTintMode="src_atop" />
+            </RelativeLayout>
+
+
+            <TextView
+                android:id="@+id/dynamicRowTwoText"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_below="@id/dynamicRowOneContainer"
+                android:layout_marginStart="10dp"
+                android:gravity="start|center_vertical"
+                android:text=""
+                android:textColor="@color/content_area_text"
+                android:visibility="gone"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:id="@+id/dynamicRowTwoContainer"
+                android:layout_width="match_parent"
+                android:layout_height="156.338012dp"
+                android:layout_below="@id/dynamicRowTwoText"
+                android:layout_marginStart="10dp"
+                android:background="@color/archive_main_content_bg"
+                android:visibility="gone"
+                android:orientation="horizontal">
+
+                <androidx.leanback.widget.HorizontalGridView
+                    android:id="@+id/dynamicRowTwoScroll"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ProgressBar
+                    android:id="@+id/dynamicRowTwoProgress"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:visibility="gone"
+                    android:layout_centerInParent="true"
+                    android:indeterminateTint="@color/tv7_default"
+                    android:indeterminateTintMode="src_atop" />
+            </RelativeLayout>
+
+
+            <TextView
+                android:id="@+id/dynamicRowThreeText"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_below="@id/dynamicRowTwoContainer"
+                android:layout_marginStart="10dp"
+                android:gravity="start|center_vertical"
+                android:text=""
+                android:textColor="@color/content_area_text"
+                android:visibility="gone"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:id="@+id/dynamicRowThreeContainer"
+                android:layout_width="match_parent"
+                android:layout_height="156.338012dp"
+                android:layout_below="@id/dynamicRowThreeText"
+                android:layout_marginStart="10dp"
+                android:background="@color/archive_main_content_bg"
+                android:visibility="gone"
+                android:orientation="horizontal">
+
+                <androidx.leanback.widget.HorizontalGridView
+                    android:id="@+id/dynamicRowThreeScroll"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ProgressBar
+                    android:id="@+id/dynamicRowThreeProgress"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:visibility="gone"
+                    android:layout_centerInParent="true"
+                    android:indeterminateTint="@color/tv7_default"
+                    android:indeterminateTintMode="src_atop" />
+            </RelativeLayout>
+
+
+            <TextView
+                android:id="@+id/dynamicRowFourText"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_below="@id/dynamicRowThreeContainer"
+                android:layout_marginStart="10dp"
+                android:gravity="start|center_vertical"
+                android:text=""
+                android:textColor="@color/content_area_text"
+                android:visibility="gone"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:id="@+id/dynamicRowFourContainer"
+                android:layout_width="match_parent"
+                android:layout_height="156.338012dp"
+                android:layout_below="@id/dynamicRowFourText"
+                android:layout_marginStart="10dp"
+                android:background="@color/archive_main_content_bg"
+                android:visibility="gone"
+                android:orientation="horizontal">
+
+                <androidx.leanback.widget.HorizontalGridView
+                    android:id="@+id/dynamicRowFourScroll"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ProgressBar
+                    android:id="@+id/dynamicRowFourProgress"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:visibility="gone"
+                    android:layout_centerInParent="true"
+                    android:indeterminateTint="@color/tv7_default"
+                    android:indeterminateTintMode="src_atop" />
+            </RelativeLayout>
+
+
+            <TextView
+                android:id="@+id/dynamicRowFiveText"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_below="@id/dynamicRowFourContainer"
+                android:layout_marginStart="10dp"
+                android:gravity="start|center_vertical"
+                android:text=""
+                android:textColor="@color/content_area_text"
+                android:visibility="gone"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:id="@+id/dynamicRowFiveContainer"
+                android:layout_width="match_parent"
+                android:layout_height="156.338012dp"
+                android:layout_below="@id/dynamicRowFiveText"
+                android:layout_marginStart="10dp"
+                android:background="@color/archive_main_content_bg"
+                android:visibility="gone"
+                android:orientation="horizontal">
+
+                <androidx.leanback.widget.HorizontalGridView
+                    android:id="@+id/dynamicRowFiveScroll"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ProgressBar
+                    android:id="@+id/dynamicRowFiveProgress"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:visibility="gone"
+                    android:layout_centerInParent="true"
+                    android:indeterminateTint="@color/tv7_default"
+                    android:indeterminateTintMode="src_atop" />
+            </RelativeLayout>
+
         </RelativeLayout>
 
     </LinearLayout>

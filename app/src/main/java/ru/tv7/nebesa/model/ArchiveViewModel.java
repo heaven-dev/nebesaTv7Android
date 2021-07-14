@@ -18,8 +18,12 @@ import org.json.JSONObject;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import ru.tv7.nebesa.BuildConfig;
 import ru.tv7.nebesa.NebesaTv7;
@@ -36,16 +40,24 @@ import static ru.tv7.nebesa.helpers.Constants.BROADCAST_DATE;
 import static ru.tv7.nebesa.helpers.Constants.BROADCAST_DATE_TIME;
 import static ru.tv7.nebesa.helpers.Constants.BROADCAST_RECOMMENDATIONS_METHOD;
 import static ru.tv7.nebesa.helpers.Constants.CAPTION;
+import static ru.tv7.nebesa.helpers.Constants.CATEGORY;
 import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ID;
 import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ID_PARAM;
 import static ru.tv7.nebesa.helpers.Constants.CATEGORY_NAME;
 import static ru.tv7.nebesa.helpers.Constants.CATEGORY_PROGRAMS_METHOD;
+import static ru.tv7.nebesa.helpers.Constants.CID;
 import static ru.tv7.nebesa.helpers.Constants.COLON;
 import static ru.tv7.nebesa.helpers.Constants.DASH_WITH_SPACES;
 import static ru.tv7.nebesa.helpers.Constants.DATE_INDEX;
 import static ru.tv7.nebesa.helpers.Constants.DATE_PARAM;
 import static ru.tv7.nebesa.helpers.Constants.DOT;
 import static ru.tv7.nebesa.helpers.Constants.DURATION;
+import static ru.tv7.nebesa.helpers.Constants.DYNAMIC_ROW_FIVE;
+import static ru.tv7.nebesa.helpers.Constants.DYNAMIC_ROW_FOUR;
+import static ru.tv7.nebesa.helpers.Constants.DYNAMIC_ROW_MIN_PROGRAMS;
+import static ru.tv7.nebesa.helpers.Constants.DYNAMIC_ROW_ONE;
+import static ru.tv7.nebesa.helpers.Constants.DYNAMIC_ROW_THREE;
+import static ru.tv7.nebesa.helpers.Constants.DYNAMIC_ROW_TWO;
 import static ru.tv7.nebesa.helpers.Constants.END_DATE;
 import static ru.tv7.nebesa.helpers.Constants.END_TIME;
 import static ru.tv7.nebesa.helpers.Constants.EPISODE_NUMBER;
@@ -123,12 +135,18 @@ public class ArchiveViewModel extends ViewModel {
     private ArchiveDataCacheItem broadcastRecommendations = null;
     private ArchiveDataCacheItem mostViewed = null;
     private ArchiveDataCacheItem newest = null;
+    private ArchiveDataCacheItem series = null;
+    private ArchiveDataCacheItem dynamicRowOne = null;
+    private ArchiveDataCacheItem dynamicRowTwo = null;
+    private ArchiveDataCacheItem dynamicRowThree = null;
+    private ArchiveDataCacheItem dynamicRowFour = null;
+    private ArchiveDataCacheItem dynamicRowFive = null;
 
     private ArchiveDataCacheItem parentCategories = null;
     private ArchiveDataCacheItem subCategories = null;
 
     private List<GuideItem> threeDaysGuide = null;
-    private List<GuideItem> seriesData = null;
+    private boolean dynamicRowsInitialized = false;
 
     public JSONObject getRecommendedByIndex(int index) throws Exception {
         JSONObject jsonObject = null;
@@ -206,21 +224,61 @@ public class ArchiveViewModel extends ViewModel {
         return jsonObject;
     }
 
-    public GuideItem getSeriesByIndex(int index) throws Exception {
-        GuideItem guideItem = null;
+    public JSONObject getSeriesByIndex(int index) throws Exception {
+        JSONObject jsonObject = null;
 
-        if (seriesData != null) {
-            if (index > seriesData.size() - 1) {
+        if (series != null) {
+            if (!series.isDataInIndex(index)) {
                 if (BuildConfig.DEBUG) {
                     Log.d(LOG_TAG, "*** ArchiveViewModel.getSeriesByIndex(): No series data in index!");
                 }
                 throw new Exception("No series data in index!");
             }
 
-            guideItem = seriesData.get(index);
+            JSONArray jsonArray = series.getData();
+            if (jsonArray != null) {
+                jsonObject = jsonArray.getJSONObject(index);
+            }
         }
 
-        return guideItem;
+        return jsonObject;
+    }
+
+    public JSONObject getDynamicRowElementByIndex(int index, int row) throws Exception {
+        JSONObject jsonObject = null;
+        ArchiveDataCacheItem data = null;
+
+        if (row == DYNAMIC_ROW_ONE) {
+            data = new ArchiveDataCacheItem(dynamicRowOne.getData());
+        }
+        else if (row == DYNAMIC_ROW_TWO) {
+            data = new ArchiveDataCacheItem(dynamicRowTwo.getData());
+        }
+        else if (row == DYNAMIC_ROW_THREE) {
+            data = new ArchiveDataCacheItem(dynamicRowThree.getData());
+        }
+        else if (row == DYNAMIC_ROW_FOUR) {
+            data = new ArchiveDataCacheItem(dynamicRowFour.getData());
+        }
+        else if (row == DYNAMIC_ROW_FIVE) {
+            data = new ArchiveDataCacheItem(dynamicRowFive.getData());
+        }
+
+        if (data != null) {
+            if (!data.isDataInIndex(index)) {
+                if (BuildConfig.DEBUG) {
+                    Log.d(LOG_TAG, "*** ArchiveViewModel.getDynamicRowElementByIndex(): No dynamic row data in index!");
+                }
+                throw new Exception("No dynamic row data in index!");
+            }
+
+            JSONArray jsonArray = data.getData();
+            if (jsonArray != null) {
+                jsonObject = jsonArray.getJSONObject(index);
+            }
+        }
+
+        return jsonObject;
     }
 
     public JSONArray hasSubCategories(int index) throws Exception {
@@ -290,19 +348,16 @@ public class ArchiveViewModel extends ViewModel {
         return null;
     }
 
-    public List<GuideItem> getSeriesData() {
-        if (seriesData != null) {
-            return seriesData;
+    public JSONArray getSeriesData() {
+        if (series != null) {
+            return series.getData();
         }
         return null;
     }
 
     public void initializeSeriesData(List<GuideItem> guideData) throws Exception {
-        if (seriesData == null) {
-            seriesData = new ArrayList<>();
-        }
-
         if (guideData != null) {
+            JSONArray jsonArray = new JSONArray();
             List<Integer> seen = new ArrayList<>();
 
             for(int i = 0; i < guideData.size(); i++) {
@@ -322,11 +377,164 @@ public class ArchiveViewModel extends ViewModel {
                 String visibleOnVod = String.valueOf(isVisibleOnVod);
 
                 if (episodeNumber > 1 && visibleOnVod.length() > 0 && !visibleOnVod.equals(NEGATIVE_ONE_STR) && !seen.contains(sid)) {
-                    seriesData.add(g);
+                    JSONObject obj = new JSONObject();
+                    obj.put(SID, g.getSid());
+                    obj.put(SERIES_NAME, g.getSeries());
+                    obj.put(IMAGE_PATH, g.getImagePath());
+                    obj.put(SERIES_AND_NAME, g.getSeriesAndName());
+                    obj.put(START_DATE, g.getStartDate());
+                    obj.put(DURATION, g.getDuration());
+
+                    jsonArray.put(obj);
                     seen.add(sid);
                 }
             }
+
+            series = new ArchiveDataCacheItem(jsonArray);
         }
+    }
+
+    public void initializeDynamicData() throws Exception {
+        if (threeDaysGuide == null) {
+            throw new Exception("Initialization of dynamic rows data failed because guide data is not initialized!");
+        }
+
+        Map<Integer, JSONArray> dynamicRows = new HashMap<>();
+        List<Integer> seen = new ArrayList<>();
+
+        for (int i = 0; i < threeDaysGuide.size(); i++) {
+            GuideItem g = threeDaysGuide.get(i);
+            if (g == null) {
+                continue;
+            }
+
+            String visibleOnVod = String.valueOf(g.getIsVisibleOnVod());
+            if (!visibleOnVod.equals(ONE_STR) && !visibleOnVod.equals(TWO_STR)) {
+                continue;
+            }
+
+            Integer id = g.getId();
+            Integer cid = g.getCid();
+            if (id != null && cid != null && !seen.contains(id)) {
+                seen.add(id);
+                JSONObject obj = new JSONObject();
+                obj.put(ID, g.getId());
+                obj.put(IMAGE_PATH, g.getImagePath());
+                obj.put(BROADCAST_DATE_TIME, g.getBroadcastDateTime());
+                obj.put(DURATION, g.getDuration());
+                obj.put(SERIES_AND_NAME, g.getSeriesAndName());
+                obj.put(CATEGORY, g.getCategory());
+
+                this.addToMap(cid, obj, dynamicRows);
+            }
+        }
+
+        List<Integer> keys = this.finalizeMap(dynamicRows);
+        Collections.shuffle(keys);
+
+        for(int i = 0; i < keys.size(); i++) {
+            Integer key = keys.get(i);
+
+            if (i == DYNAMIC_ROW_ONE - 1) {
+                dynamicRowOne = new ArchiveDataCacheItem(dynamicRows.get(key));
+            }
+            else if (i == DYNAMIC_ROW_TWO - 1) {
+                dynamicRowTwo = new ArchiveDataCacheItem(dynamicRows.get(key));
+            }
+            else if (i == DYNAMIC_ROW_THREE - 1) {
+                dynamicRowThree = new ArchiveDataCacheItem(dynamicRows.get(key));
+            }
+            else if (i == DYNAMIC_ROW_FOUR - 1) {
+                dynamicRowFour = new ArchiveDataCacheItem(dynamicRows.get(key));
+            }
+            else if (i == DYNAMIC_ROW_FIVE - 1) {
+                dynamicRowFive = new ArchiveDataCacheItem(dynamicRows.get(key));
+            }
+        }
+
+        dynamicRows.clear();
+        threeDaysGuide.clear();
+
+        dynamicRowsInitialized = true;
+    }
+
+    public boolean isDynamicRowsInitialized() {
+        return dynamicRowsInitialized;
+    }
+
+    public JSONArray getDynamicDataRow(int rowNumber) {
+        if (rowNumber == DYNAMIC_ROW_ONE && dynamicRowOne != null) {
+            return dynamicRowOne.getData();
+        }
+        else if (rowNumber == DYNAMIC_ROW_TWO && dynamicRowTwo != null) {
+            return dynamicRowTwo.getData();
+        }
+        else if (rowNumber == DYNAMIC_ROW_THREE && dynamicRowThree != null) {
+            return dynamicRowThree.getData();
+        }
+        else if (rowNumber == DYNAMIC_ROW_FOUR && dynamicRowFour != null) {
+            return dynamicRowFour.getData();
+        }
+        else if (rowNumber == DYNAMIC_ROW_FIVE && dynamicRowFive != null) {
+            return dynamicRowFive.getData();
+        }
+        return null;
+    }
+
+    public int getDynamicRowCount() {
+        int size = 0;
+        if (dynamicRowOne != null) {
+            size++;
+        }
+
+        if (dynamicRowTwo != null) {
+            size++;
+        }
+
+        if (dynamicRowThree != null) {
+            size++;
+        }
+
+        if (dynamicRowFour != null) {
+            size++;
+        }
+
+        if (dynamicRowFive != null) {
+            size++;
+        }
+        return size;
+    }
+
+    private void addToMap(Integer cid, JSONObject jsonObject, Map<Integer, JSONArray> dynamicRows) {
+        JSONArray jsonArray = dynamicRows.get(cid);
+        if (jsonArray == null) {
+            jsonArray = new JSONArray();
+        }
+
+        jsonArray.put(jsonObject);
+        dynamicRows.put(cid, jsonArray);
+    }
+
+    private List<Integer> finalizeMap(Map<Integer, JSONArray> dynamicRows) {
+        List<Integer> keys = new ArrayList<>();
+
+        for(Iterator<Map.Entry<Integer, JSONArray>> it = dynamicRows.entrySet().iterator(); it.hasNext();) {
+            Map.Entry<Integer, JSONArray> entry = it.next();
+
+            JSONArray jsonArray = entry.getValue();
+            if (jsonArray == null) {
+                continue;
+            }
+
+            if(jsonArray.length() < DYNAMIC_ROW_MIN_PROGRAMS) {
+                it.remove();
+            }
+            else {
+                keys.add(entry.getKey());
+            }
+        }
+
+        return keys;
     }
 
     public List<GuideItem> getThreeDaysGuide() {
@@ -946,6 +1154,8 @@ public class ArchiveViewModel extends ViewModel {
             JSONObject respObj = new JSONObject();
             JSONObject sourceObj = array.getJSONObject(i);
 
+            setValue(respObj, DATE_INDEX, String.valueOf(dateIndex), true);
+
             setValue(respObj, ID, this.getValue(sourceObj, ID), true);
             setValue(respObj, PATH, this.getValue(sourceObj, PATH), false);
 
@@ -992,6 +1202,9 @@ public class ArchiveViewModel extends ViewModel {
 
             setValue(respObj, SID, this.getValue(sourceObj, SID), true);
             setValue(respObj, EPISODE_NUMBER, this.getValue(sourceObj, EPISODE_NUMBER), true);
+
+            setValue(respObj, CID, this.getValue(sourceObj, CID), true);
+            setValue(respObj, CATEGORY, this.getValue(sourceObj, CATEGORY), false);
 
             String isVisibleOnVod = this.getValue(sourceObj, IS_VISIBLE_ON_VOD);
             String visibleOnVodSince = this.getValue(sourceObj, VISIBLE_ON_VOD_SINCE);
