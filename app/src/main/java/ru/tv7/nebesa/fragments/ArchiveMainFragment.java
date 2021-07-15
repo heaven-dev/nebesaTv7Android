@@ -683,7 +683,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
             }
             else if (type.equals(RECOMMENDATIONS_METHOD)) {
                 if (jsonArray != null && jsonArray.length() <= 4) {
-                    archiveViewModel.getBroadcastRecommendationPrograms(Utils.getUtcFormattedLocalDate(0), RECOMMENDED_PROGRAMS_LIMIT, 0, this);
+                    archiveViewModel.getBroadcastRecommendationPrograms(Utils.getUtcFormattedLocalDate(DATE_INDEX_TODAY), RECOMMENDED_PROGRAMS_LIMIT, 0, this);
                 }
                 else {
                     archiveViewModel.clearBroadcastRecommendations();
