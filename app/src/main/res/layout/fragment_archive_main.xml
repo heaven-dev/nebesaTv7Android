@@ -211,7 +211,6 @@
                 android:gravity="start|center_vertical"
                 android:text=""
                 android:textColor="@color/content_area_text"
-                android:visibility="gone"
                 android:textSize="18sp" />
 
             <RelativeLayout
@@ -221,7 +220,6 @@
                 android:layout_below="@id/dynamicRowOneText"
                 android:layout_marginStart="10dp"
                 android:background="@color/archive_main_content_bg"
-                android:visibility="gone"
                 android:orientation="horizontal">
 
                 <androidx.leanback.widget.HorizontalGridView
@@ -233,7 +231,6 @@
                     android:id="@+id/dynamicRowOneProgress"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:visibility="gone"
                     android:layout_centerInParent="true"
                     android:indeterminateTint="@color/tv7_default"
                     android:indeterminateTintMode="src_atop" />
@@ -249,7 +246,6 @@
                 android:gravity="start|center_vertical"
                 android:text=""
                 android:textColor="@color/content_area_text"
-                android:visibility="gone"
                 android:textSize="18sp" />
 
             <RelativeLayout
@@ -259,7 +255,6 @@
                 android:layout_below="@id/dynamicRowTwoText"
                 android:layout_marginStart="10dp"
                 android:background="@color/archive_main_content_bg"
-                android:visibility="gone"
                 android:orientation="horizontal">
 
                 <androidx.leanback.widget.HorizontalGridView
@@ -271,7 +266,6 @@
                     android:id="@+id/dynamicRowTwoProgress"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:visibility="gone"
                     android:layout_centerInParent="true"
                     android:indeterminateTint="@color/tv7_default"
                     android:indeterminateTintMode="src_atop" />
@@ -287,7 +281,6 @@
                 android:gravity="start|center_vertical"
                 android:text=""
                 android:textColor="@color/content_area_text"
-                android:visibility="gone"
                 android:textSize="18sp" />
 
             <RelativeLayout
@@ -297,7 +290,6 @@
                 android:layout_below="@id/dynamicRowThreeText"
                 android:layout_marginStart="10dp"
                 android:background="@color/archive_main_content_bg"
-                android:visibility="gone"
                 android:orientation="horizontal">
 
                 <androidx.leanback.widget.HorizontalGridView
@@ -309,7 +301,6 @@
                     android:id="@+id/dynamicRowThreeProgress"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:visibility="gone"
                     android:layout_centerInParent="true"
                     android:indeterminateTint="@color/tv7_default"
                     android:indeterminateTintMode="src_atop" />
@@ -325,7 +316,6 @@
                 android:gravity="start|center_vertical"
                 android:text=""
                 android:textColor="@color/content_area_text"
-                android:visibility="gone"
                 android:textSize="18sp" />
 
             <RelativeLayout
@@ -335,7 +325,6 @@
                 android:layout_below="@id/dynamicRowFourText"
                 android:layout_marginStart="10dp"
                 android:background="@color/archive_main_content_bg"
-                android:visibility="gone"
                 android:orientation="horizontal">
 
                 <androidx.leanback.widget.HorizontalGridView
@@ -347,7 +336,6 @@
                     android:id="@+id/dynamicRowFourProgress"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:visibility="gone"
                     android:layout_centerInParent="true"
                     android:indeterminateTint="@color/tv7_default"
                     android:indeterminateTintMode="src_atop" />
@@ -363,7 +351,6 @@
                 android:gravity="start|center_vertical"
                 android:text=""
                 android:textColor="@color/content_area_text"
-                android:visibility="gone"
                 android:textSize="18sp" />
 
             <RelativeLayout
@@ -373,7 +360,6 @@
                 android:layout_below="@id/dynamicRowFiveText"
                 android:layout_marginStart="10dp"
                 android:background="@color/archive_main_content_bg"
-                android:visibility="gone"
                 android:orientation="horizontal">
 
                 <androidx.leanback.widget.HorizontalGridView
@@ -385,7 +371,6 @@
                     android:id="@+id/dynamicRowFiveProgress"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:visibility="gone"
                     android:layout_centerInParent="true"
                     android:indeterminateTint="@color/tv7_default"
                     android:indeterminateTintMode="src_atop" />

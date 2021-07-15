@@ -409,7 +409,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
         if (rowOneData != null) {
             JSONObject obj = rowOneData.getJSONObject(0);
             if (obj != null) {
-                this.setDynamicRowVisibility(Utils.getJsonStringValue(obj, CATEGORY), R.id.dynamicRowOneText, R.id.dynamicRowOneContainer);
+                this.setDynamicRowCategoryText(Utils.getJsonStringValue(obj, CATEGORY), R.id.dynamicRowOneText);
 
                 dynamicRowOneScroll = root.findViewById(R.id.dynamicRowOneScroll);
                 dynamicRowOneScroll.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -433,13 +433,16 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                 Utils.hideProgressBar(root, R.id.dynamicRowOneProgress);
             }
         }
+        else {
+            this.hideDynamicRow(R.id.dynamicRowOneText, R.id.dynamicRowOneContainer);
+        }
 
         // Row two
         JSONArray rowTwoData = archiveViewModel.getDynamicDataRow(DYNAMIC_ROW_TWO);
         if (rowTwoData != null) {
             JSONObject obj = rowTwoData.getJSONObject(0);
             if (obj != null) {
-                this.setDynamicRowVisibility(Utils.getJsonStringValue(obj, CATEGORY), R.id.dynamicRowTwoText, R.id.dynamicRowTwoContainer);
+                this.setDynamicRowCategoryText(Utils.getJsonStringValue(obj, CATEGORY), R.id.dynamicRowTwoText);
 
                 dynamicRowTwoScroll = root.findViewById(R.id.dynamicRowTwoScroll);
                 dynamicRowTwoScroll.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -463,13 +466,16 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                 Utils.hideProgressBar(root, R.id.dynamicRowTwoProgress);
             }
         }
+        else {
+            this.hideDynamicRow(R.id.dynamicRowTwoText, R.id.dynamicRowTwoContainer);
+        }
 
         // Row three
         JSONArray rowThreeData = archiveViewModel.getDynamicDataRow(DYNAMIC_ROW_THREE);
         if (rowThreeData != null) {
             JSONObject obj = rowThreeData.getJSONObject(0);
             if (obj != null) {
-                this.setDynamicRowVisibility(Utils.getJsonStringValue(obj, CATEGORY), R.id.dynamicRowThreeText, R.id.dynamicRowThreeContainer);
+                this.setDynamicRowCategoryText(Utils.getJsonStringValue(obj, CATEGORY), R.id.dynamicRowThreeText);
 
                 dynamicRowThreeScroll = root.findViewById(R.id.dynamicRowThreeScroll);
                 dynamicRowThreeScroll.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -493,13 +499,16 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                 Utils.hideProgressBar(root, R.id.dynamicRowThreeProgress);
             }
         }
+        else {
+            this.hideDynamicRow(R.id.dynamicRowThreeText, R.id.dynamicRowThreeContainer);
+        }
 
         // Row four
         JSONArray rowFourData = archiveViewModel.getDynamicDataRow(DYNAMIC_ROW_FOUR);
         if (rowFourData != null) {
             JSONObject obj = rowFourData.getJSONObject(0);
             if (obj != null) {
-                this.setDynamicRowVisibility(Utils.getJsonStringValue(obj, CATEGORY), R.id.dynamicRowFourText, R.id.dynamicRowFourContainer);
+                this.setDynamicRowCategoryText(Utils.getJsonStringValue(obj, CATEGORY), R.id.dynamicRowFourText);
 
                 dynamicRowFourScroll = root.findViewById(R.id.dynamicRowFourScroll);
                 dynamicRowFourScroll.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -523,13 +532,16 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                 Utils.hideProgressBar(root, R.id.dynamicRowFourProgress);
             }
         }
+        else {
+            this.hideDynamicRow(R.id.dynamicRowFourText, R.id.dynamicRowFourContainer);
+        }
 
         // Row five
         JSONArray rowFiveData = archiveViewModel.getDynamicDataRow(DYNAMIC_ROW_FIVE);
         if (rowFiveData != null) {
             JSONObject obj = rowFiveData.getJSONObject(0);
             if (obj != null) {
-                this.setDynamicRowVisibility(Utils.getJsonStringValue(obj, CATEGORY), R.id.dynamicRowFiveText, R.id.dynamicRowFiveContainer);
+                this.setDynamicRowCategoryText(Utils.getJsonStringValue(obj, CATEGORY), R.id.dynamicRowFiveText);
 
                 dynamicRowFiveScroll = root.findViewById(R.id.dynamicRowFiveScroll);
                 dynamicRowFiveScroll.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -553,24 +565,37 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                 Utils.hideProgressBar(root, R.id.dynamicRowFiveProgress);
             }
         }
+        else {
+            this.hideDynamicRow(R.id.dynamicRowFiveText, R.id.dynamicRowFiveContainer);
+        }
     }
 
     /**
      * Sets dynamic row visibility and category text.
-     * @param category
+     * @param categoryText
      * @param textViewId
-     * @param relativeLayoutId
      */
-    private void setDynamicRowVisibility(String category, int textViewId, int relativeLayoutId) {
+    private void setDynamicRowCategoryText(String categoryText, int textViewId) {
         TextView tv = root.findViewById(textViewId);
         if (tv != null) {
-            tv.setText(category);
-            tv.setVisibility(View.VISIBLE);
+            tv.setText(categoryText);
+        }
+    }
+
+    /**
+     * Hides the dynamic row.
+     * @param textViewId
+     * @param containerId
+     */
+    private void hideDynamicRow(int textViewId, int containerId) {
+        TextView tv = root.findViewById(textViewId);
+        if (tv != null) {
+            tv.setVisibility(View.GONE);
         }
 
-        RelativeLayout rl = root.findViewById(relativeLayoutId);
+        RelativeLayout rl = root.findViewById(containerId);
         if (rl != null) {
-            rl.setVisibility(View.VISIBLE);
+            rl.setVisibility(View.GONE);
         }
     }
 
