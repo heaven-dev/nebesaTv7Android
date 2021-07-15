@@ -245,7 +245,13 @@ abstract public class Constants {
     public static final int DYNAMIC_ROW_FOUR = 4;
     public static final int DYNAMIC_ROW_FIVE = 5;
 
+    public static final int DYNAMIC_ROW_COUNT = 5;
     public static final int DYNAMIC_ROW_MIN_PROGRAMS = 4;
+
+    public static final int DATE_INDEX_DAY_BEFORE_YESTERDAY = -2;
+    public static final int DATE_INDEX_YESTERDAY = -1;
+    public static final int DATE_INDEX_TODAY = 0;
+    public static final int DATE_INDEX_TOMORROW = 1;
 
     public static final float CATEGORY_IMAGE_SIZE_IN_PERCENT = 0.6f;
 
@@ -292,7 +298,12 @@ abstract public class Constants {
         R.id.mostViewedContainer,
         R.id.newestContainer,
         R.id.categoriesContainer,
-        R.id.topicalSeriesContainer
+        R.id.topicalSeriesContainer,
+        R.id.dynamicRowOneContainer,
+        R.id.dynamicRowTwoContainer,
+        R.id.dynamicRowThreeContainer,
+        R.id.dynamicRowFourContainer,
+        R.id.dynamicRowFiveContainer
     ));
 
     public static final List<Integer> GUIDE_DATE_IDS = new ArrayList<>(Arrays.asList(

@@ -51,6 +51,10 @@ import static ru.tv7.nebesa.helpers.Constants.ARCHIVE_MAIN_TITLE_HEIGHT;
 import static ru.tv7.nebesa.helpers.Constants.BACK_TEXT;
 import static ru.tv7.nebesa.helpers.Constants.CATEGORY;
 import static ru.tv7.nebesa.helpers.Constants.DATE_INDEX;
+import static ru.tv7.nebesa.helpers.Constants.DATE_INDEX_DAY_BEFORE_YESTERDAY;
+import static ru.tv7.nebesa.helpers.Constants.DATE_INDEX_TODAY;
+import static ru.tv7.nebesa.helpers.Constants.DATE_INDEX_YESTERDAY;
+import static ru.tv7.nebesa.helpers.Constants.DYNAMIC_ROW_COUNT;
 import static ru.tv7.nebesa.helpers.Constants.DYNAMIC_ROW_FIVE;
 import static ru.tv7.nebesa.helpers.Constants.DYNAMIC_ROW_FIVE_ID;
 import static ru.tv7.nebesa.helpers.Constants.DYNAMIC_ROW_FOUR;
@@ -184,14 +188,14 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
 
             Sidebar.setSelectedMenuItem(root, R.id.archiveMenuContainer);
 
-            this.calculateAndSetContentRowHeight();
+            this.calculateAndSetContentRowHeight(DYNAMIC_ROW_COUNT);
 
             this.loadRecommendedPrograms();
             this.loadMostViewedPrograms();
             this.loadNewestPrograms();
             this.loadCategories(true);
             this.loadCategories(false);
-            this.loadSeries();
+            this.loadGuideData(DATE_INDEX_YESTERDAY);
         }
         catch(Exception e) {
             if (BuildConfig.DEBUG) {
@@ -549,8 +553,6 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                 Utils.hideProgressBar(root, R.id.dynamicRowFiveProgress);
             }
         }
-
-        this.calculateAndSetContentRowHeight();
     }
 
     /**
@@ -642,15 +644,22 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                     if (obj != null && obj.getInt(DATE_INDEX) == -1) {
                         JSONArray guideData = obj.getJSONArray(GUIDE_DATA);
 
-                        this.addYesterdayGuideData(guideData);
+                        this.addGuideData(guideData);
+
+                        this.loadGuideData(DATE_INDEX_DAY_BEFORE_YESTERDAY);
+                    }
+                    else if (obj != null && obj.getInt(DATE_INDEX) == -2) {
+                        JSONArray guideData = obj.getJSONArray(GUIDE_DATA);
+
+                        this.addGuideData(guideData);
 
                         JSONArray seriesData = archiveViewModel.getSeriesData();
                         if (seriesData == null) {
-                            archiveViewModel.initializeSeriesData(archiveViewModel.getThreeDaysGuide());
+                            archiveViewModel.initializeSeriesData(archiveViewModel.getFourDaysGuide());
 
                             if (!archiveViewModel.isDynamicRowsInitialized()) {
                                 archiveViewModel.initializeDynamicData();
-                                this.calculateAndSetContentRowHeight();
+                                this.calculateAndSetContentRowHeight(archiveViewModel.getDynamicRowCount());
                             }
 
                             seriesData = archiveViewModel.getSeriesData();
@@ -674,7 +683,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
             }
             else if (type.equals(RECOMMENDATIONS_METHOD)) {
                 if (jsonArray != null && jsonArray.length() <= 4) {
-                    archiveViewModel.getBroadcastRecommendationPrograms(Utils.getTodayUtcFormattedLocalDate(), RECOMMENDED_PROGRAMS_LIMIT, 0, this);
+                    archiveViewModel.getBroadcastRecommendationPrograms(Utils.getUtcFormattedLocalDate(0), RECOMMENDED_PROGRAMS_LIMIT, 0, this);
                 }
                 else {
                     archiveViewModel.clearBroadcastRecommendations();
@@ -940,7 +949,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
      * @param guideData
      * @throws Exception
      */
-    private void addYesterdayGuideData(JSONArray guideData) throws Exception {
+    private void addGuideData(JSONArray guideData) throws Exception {
         if (guideData == null) {
             Utils.toErrorPage(getActivity());
         }
@@ -1011,7 +1020,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
      */
     private void loadRecommendedPrograms() {
         Utils.showProgressBar(root, R.id.recommendProgress);
-        archiveViewModel.getRecommendPrograms(Utils.getTodayUtcFormattedLocalDate(), RECOMMENDED_PROGRAMS_LIMIT, 0, this);
+        archiveViewModel.getRecommendPrograms(Utils.getUtcFormattedLocalDate(DATE_INDEX_TODAY), RECOMMENDED_PROGRAMS_LIMIT, 0, this);
     }
 
     /**
@@ -1027,7 +1036,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
      */
     private void loadNewestPrograms() {
         Utils.showProgressBar(root, R.id.newestProgress);
-        archiveViewModel.getNewestPrograms(Utils.getTodayUtcFormattedLocalDate(), NEWEST_LIMIT, 0, this);
+        archiveViewModel.getNewestPrograms(Utils.getUtcFormattedLocalDate(DATE_INDEX_TODAY), NEWEST_LIMIT, 0, this);
     }
 
     /**
@@ -1045,9 +1054,11 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
     }
 
     /**
-     * Calls get guide by date (yesterday).
+     * Calls get guide by date.
+     * @param dateIndex
+     * @throws Exception
      */
-    private void loadSeries() throws Exception {
+    private void loadGuideData(int dateIndex) throws Exception {
         Utils.showProgressBar(root, R.id.topicalSeriesProgress);
 
         JSONArray jsonArray = archiveViewModel.getSeriesData();
@@ -1055,7 +1066,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
             this.addGuideItemElements(jsonArray, SERIES_METHOD);
         }
         else {
-            archiveViewModel.getGuideByDate(Utils.getYesterdayUtcFormattedLocalDate(), -1, this);
+            archiveViewModel.getGuideByDate(Utils.getUtcFormattedLocalDate(dateIndex), dateIndex, this);
         }
     }
 
@@ -1119,9 +1130,10 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
     }
 
     /**
-     * Calculates and sets content row height.
+     * Calculates and sets row and content height.
+     * @param dynamicRowCount
      */
-    private void calculateAndSetContentRowHeight() {
+    private void calculateAndSetContentRowHeight(int dynamicRowCount) {
         double contentRowHeight = this.getContentRowHeight();
 
         if (BuildConfig.DEBUG) {
@@ -1142,7 +1154,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
             }
         }
 
-        int contentContainerHeight = (contentRowHeightPx + 30) * (6 + archiveViewModel.getDynamicRowCount());
+        int contentContainerHeight = (contentRowHeightPx + 30) * (6 + dynamicRowCount);
 
         RelativeLayout contentContainer = root.findViewById(R.id.contentContainer);
         if (contentContainer != null) {

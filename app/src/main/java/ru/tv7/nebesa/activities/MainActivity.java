@@ -44,6 +44,8 @@ import ru.tv7.nebesa.model.ArchiveViewModel;
 import ru.tv7.nebesa.model.GuideViewModel;
 
 import static ru.tv7.nebesa.helpers.Constants.DATE_INDEX;
+import static ru.tv7.nebesa.helpers.Constants.DATE_INDEX_TODAY;
+import static ru.tv7.nebesa.helpers.Constants.DATE_INDEX_TOMORROW;
 import static ru.tv7.nebesa.helpers.Constants.EXIT_OVERLAY_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.GUIDE_DATA;
 import static ru.tv7.nebesa.helpers.Constants.LOG_TAG;
@@ -101,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements ArchiveDataLoaded
 
             NebesaTv7.getInstance().setActivity(this);
 
-            archiveViewModel.getGuideByDate(Utils.getTodayUtcFormattedLocalDate(), 0, this);
+            archiveViewModel.getGuideByDate(Utils.getUtcFormattedLocalDate(DATE_INDEX_TODAY), 0, this);
         }
         catch(Exception e) {
             if (BuildConfig.DEBUG) {
@@ -239,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements ArchiveDataLoaded
                     if (obj.getInt(DATE_INDEX) == 0) {
                         this.addGuideData(guideData);
 
-                        archiveViewModel.getGuideByDate(Utils.getTomorrowUtcFormattedLocalDate(), 1, this);
+                        archiveViewModel.getGuideByDate(Utils.getUtcFormattedLocalDate(DATE_INDEX_TOMORROW), 1, this);
                     }
                     else {
                         this.addGuideData(guideData);

@@ -39,6 +39,7 @@ import ru.tv7.nebesa.model.SharedCacheViewModel;
 import static ru.tv7.nebesa.helpers.Constants.ARCHIVE_MAIN_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.DATES_COUNT;
 import static ru.tv7.nebesa.helpers.Constants.DATE_INDEX;
+import static ru.tv7.nebesa.helpers.Constants.DATE_INDEX_TODAY;
 import static ru.tv7.nebesa.helpers.Constants.GUIDE_DATA;
 import static ru.tv7.nebesa.helpers.Constants.GUIDE_DATE_IDS;
 import static ru.tv7.nebesa.helpers.Constants.GUIDE_FRAGMENT;
@@ -151,7 +152,7 @@ public class GuideFragment extends Fragment implements ArchiveDataLoadedListener
                 this.scrollToPosition((Integer)pageStateItem.getValue(SELECTED_POS));
             }
             else {
-                this.loadGuideByDate(Utils.getTodayUtcFormattedLocalDate(), 0);
+                this.loadGuideByDate(Utils.getUtcFormattedLocalDate(DATE_INDEX_TODAY), DATE_INDEX_TODAY);
             }
         }
         catch (Exception e) {

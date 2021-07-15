@@ -75,6 +75,7 @@ import static ru.tv7.nebesa.helpers.Constants.CAPTION;
 import static ru.tv7.nebesa.helpers.Constants.COLON_WITH_SPACE;
 import static ru.tv7.nebesa.helpers.Constants.CUE_LINE_POSITION;
 import static ru.tv7.nebesa.helpers.Constants.DASH;
+import static ru.tv7.nebesa.helpers.Constants.DATE_INDEX_TODAY;
 import static ru.tv7.nebesa.helpers.Constants.EMPTY;
 import static ru.tv7.nebesa.helpers.Constants.EPISODE_NUMBER;
 import static ru.tv7.nebesa.helpers.Constants.EQUAL;
@@ -1325,7 +1326,7 @@ public class ArchivePlayerFragment extends Fragment implements Player.EventListe
      * Calls load newest programs.
      */
     private void loadNewestPrograms() {
-        archiveViewModel.getNewestPrograms(Utils.getTodayUtcFormattedLocalDate(), NEWEST_LIMIT, 0, this);
+        archiveViewModel.getNewestPrograms(Utils.getUtcFormattedLocalDate(DATE_INDEX_TODAY), NEWEST_LIMIT, 0, this);
     }
 
     /**

@@ -52,6 +52,7 @@ import static ru.tv7.nebesa.helpers.Constants.DATE_INDEX;
 import static ru.tv7.nebesa.helpers.Constants.DATE_PARAM;
 import static ru.tv7.nebesa.helpers.Constants.DOT;
 import static ru.tv7.nebesa.helpers.Constants.DURATION;
+import static ru.tv7.nebesa.helpers.Constants.DYNAMIC_ROW_COUNT;
 import static ru.tv7.nebesa.helpers.Constants.DYNAMIC_ROW_FIVE;
 import static ru.tv7.nebesa.helpers.Constants.DYNAMIC_ROW_FOUR;
 import static ru.tv7.nebesa.helpers.Constants.DYNAMIC_ROW_MIN_PROGRAMS;
@@ -145,7 +146,7 @@ public class ArchiveViewModel extends ViewModel {
     private ArchiveDataCacheItem parentCategories = null;
     private ArchiveDataCacheItem subCategories = null;
 
-    private List<GuideItem> threeDaysGuide = null;
+    private List<GuideItem> fourDaysGuide = null;
     private boolean dynamicRowsInitialized = false;
 
     public JSONObject getRecommendedByIndex(int index) throws Exception {
@@ -395,15 +396,15 @@ public class ArchiveViewModel extends ViewModel {
     }
 
     public void initializeDynamicData() throws Exception {
-        if (threeDaysGuide == null) {
+        if (fourDaysGuide == null) {
             throw new Exception("Initialization of dynamic rows data failed because guide data is not initialized!");
         }
 
         Map<Integer, JSONArray> dynamicRows = new HashMap<>();
         List<Integer> seen = new ArrayList<>();
 
-        for (int i = 0; i < threeDaysGuide.size(); i++) {
-            GuideItem g = threeDaysGuide.get(i);
+        for (int i = 0; i < fourDaysGuide.size(); i++) {
+            GuideItem g = fourDaysGuide.get(i);
             if (g == null) {
                 continue;
             }
@@ -429,8 +430,14 @@ public class ArchiveViewModel extends ViewModel {
             }
         }
 
-        List<Integer> keys = this.finalizeMap(dynamicRows);
+        List<Integer> keys = this.getCategoryIdsFromMap(dynamicRows, DYNAMIC_ROW_MIN_PROGRAMS, DYNAMIC_ROW_MIN_PROGRAMS + 50);
         Collections.shuffle(keys);
+
+        if (keys.size() < DYNAMIC_ROW_COUNT) {
+            List<Integer> moreKeys = this.getCategoryIdsFromMap(dynamicRows, DYNAMIC_ROW_MIN_PROGRAMS - 1, DYNAMIC_ROW_MIN_PROGRAMS - 1);
+            Collections.shuffle(moreKeys);
+            keys.addAll(moreKeys);
+        }
 
         for(int i = 0; i < keys.size(); i++) {
             Integer key = keys.get(i);
@@ -453,7 +460,7 @@ public class ArchiveViewModel extends ViewModel {
         }
 
         dynamicRows.clear();
-        threeDaysGuide.clear();
+        fourDaysGuide.clear();
 
         dynamicRowsInitialized = true;
     }
@@ -515,7 +522,7 @@ public class ArchiveViewModel extends ViewModel {
         dynamicRows.put(cid, jsonArray);
     }
 
-    private List<Integer> finalizeMap(Map<Integer, JSONArray> dynamicRows) {
+    private List<Integer> getCategoryIdsFromMap(Map<Integer, JSONArray> dynamicRows, int minProgramsInRow, int maxProgramsInRow) {
         List<Integer> keys = new ArrayList<>();
 
         for(Iterator<Map.Entry<Integer, JSONArray>> it = dynamicRows.entrySet().iterator(); it.hasNext();) {
@@ -526,10 +533,9 @@ public class ArchiveViewModel extends ViewModel {
                 continue;
             }
 
-            if(jsonArray.length() < DYNAMIC_ROW_MIN_PROGRAMS) {
-                it.remove();
-            }
-            else {
+            int arrayLength = jsonArray.length();
+
+            if(arrayLength >= minProgramsInRow && arrayLength <= maxProgramsInRow) {
                 keys.add(entry.getKey());
             }
         }
@@ -537,24 +543,24 @@ public class ArchiveViewModel extends ViewModel {
         return keys;
     }
 
-    public List<GuideItem> getThreeDaysGuide() {
-        if (threeDaysGuide != null) {
-            return threeDaysGuide;
+    public List<GuideItem> getFourDaysGuide() {
+        if (fourDaysGuide != null) {
+            return fourDaysGuide;
         }
         return new ArrayList<>();
     }
 
     public void addGuideData(List<GuideItem> guideData, boolean toEnd) {
-        if (threeDaysGuide == null) {
-            threeDaysGuide = new ArrayList<>();
+        if (fourDaysGuide == null) {
+            fourDaysGuide = new ArrayList<>();
         }
 
         if (guideData != null) {
             if (toEnd) {
-                threeDaysGuide.addAll(guideData);
+                fourDaysGuide.addAll(guideData);
             }
             else {
-                threeDaysGuide.addAll(0, guideData);
+                fourDaysGuide.addAll(0, guideData);
             }
         }
     }

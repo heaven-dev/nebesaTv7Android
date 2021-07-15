@@ -42,6 +42,7 @@ import ru.tv7.nebesa.model.SharedCacheViewModel;
 import static ru.tv7.nebesa.helpers.Constants.CHANNEL_URL_PARAM;
 import static ru.tv7.nebesa.helpers.Constants.COMING_PROGRAM_IMAGE_AND_TEXT;
 import static ru.tv7.nebesa.helpers.Constants.DATE_INDEX;
+import static ru.tv7.nebesa.helpers.Constants.DATE_INDEX_TOMORROW;
 import static ru.tv7.nebesa.helpers.Constants.EMPTY;
 import static ru.tv7.nebesa.helpers.Constants.EXIT_OVERLAY_FRAGMENT;
 import static ru.tv7.nebesa.helpers.Constants.GUIDE_DATA;
@@ -543,7 +544,7 @@ public class TvMainFragment extends Fragment implements ArchiveDataLoadedListene
 
                 int count = guideViewModel.getCountOfNextPrograms();
                 if (count <= PROGRAM_LIST_MIN_SIZE) {
-                    String date = Utils.getTomorrowUtcFormattedLocalDate();
+                    String date = Utils.getUtcFormattedLocalDate(DATE_INDEX_TOMORROW);
                     if (BuildConfig.DEBUG) {
                         Log.d(LOG_TAG, "Timer.run() Add items to guide. Date to add: " + date);
                     }
