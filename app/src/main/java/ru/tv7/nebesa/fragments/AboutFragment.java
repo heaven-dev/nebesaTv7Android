@@ -244,7 +244,7 @@ public class AboutFragment extends Fragment {
                         Utils.requestFocusById(root, R.id.okButton);
                     }
                 }
-                else if (!Sidebar.isSideMenuOpen(menuTexts)) {
+                else if (!Sidebar.isSideMenuOpen(menuTexts) && !clearMenuVisible) {
                     Sidebar.showMenuTexts(menuTexts, root);
                     Sidebar.setFocusToMenu(root, R.id.aboutMenuContainer);
                 }
