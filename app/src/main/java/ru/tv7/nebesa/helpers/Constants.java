@@ -146,6 +146,10 @@ abstract public class Constants {
     public static final String MOST_VIEWED_METHOD = "get_tv7_vod_previousweek_stats";
     public static final String NEWEST_METHOD = "tv7_vod_new";
     public static final String SERIES_METHOD = "tv7_series";
+    public static final String CATEGORY_ROW_ONE_METHOD = "tv7_category_row_1";
+    public static final String CATEGORY_ROW_TWO_METHOD = "tv7_category_row_2";
+    public static final String CATEGORY_ROW_THREE_METHOD = "tv7_category_row_3";
+    public static final String CATEGORY_ROW_FOUR_METHOD = "tv7_category_row_4";
     public static final String PARENT_CATEGORIES_METHOD = "tv7_parent_categories";
     public static final String SUB_CATEGORIES_METHOD = "tv7_sub_categories";
     public static final String TRANSLATION_METHOD = "tv7_translation";
@@ -167,11 +171,13 @@ abstract public class Constants {
     public static final String VOD_PARAM = "vod";
     public static final String PROGRAM_ID_PARAM = "program_id";
     public static final String CATEGORY_ID_PARAM = "category_id";
+    public static final String CATEGORY_PARAM = "category";
     public static final String SERIES_ID_PARAM = "series_id";
     public static final String QUERY_PARAM = "query";
 
     public static final int RECOMMENDED_PROGRAMS_LIMIT = 30;
     public static final int NEWEST_LIMIT = 30;
+    public static final int CATEGORY_ROW_LIMIT = 5;
     public static final int CATEGORY_PROGRAMS_SEARCH_LIMIT = 30;
     public static final int SERIES_PROGRAMS_SEARCH_LIMIT = 30;
 
@@ -182,6 +188,7 @@ abstract public class Constants {
     public static final String EPISODE_NUMBER = "episode_number";
     public static final String SID = "sid";
     public static final String CID = "cid";
+    public static final String CNAME = "cname";
     public static final String CATEGORY = "category";
     public static final String SERIES_ID = "series_id";
     public static final String FIRST_BROADCAST = "first_broadcast";
@@ -218,6 +225,7 @@ abstract public class Constants {
     public static final String DATE_INDEX = "date_index";
     public static final String GUIDE_DATA = "guide_data";
     public static final String BACK_TEXT = "back_text";
+    public static final String CATEGORY_MORE_BOX = "category_more_box";
     public static final String RESULTS = "results";
     public static final String ASPECT_RATIO = "aspect_ratio";
     public static final String ASPECT_RATIO_16_9 = "16:9";
@@ -233,20 +241,17 @@ abstract public class Constants {
     public static final int NEWEST_ROW_ID = 2;
     public static final int CATEGORIES_ROW_ID = 3;
     public static final int SERIES_ROW_ID = 4;
-    public static final int DYNAMIC_ROW_ONE_ID = 5;
-    public static final int DYNAMIC_ROW_TWO_ID = 6;
-    public static final int DYNAMIC_ROW_THREE_ID = 7;
-    public static final int DYNAMIC_ROW_FOUR_ID = 8;
-    public static final int DYNAMIC_ROW_FIVE_ID = 9;
+    public static final int CATEGORY_ROW_ONE_ID = 5;
+    public static final int CATEGORY_ROW_TWO_ID = 6;
+    public static final int CATEGORY_ROW_THREE_ID = 7;
+    public static final int CATEGORY_ROW_FOUR_ID = 8;
 
-    public static final int DYNAMIC_ROW_ONE = 1;
-    public static final int DYNAMIC_ROW_TWO = 2;
-    public static final int DYNAMIC_ROW_THREE = 3;
-    public static final int DYNAMIC_ROW_FOUR = 4;
-    public static final int DYNAMIC_ROW_FIVE = 5;
+    public static final int CATEGORY_ROW_ONE = 1;
+    public static final int CATEGORY_ROW_TWO = 2;
+    public static final int CATEGORY_ROW_THREE = 3;
+    public static final int CATEGORY_ROW_FOUR = 4;
 
-    public static final int DYNAMIC_ROW_COUNT = 5;
-    public static final int DYNAMIC_ROW_MIN_PROGRAMS = 4;
+    public static final int CATEGORY_ROW_COUNT = 4;
 
     public static final int DATE_INDEX_DAY_BEFORE_YESTERDAY = -2;
     public static final int DATE_INDEX_YESTERDAY = -1;
@@ -299,11 +304,10 @@ abstract public class Constants {
         R.id.newestContainer,
         R.id.categoriesContainer,
         R.id.topicalSeriesContainer,
-        R.id.dynamicRowOneContainer,
-        R.id.dynamicRowTwoContainer,
-        R.id.dynamicRowThreeContainer,
-        R.id.dynamicRowFourContainer,
-        R.id.dynamicRowFiveContainer
+        R.id.categoryRowOneContainer,
+        R.id.categoryRowTwoContainer,
+        R.id.categoryRowThreeContainer,
+        R.id.categoryRowFourContainer
     ));
 
     public static final List<Integer> GUIDE_DATE_IDS = new ArrayList<>(Arrays.asList(
@@ -354,4 +358,11 @@ abstract public class Constants {
         put(R.id.k_2_9, BACKSPACE_BUTTON);
         put(R.id.k_2_10, SPECIAL_CHARS_BUTTON);
     }};
+
+    public static final List<Integer> CATEGORY_ROW_IDS = new ArrayList<>(Arrays.asList(
+        4,
+        15,
+        26,
+        1
+    ));
 }

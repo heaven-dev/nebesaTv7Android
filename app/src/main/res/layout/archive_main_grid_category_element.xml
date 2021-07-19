@@ -49,21 +49,9 @@
 
         <ImageView
             android:id="@+id/backImage"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:contentDescription="@string/tv7_logo"
             android:src="@drawable/back" />
-
-        <TextView
-            android:id="@+id/backText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@string/tv7_logo"
-            android:textColor="@color/content_area_text"
-            android:textSize="18sp" />
     </LinearLayout>
-
 </LinearLayout>

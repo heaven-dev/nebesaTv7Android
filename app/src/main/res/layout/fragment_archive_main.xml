@@ -203,7 +203,7 @@
 
 
             <TextView
-                android:id="@+id/dynamicRowOneText"
+                android:id="@+id/categoryRowOneText"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:layout_below="@id/topicalSeriesContainer"
@@ -214,23 +214,24 @@
                 android:textSize="18sp" />
 
             <RelativeLayout
-                android:id="@+id/dynamicRowOneContainer"
+                android:id="@+id/categoryRowOneContainer"
                 android:layout_width="match_parent"
                 android:layout_height="156.338012dp"
-                android:layout_below="@id/dynamicRowOneText"
+                android:layout_below="@id/categoryRowOneText"
                 android:layout_marginStart="10dp"
                 android:background="@color/archive_main_content_bg"
                 android:orientation="horizontal">
 
                 <androidx.leanback.widget.HorizontalGridView
-                    android:id="@+id/dynamicRowOneScroll"
+                    android:id="@+id/categoryRowOneScroll"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
                 <ProgressBar
-                    android:id="@+id/dynamicRowOneProgress"
+                    android:id="@+id/categoryRowOneProgress"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
+                    android:visibility="gone"
                     android:layout_centerInParent="true"
                     android:indeterminateTint="@color/tv7_default"
                     android:indeterminateTintMode="src_atop" />
@@ -238,10 +239,10 @@
 
 
             <TextView
-                android:id="@+id/dynamicRowTwoText"
+                android:id="@+id/categoryRowTwoText"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:layout_below="@id/dynamicRowOneContainer"
+                android:layout_below="@id/categoryRowOneContainer"
                 android:layout_marginStart="10dp"
                 android:gravity="start|center_vertical"
                 android:text=""
@@ -249,23 +250,24 @@
                 android:textSize="18sp" />
 
             <RelativeLayout
-                android:id="@+id/dynamicRowTwoContainer"
+                android:id="@+id/categoryRowTwoContainer"
                 android:layout_width="match_parent"
                 android:layout_height="156.338012dp"
-                android:layout_below="@id/dynamicRowTwoText"
+                android:layout_below="@id/categoryRowTwoText"
                 android:layout_marginStart="10dp"
                 android:background="@color/archive_main_content_bg"
                 android:orientation="horizontal">
 
                 <androidx.leanback.widget.HorizontalGridView
-                    android:id="@+id/dynamicRowTwoScroll"
+                    android:id="@+id/categoryRowTwoScroll"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
                 <ProgressBar
-                    android:id="@+id/dynamicRowTwoProgress"
+                    android:id="@+id/categoryRowTwoProgress"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
+                    android:visibility="gone"
                     android:layout_centerInParent="true"
                     android:indeterminateTint="@color/tv7_default"
                     android:indeterminateTintMode="src_atop" />
@@ -273,10 +275,10 @@
 
 
             <TextView
-                android:id="@+id/dynamicRowThreeText"
+                android:id="@+id/categoryRowThreeText"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:layout_below="@id/dynamicRowTwoContainer"
+                android:layout_below="@id/categoryRowTwoContainer"
                 android:layout_marginStart="10dp"
                 android:gravity="start|center_vertical"
                 android:text=""
@@ -284,23 +286,24 @@
                 android:textSize="18sp" />
 
             <RelativeLayout
-                android:id="@+id/dynamicRowThreeContainer"
+                android:id="@+id/categoryRowThreeContainer"
                 android:layout_width="match_parent"
                 android:layout_height="156.338012dp"
-                android:layout_below="@id/dynamicRowThreeText"
+                android:layout_below="@id/categoryRowThreeText"
                 android:layout_marginStart="10dp"
                 android:background="@color/archive_main_content_bg"
                 android:orientation="horizontal">
 
                 <androidx.leanback.widget.HorizontalGridView
-                    android:id="@+id/dynamicRowThreeScroll"
+                    android:id="@+id/categoryRowThreeScroll"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
                 <ProgressBar
-                    android:id="@+id/dynamicRowThreeProgress"
+                    android:id="@+id/categoryRowThreeProgress"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
+                    android:visibility="gone"
                     android:layout_centerInParent="true"
                     android:indeterminateTint="@color/tv7_default"
                     android:indeterminateTintMode="src_atop" />
@@ -308,10 +311,10 @@
 
 
             <TextView
-                android:id="@+id/dynamicRowFourText"
+                android:id="@+id/categoryRowFourText"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:layout_below="@id/dynamicRowThreeContainer"
+                android:layout_below="@id/categoryRowThreeContainer"
                 android:layout_marginStart="10dp"
                 android:gravity="start|center_vertical"
                 android:text=""
@@ -319,58 +322,24 @@
                 android:textSize="18sp" />
 
             <RelativeLayout
-                android:id="@+id/dynamicRowFourContainer"
+                android:id="@+id/categoryRowFourContainer"
                 android:layout_width="match_parent"
                 android:layout_height="156.338012dp"
-                android:layout_below="@id/dynamicRowFourText"
+                android:layout_below="@id/categoryRowFourText"
                 android:layout_marginStart="10dp"
                 android:background="@color/archive_main_content_bg"
                 android:orientation="horizontal">
 
                 <androidx.leanback.widget.HorizontalGridView
-                    android:id="@+id/dynamicRowFourScroll"
+                    android:id="@+id/categoryRowFourScroll"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
                 <ProgressBar
-                    android:id="@+id/dynamicRowFourProgress"
+                    android:id="@+id/categoryRowFourProgress"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_centerInParent="true"
-                    android:indeterminateTint="@color/tv7_default"
-                    android:indeterminateTintMode="src_atop" />
-            </RelativeLayout>
-
-
-            <TextView
-                android:id="@+id/dynamicRowFiveText"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_below="@id/dynamicRowFourContainer"
-                android:layout_marginStart="10dp"
-                android:gravity="start|center_vertical"
-                android:text=""
-                android:textColor="@color/content_area_text"
-                android:textSize="18sp" />
-
-            <RelativeLayout
-                android:id="@+id/dynamicRowFiveContainer"
-                android:layout_width="match_parent"
-                android:layout_height="156.338012dp"
-                android:layout_below="@id/dynamicRowFiveText"
-                android:layout_marginStart="10dp"
-                android:background="@color/archive_main_content_bg"
-                android:orientation="horizontal">
-
-                <androidx.leanback.widget.HorizontalGridView
-                    android:id="@+id/dynamicRowFiveScroll"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
-                <ProgressBar
-                    android:id="@+id/dynamicRowFiveProgress"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:visibility="gone"
                     android:layout_centerInParent="true"
                     android:indeterminateTint="@color/tv7_default"
                     android:indeterminateTintMode="src_atop" />

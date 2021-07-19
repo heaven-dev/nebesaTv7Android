@@ -8,68 +8,93 @@
     android:focusable="true"
     android:background="@drawable/list_item">
 
-    <ImageView
-        android:id="@+id/mainArchiveProgramImage"
+    <RelativeLayout
+        android:id="@+id/programItem"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="6dp"
-        android:scaleType="fitXY"/>
+        android:orientation="vertical"
+        android:visibility="gone">
 
-    <TextView
-        android:id="@+id/mainArchiveProgramDateTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="8dp"
-        android:paddingTop="1dp"
-        android:paddingBottom="1dp"
-        android:paddingStart="6dp"
-        android:paddingEnd="6dp"
-        android:gravity="center_vertical"
-        android:background="@color/image_text_background"
-        android:textColor="@color/image_text"
-        android:textSize="13sp"
-        android:alpha="0.8"
-        android:text="" />
+        <ImageView
+            android:id="@+id/mainArchiveProgramImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="6dp"
+            android:scaleType="fitXY"/>
 
-    <TextView
-        android:id="@+id/mainArchiveProgramDuration"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:paddingTop="1dp"
-        android:paddingBottom="1dp"
-        android:paddingStart="6dp"
-        android:paddingEnd="6dp"
-        android:gravity="center_vertical"
-        android:background="@color/image_text_background"
-        android:textColor="@color/image_text"
-        android:textSize="13sp"
-        android:alpha="0.8"
-        android:text="" />
+        <TextView
+            android:id="@+id/mainArchiveProgramDateTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            android:paddingTop="1dp"
+            android:paddingBottom="1dp"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            android:gravity="center_vertical"
+            android:background="@color/image_text_background"
+            android:textColor="@color/image_text"
+            android:textSize="13sp"
+            android:alpha="0.8"
+            android:text="" />
 
-    <TextView
-        android:id="@+id/mainArchiveProgramText"
+        <TextView
+            android:id="@+id/mainArchiveProgramDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:paddingTop="1dp"
+            android:paddingBottom="1dp"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            android:gravity="center_vertical"
+            android:background="@color/image_text_background"
+            android:textColor="@color/image_text"
+            android:textSize="13sp"
+            android:alpha="0.8"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/mainArchiveProgramText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginBottom="6dp"
+            android:paddingTop="1dp"
+            android:paddingBottom="1dp"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            android:gravity="center_vertical"
+            android:background="@color/image_text_background"
+            android:textColor="@color/image_text"
+            android:textSize="13sp"
+            android:alpha="0.8"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/moreBox"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="6dp"
-        android:layout_marginEnd="6dp"
-        android:layout_marginBottom="6dp"
-        android:paddingTop="1dp"
-        android:paddingBottom="1dp"
-        android:paddingStart="6dp"
-        android:paddingEnd="6dp"
-        android:gravity="center_vertical"
-        android:background="@color/image_text_background"
-        android:textColor="@color/image_text"
-        android:textSize="13sp"
-        android:alpha="0.8"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:text="" />
+        android:layout_height="match_parent"
+        android:layout_marginEnd="10dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/moreImage"
+            android:layout_width="88dp"
+            android:layout_height="88dp"
+            android:contentDescription="@string/tv7_logo"
+            android:src="@drawable/more" />
+    </RelativeLayout>
 </RelativeLayout>

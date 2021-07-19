@@ -14,7 +14,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.leanback.widget.HorizontalGridView;
 import androidx.lifecycle.ViewModelProviders;
@@ -23,7 +22,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +32,6 @@ import ru.tv7.nebesa.adapter.ArchiveMainCategoryGridAdapter;
 import ru.tv7.nebesa.adapter.ArchiveMainProgramGridAdapter;
 import ru.tv7.nebesa.adapter.ArchiveMainSeriesGridAdapter;
 import ru.tv7.nebesa.helpers.ArchiveMainPageStateItem;
-import ru.tv7.nebesa.helpers.GuideItem;
 import ru.tv7.nebesa.helpers.Sidebar;
 import ru.tv7.nebesa.helpers.Utils;
 import ru.tv7.nebesa.interfaces.ArchiveDataLoadedListener;
@@ -49,24 +46,26 @@ import static ru.tv7.nebesa.helpers.Constants.ARCHIVE_MAIN_ROW_COUNT;
 import static ru.tv7.nebesa.helpers.Constants.ARCHIVE_MAIN_SCROLL_Y_DURATION;
 import static ru.tv7.nebesa.helpers.Constants.ARCHIVE_MAIN_TITLE_HEIGHT;
 import static ru.tv7.nebesa.helpers.Constants.BACK_TEXT;
-import static ru.tv7.nebesa.helpers.Constants.CATEGORY;
-import static ru.tv7.nebesa.helpers.Constants.DATE_INDEX;
-import static ru.tv7.nebesa.helpers.Constants.DATE_INDEX_DAY_BEFORE_YESTERDAY;
+import static ru.tv7.nebesa.helpers.Constants.CATEGORY_MORE_BOX;
+import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ROW_COUNT;
+import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ROW_FOUR;
+import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ROW_FOUR_ID;
+import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ROW_FOUR_METHOD;
+import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ROW_IDS;
+import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ROW_LIMIT;
+import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ROW_ONE;
+import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ROW_ONE_ID;
+import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ROW_ONE_METHOD;
+import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ROW_THREE;
+import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ROW_THREE_ID;
+import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ROW_THREE_METHOD;
+import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ROW_TWO;
+import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ROW_TWO_ID;
+import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ROW_TWO_METHOD;
+import static ru.tv7.nebesa.helpers.Constants.CID;
+import static ru.tv7.nebesa.helpers.Constants.CNAME;
 import static ru.tv7.nebesa.helpers.Constants.DATE_INDEX_TODAY;
-import static ru.tv7.nebesa.helpers.Constants.DATE_INDEX_YESTERDAY;
-import static ru.tv7.nebesa.helpers.Constants.DYNAMIC_ROW_COUNT;
-import static ru.tv7.nebesa.helpers.Constants.DYNAMIC_ROW_FIVE;
-import static ru.tv7.nebesa.helpers.Constants.DYNAMIC_ROW_FIVE_ID;
-import static ru.tv7.nebesa.helpers.Constants.DYNAMIC_ROW_FOUR;
-import static ru.tv7.nebesa.helpers.Constants.DYNAMIC_ROW_FOUR_ID;
-import static ru.tv7.nebesa.helpers.Constants.DYNAMIC_ROW_ONE;
-import static ru.tv7.nebesa.helpers.Constants.DYNAMIC_ROW_ONE_ID;
-import static ru.tv7.nebesa.helpers.Constants.DYNAMIC_ROW_THREE;
-import static ru.tv7.nebesa.helpers.Constants.DYNAMIC_ROW_THREE_ID;
-import static ru.tv7.nebesa.helpers.Constants.DYNAMIC_ROW_TWO;
-import static ru.tv7.nebesa.helpers.Constants.DYNAMIC_ROW_TWO_ID;
-import static ru.tv7.nebesa.helpers.Constants.GUIDE_DATA;
-import static ru.tv7.nebesa.helpers.Constants.GUIDE_DATE_METHOD;
+import static ru.tv7.nebesa.helpers.Constants.EMPTY;
 import static ru.tv7.nebesa.helpers.Constants.RECOMMENDED_PROGRAMS_LIMIT;
 import static ru.tv7.nebesa.helpers.Constants.BROADCAST_RECOMMENDATIONS_METHOD;
 import static ru.tv7.nebesa.helpers.Constants.CATEGORIES_FRAGMENT;
@@ -109,11 +108,10 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
     private HorizontalGridView newestScroll = null;
     private HorizontalGridView categoriesScroll = null;
     private HorizontalGridView topicalSeriesScroll = null;
-    private HorizontalGridView dynamicRowOneScroll = null;
-    private HorizontalGridView dynamicRowTwoScroll = null;
-    private HorizontalGridView dynamicRowThreeScroll = null;
-    private HorizontalGridView dynamicRowFourScroll = null;
-    private HorizontalGridView dynamicRowFiveScroll = null;
+    private HorizontalGridView categoryRowOneScroll = null;
+    private HorizontalGridView categoryRowTwoScroll = null;
+    private HorizontalGridView categoryRowThreeScroll = null;
+    private HorizontalGridView categoryRowFourScroll = null;
 
     private JSONArray visibleSubCategories = null;
 
@@ -188,14 +186,20 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
 
             Sidebar.setSelectedMenuItem(root, R.id.archiveMenuContainer);
 
-            this.calculateAndSetContentRowHeight(DYNAMIC_ROW_COUNT);
+            this.calculateAndSetContentRowHeight(CATEGORY_ROW_COUNT);
 
             this.loadRecommendedPrograms();
             this.loadMostViewedPrograms();
             this.loadNewestPrograms();
             this.loadCategories(true);
             this.loadCategories(false);
-            this.loadGuideData(DATE_INDEX_YESTERDAY);
+
+            this.handleSeriesData();
+
+            for(int i = 0; i < CATEGORY_ROW_IDS.size(); i++) {
+                int categoryId = CATEGORY_ROW_IDS.get(i);
+                this.loadNewestProgramsByCategoryId(categoryId, i);
+            }
         }
         catch(Exception e) {
             if (BuildConfig.DEBUG) {
@@ -287,7 +291,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
      * @param type
      * @throws Exception
      */
-    private void addElements(JSONArray jsonArray, String type) {
+    private void addElements(JSONArray jsonArray, String type) throws Exception {
         Context context = getContext();
 
         if (type.equals(BROADCAST_RECOMMENDATIONS_METHOD) || type.equals(RECOMMENDATIONS_METHOD)) {
@@ -303,7 +307,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                 }
             });
 
-            ArchiveMainProgramGridAdapter adapter = new ArchiveMainProgramGridAdapter(getActivity(), context, jsonArray);
+            ArchiveMainProgramGridAdapter adapter = new ArchiveMainProgramGridAdapter(getActivity(), context, jsonArray, null);
             recommendScroll.setAdapter(adapter);
 
             // Change row background to white
@@ -325,7 +329,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                 }
             });
 
-            ArchiveMainProgramGridAdapter adapter = new ArchiveMainProgramGridAdapter(getActivity(), context, jsonArray);
+            ArchiveMainProgramGridAdapter adapter = new ArchiveMainProgramGridAdapter(getActivity(), context, jsonArray, null);
             mostViewedScroll.setAdapter(adapter);
 
             // Change row background to white
@@ -347,7 +351,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                 }
             });
 
-            ArchiveMainProgramGridAdapter adapter = new ArchiveMainProgramGridAdapter(getActivity(), context, jsonArray);
+            ArchiveMainProgramGridAdapter adapter = new ArchiveMainProgramGridAdapter(getActivity(), context, jsonArray, null);
             newestScroll.setAdapter(adapter);
 
             // Change row background to white
@@ -359,6 +363,110 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
         else if(type.equals(PARENT_CATEGORIES_METHOD)) {
             this.addCategories(jsonArray, type, true, true);
         }
+        else if (type.equals(CATEGORY_ROW_ONE_METHOD)) {
+            categoryRowOneScroll = root.findViewById(R.id.categoryRowOneScroll);
+            categoryRowOneScroll.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    if (categoryRowOneScroll != null) {
+                        categoryRowOneScroll.invalidate();
+                        categoryRowOneScroll.requestLayout();
+                    }
+                }
+            });
+
+            this.checkCategoryRowMoreBox(jsonArray);
+
+            ArchiveMainProgramGridAdapter adapter = new ArchiveMainProgramGridAdapter(getActivity(), context, jsonArray, this.getContentRowHeight());
+            categoryRowOneScroll.setAdapter(adapter);
+
+            this.setCategoryRowTitle(this.getCategoryName(jsonArray), R.id.categoryRowOneText);
+
+            // Change row background to white
+            this.setRowWhiteBackground(context, R.id.categoryRowOneContainer);
+
+            this.restorePageState(CATEGORY_ROW_ONE_ID);
+            Utils.hideProgressBar(root, R.id.categoryRowOneProgress);
+        }
+        else if (type.equals(CATEGORY_ROW_TWO_METHOD)) {
+            categoryRowTwoScroll = root.findViewById(R.id.categoryRowTwoScroll);
+            categoryRowTwoScroll.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    if (categoryRowTwoScroll != null) {
+                        categoryRowTwoScroll.invalidate();
+                        categoryRowTwoScroll.requestLayout();
+                    }
+                }
+            });
+
+            this.checkCategoryRowMoreBox(jsonArray);
+
+            ArchiveMainProgramGridAdapter adapter = new ArchiveMainProgramGridAdapter(getActivity(), context, jsonArray, this.getContentRowHeight());
+            categoryRowTwoScroll.setAdapter(adapter);
+
+            this.setCategoryRowTitle(this.getCategoryName(jsonArray), R.id.categoryRowTwoText);
+
+            // Change row background to white
+            this.setRowWhiteBackground(context, R.id.categoryRowTwoContainer);
+
+            this.restorePageState(CATEGORY_ROW_TWO_ID);
+            Utils.hideProgressBar(root, R.id.categoryRowTwoProgress);
+        }
+        else if (type.equals(CATEGORY_ROW_THREE_METHOD)) {
+            categoryRowThreeScroll = root.findViewById(R.id.categoryRowThreeScroll);
+            categoryRowThreeScroll.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    if (categoryRowThreeScroll != null) {
+                        categoryRowThreeScroll.invalidate();
+                        categoryRowThreeScroll.requestLayout();
+                    }
+                }
+            });
+
+            this.checkCategoryRowMoreBox(jsonArray);
+
+            ArchiveMainProgramGridAdapter adapter = new ArchiveMainProgramGridAdapter(getActivity(), context, jsonArray, this.getContentRowHeight());
+            categoryRowThreeScroll.setAdapter(adapter);
+
+            this.setCategoryRowTitle(this.getCategoryName(jsonArray), R.id.categoryRowThreeText);
+
+            // Change row background to white
+            this.setRowWhiteBackground(context, R.id.categoryRowThreeContainer);
+
+            this.restorePageState(CATEGORY_ROW_THREE_ID);
+            Utils.hideProgressBar(root, R.id.categoryRowThreeProgress);
+        }
+        else if (type.equals(CATEGORY_ROW_FOUR_METHOD)) {
+            categoryRowFourScroll = root.findViewById(R.id.categoryRowFourScroll);
+            categoryRowFourScroll.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    if (categoryRowFourScroll != null) {
+                        categoryRowFourScroll.invalidate();
+                        categoryRowFourScroll.requestLayout();
+                    }
+                }
+            });
+
+            this.checkCategoryRowMoreBox(jsonArray);
+
+            ArchiveMainProgramGridAdapter adapter = new ArchiveMainProgramGridAdapter(getActivity(), context, jsonArray, this.getContentRowHeight());
+            categoryRowFourScroll.setAdapter(adapter);
+
+            this.setCategoryRowTitle(this.getCategoryName(jsonArray), R.id.categoryRowFourText);
+
+            // Change row background to white
+            this.setRowWhiteBackground(context, R.id.categoryRowFourContainer);
+
+            this.restorePageState(CATEGORY_ROW_FOUR_ID);
+            Utils.hideProgressBar(root, R.id.categoryRowFourProgress);
+        }
     }
 
     /**
@@ -367,7 +475,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
      * @param type
      * @throws Exception
      */
-    private void addGuideItemElements(JSONArray jsonArray, String type) throws Exception {
+    private void addTopicalSeriesElements(JSONArray jsonArray, String type) throws Exception {
         Context context = getContext();
 
         if(type.equals(SERIES_METHOD)) {
@@ -391,211 +499,57 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
 
             this.restorePageState(SERIES_ROW_ID);
             Utils.hideProgressBar(root, R.id.topicalSeriesProgress);
-
-            this.addDynamicRowElements();
         }
     }
 
     /**
-     * Add dynamic row elements.
+     * Checks category row more box and adds it to end of JSON array if not found.
+     * @param jsonArray
      * @throws Exception
      */
-    private void addDynamicRowElements() throws Exception {
-        Context context = getContext();
-        FragmentActivity activity = getActivity();
-
-        // Row one
-        JSONArray rowOneData = archiveViewModel.getDynamicDataRow(DYNAMIC_ROW_ONE);
-        if (rowOneData != null) {
-            JSONObject obj = rowOneData.getJSONObject(0);
-            if (obj != null) {
-                this.setDynamicRowCategoryText(Utils.getJsonStringValue(obj, CATEGORY), R.id.dynamicRowOneText);
-
-                dynamicRowOneScroll = root.findViewById(R.id.dynamicRowOneScroll);
-                dynamicRowOneScroll.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                    @Override
-                    public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                        super.onScrolled(recyclerView, dx, dy);
-                        if (dynamicRowOneScroll != null) {
-                            dynamicRowOneScroll.invalidate();
-                            dynamicRowOneScroll.requestLayout();
-                        }
-                    }
-                });
-
-                ArchiveMainProgramGridAdapter adapter = new ArchiveMainProgramGridAdapter(activity, context, rowOneData);
-                dynamicRowOneScroll.setAdapter(adapter);
-
-                // Change row background to white
-                this.setRowWhiteBackground(context, R.id.dynamicRowOneContainer);
-
-                this.restorePageState(DYNAMIC_ROW_ONE_ID);
-                Utils.hideProgressBar(root, R.id.dynamicRowOneProgress);
+    private void checkCategoryRowMoreBox(JSONArray jsonArray) throws Exception {
+        JSONObject obj = jsonArray.getJSONObject(jsonArray.length() - 1);
+        if (obj != null) {
+            Integer moreBox = Utils.getJsonIntValue(obj, CATEGORY_MORE_BOX);
+            if (moreBox == null) {
+                obj = new JSONObject();
+                obj.put(CATEGORY_MORE_BOX, 1);
+                obj.put(CID, Utils.getJsonIntValue(jsonArray.getJSONObject(0), CID));
+                jsonArray.put(obj);
             }
-        }
-        else {
-            this.hideDynamicRow(R.id.dynamicRowOneText, R.id.dynamicRowOneContainer);
-        }
-
-        // Row two
-        JSONArray rowTwoData = archiveViewModel.getDynamicDataRow(DYNAMIC_ROW_TWO);
-        if (rowTwoData != null) {
-            JSONObject obj = rowTwoData.getJSONObject(0);
-            if (obj != null) {
-                this.setDynamicRowCategoryText(Utils.getJsonStringValue(obj, CATEGORY), R.id.dynamicRowTwoText);
-
-                dynamicRowTwoScroll = root.findViewById(R.id.dynamicRowTwoScroll);
-                dynamicRowTwoScroll.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                    @Override
-                    public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                        super.onScrolled(recyclerView, dx, dy);
-                        if (dynamicRowTwoScroll != null) {
-                            dynamicRowTwoScroll.invalidate();
-                            dynamicRowTwoScroll.requestLayout();
-                        }
-                    }
-                });
-
-                ArchiveMainProgramGridAdapter adapter = new ArchiveMainProgramGridAdapter(activity, context, rowTwoData);
-                dynamicRowTwoScroll.setAdapter(adapter);
-
-                // Change row background to white
-                this.setRowWhiteBackground(context, R.id.dynamicRowTwoContainer);
-
-                this.restorePageState(DYNAMIC_ROW_TWO_ID);
-                Utils.hideProgressBar(root, R.id.dynamicRowTwoProgress);
-            }
-        }
-        else {
-            this.hideDynamicRow(R.id.dynamicRowTwoText, R.id.dynamicRowTwoContainer);
-        }
-
-        // Row three
-        JSONArray rowThreeData = archiveViewModel.getDynamicDataRow(DYNAMIC_ROW_THREE);
-        if (rowThreeData != null) {
-            JSONObject obj = rowThreeData.getJSONObject(0);
-            if (obj != null) {
-                this.setDynamicRowCategoryText(Utils.getJsonStringValue(obj, CATEGORY), R.id.dynamicRowThreeText);
-
-                dynamicRowThreeScroll = root.findViewById(R.id.dynamicRowThreeScroll);
-                dynamicRowThreeScroll.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                    @Override
-                    public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                        super.onScrolled(recyclerView, dx, dy);
-                        if (dynamicRowThreeScroll != null) {
-                            dynamicRowThreeScroll.invalidate();
-                            dynamicRowThreeScroll.requestLayout();
-                        }
-                    }
-                });
-
-                ArchiveMainProgramGridAdapter adapter = new ArchiveMainProgramGridAdapter(activity, context, rowThreeData);
-                dynamicRowThreeScroll.setAdapter(adapter);
-
-                // Change row background to white
-                this.setRowWhiteBackground(context, R.id.dynamicRowThreeContainer);
-
-                this.restorePageState(DYNAMIC_ROW_THREE_ID);
-                Utils.hideProgressBar(root, R.id.dynamicRowThreeProgress);
-            }
-        }
-        else {
-            this.hideDynamicRow(R.id.dynamicRowThreeText, R.id.dynamicRowThreeContainer);
-        }
-
-        // Row four
-        JSONArray rowFourData = archiveViewModel.getDynamicDataRow(DYNAMIC_ROW_FOUR);
-        if (rowFourData != null) {
-            JSONObject obj = rowFourData.getJSONObject(0);
-            if (obj != null) {
-                this.setDynamicRowCategoryText(Utils.getJsonStringValue(obj, CATEGORY), R.id.dynamicRowFourText);
-
-                dynamicRowFourScroll = root.findViewById(R.id.dynamicRowFourScroll);
-                dynamicRowFourScroll.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                    @Override
-                    public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                        super.onScrolled(recyclerView, dx, dy);
-                        if (dynamicRowFourScroll != null) {
-                            dynamicRowFourScroll.invalidate();
-                            dynamicRowFourScroll.requestLayout();
-                        }
-                    }
-                });
-
-                ArchiveMainProgramGridAdapter adapter = new ArchiveMainProgramGridAdapter(activity, context, rowFourData);
-                dynamicRowFourScroll.setAdapter(adapter);
-
-                // Change row background to white
-                this.setRowWhiteBackground(context, R.id.dynamicRowFourContainer);
-
-                this.restorePageState(DYNAMIC_ROW_FOUR_ID);
-                Utils.hideProgressBar(root, R.id.dynamicRowFourProgress);
-            }
-        }
-        else {
-            this.hideDynamicRow(R.id.dynamicRowFourText, R.id.dynamicRowFourContainer);
-        }
-
-        // Row five
-        JSONArray rowFiveData = archiveViewModel.getDynamicDataRow(DYNAMIC_ROW_FIVE);
-        if (rowFiveData != null) {
-            JSONObject obj = rowFiveData.getJSONObject(0);
-            if (obj != null) {
-                this.setDynamicRowCategoryText(Utils.getJsonStringValue(obj, CATEGORY), R.id.dynamicRowFiveText);
-
-                dynamicRowFiveScroll = root.findViewById(R.id.dynamicRowFiveScroll);
-                dynamicRowFiveScroll.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                    @Override
-                    public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                        super.onScrolled(recyclerView, dx, dy);
-                        if (dynamicRowFiveScroll != null) {
-                            dynamicRowFiveScroll.invalidate();
-                            dynamicRowFiveScroll.requestLayout();
-                        }
-                    }
-                });
-
-                ArchiveMainProgramGridAdapter adapter = new ArchiveMainProgramGridAdapter(activity, context, rowFiveData);
-                dynamicRowFiveScroll.setAdapter(adapter);
-
-                // Change row background to white
-                this.setRowWhiteBackground(context, R.id.dynamicRowFiveContainer);
-
-                this.restorePageState(DYNAMIC_ROW_FIVE_ID);
-                Utils.hideProgressBar(root, R.id.dynamicRowFiveProgress);
-            }
-        }
-        else {
-            this.hideDynamicRow(R.id.dynamicRowFiveText, R.id.dynamicRowFiveContainer);
         }
     }
 
     /**
-     * Sets dynamic row visibility and category text.
-     * @param categoryText
-     * @param textViewId
+     * Sets category row title text.
+     * @param title
+     * @param id
      */
-    private void setDynamicRowCategoryText(String categoryText, int textViewId) {
-        TextView tv = root.findViewById(textViewId);
+    private void setCategoryRowTitle(String title, int id) {
+        if (title == null) {
+            title = EMPTY;
+        }
+
+        TextView tv = root.findViewById(id);
         if (tv != null) {
-            tv.setText(categoryText);
+            tv.setText(title);
         }
     }
 
     /**
-     * Hides the dynamic row.
-     * @param textViewId
-     * @param containerId
+     * Returns category name.
+     * @param jsonArray
+     * @return
      */
-    private void hideDynamicRow(int textViewId, int containerId) {
-        TextView tv = root.findViewById(textViewId);
-        if (tv != null) {
-            tv.setVisibility(View.GONE);
+    private String getCategoryName(JSONArray jsonArray) {
+        try {
+            if (jsonArray != null) {
+                return Utils.getJsonStringValue(jsonArray.getJSONObject(0), CNAME);
+            }
+            return EMPTY;
         }
-
-        RelativeLayout rl = root.findViewById(containerId);
-        if (rl != null) {
-            rl.setVisibility(View.GONE);
+        catch (Exception e) {
+            return EMPTY;
         }
     }
 
@@ -658,39 +612,6 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                         sharedCacheViewModel.setSelectedProgram(obj);
 
                         Utils.toPage(PROGRAM_INFO_FRAGMENT, getActivity(), true, false, null);
-                    }
-                }
-            }
-            else if (type.equals(GUIDE_DATE_METHOD)) {
-                Utils.hideProgressBar(root, this.getProgressBarByRow());
-
-                if (jsonArray != null && jsonArray.length() == 1) {
-                    JSONObject obj = jsonArray.getJSONObject(0);
-                    if (obj != null && obj.getInt(DATE_INDEX) == -1) {
-                        JSONArray guideData = obj.getJSONArray(GUIDE_DATA);
-
-                        this.addGuideData(guideData);
-
-                        this.loadGuideData(DATE_INDEX_DAY_BEFORE_YESTERDAY);
-                    }
-                    else if (obj != null && obj.getInt(DATE_INDEX) == -2) {
-                        JSONArray guideData = obj.getJSONArray(GUIDE_DATA);
-
-                        this.addGuideData(guideData);
-
-                        JSONArray seriesData = archiveViewModel.getSeriesData();
-                        if (seriesData == null) {
-                            archiveViewModel.initializeSeriesData(archiveViewModel.getFourDaysGuide());
-
-                            if (!archiveViewModel.isDynamicRowsInitialized()) {
-                                archiveViewModel.initializeDynamicData();
-                                this.calculateAndSetContentRowHeight(archiveViewModel.getDynamicRowCount());
-                            }
-
-                            seriesData = archiveViewModel.getSeriesData();
-                        }
-
-                        this.addGuideItemElements(seriesData, SERIES_METHOD);
                     }
                 }
             }
@@ -792,15 +713,31 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                     }
 
                     if (focusedRow == RECOMMENDATIONS_ROW_ID || focusedRow == MOST_VIEWED_ROW_ID || focusedRow == NEWEST_ROW_ID
-                            || focusedRow == DYNAMIC_ROW_ONE_ID || focusedRow == DYNAMIC_ROW_TWO_ID || focusedRow == DYNAMIC_ROW_THREE_ID
-                            || focusedRow == DYNAMIC_ROW_FOUR_ID || focusedRow == DYNAMIC_ROW_FIVE_ID) {
+                            || focusedRow == CATEGORY_ROW_ONE_ID || focusedRow == CATEGORY_ROW_TWO_ID || focusedRow == CATEGORY_ROW_THREE_ID
+                            || focusedRow == CATEGORY_ROW_FOUR_ID) {
                         JSONObject program = this.getProgramByIndex(pos);
                         if (program != null) {
                             sharedCacheViewModel.setPageToHistory(ARCHIVE_MAIN_FRAGMENT);
 
                             this.cachePageState();
 
-                            this.loadProgramInfo(program);
+                            Integer moreBox = Utils.getJsonIntValue(program, CATEGORY_MORE_BOX);
+                            if (moreBox == null) {
+                                this.loadProgramInfo(program);
+                            }
+                            else {
+                                Integer cid = Utils.getJsonIntValue(program, CID);
+                                if (cid == null) {
+                                    return false;
+                                }
+
+                                JSONObject obj = archiveViewModel.getSubCategoryByCategoryId(cid);
+                                if (obj == null) {
+                                    return false;
+                                }
+
+                                this.toCategoriesPage(obj);
+                            }
                         }
                     }
                     else if (focusedRow == SERIES_ROW_ID) {
@@ -908,7 +845,7 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
                     Sidebar.menuFocusDown(root, R.id.archiveMenuContainer);
                 }
                 else {
-                    if (focusedRow < ARCHIVE_MAIN_ROW_COUNT + archiveViewModel.getDynamicRowCount() - 1) {
+                    if (focusedRow < ARCHIVE_MAIN_ROW_COUNT + CATEGORY_ROW_COUNT - 1) {
                         focusedRow++;
 
                         if (focusedRow > 1) {
@@ -970,25 +907,21 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
     }
 
     /**
-     * Adds guide data to view model.
-     * @param guideData
+     * Handles series data. Initializes date if needed.
      * @throws Exception
      */
-    private void addGuideData(JSONArray guideData) throws Exception {
-        if (guideData == null) {
-            Utils.toErrorPage(getActivity());
-        }
-
-        List<GuideItem> guideList = new ArrayList<>();
-
-        for (int i = 0; i < guideData.length(); i++) {
-            JSONObject obj = guideData.getJSONObject(i);
-            if (obj != null) {
-                guideList.add(Utils.getGuideItemByJsonObj(obj));
+    private void handleSeriesData() throws Exception {
+        JSONArray seriesData = archiveViewModel.getSeriesData();
+        if (seriesData == null) {
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "ArchiveMainFragment.handleSeriesData(): Initializing series data.");
             }
+
+            archiveViewModel.initializeSeriesData(archiveViewModel.getTwoDaysGuide());
+            seriesData = archiveViewModel.getSeriesData();
         }
 
-        archiveViewModel.addGuideData(guideList, false);
+        this.addTopicalSeriesElements(seriesData, SERIES_METHOD);
     }
 
     /**
@@ -1022,20 +955,17 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
         else if (row == SERIES_ROW_ID) {
             grid = topicalSeriesScroll;
         }
-        else if (row == DYNAMIC_ROW_ONE_ID) {
-            grid = dynamicRowOneScroll;
+        else if (row == CATEGORY_ROW_ONE_ID) {
+            grid = categoryRowOneScroll;
         }
-        else if (row == DYNAMIC_ROW_TWO_ID) {
-            grid = dynamicRowTwoScroll;
+        else if (row == CATEGORY_ROW_TWO_ID) {
+            grid = categoryRowTwoScroll;
         }
-        else if (row == DYNAMIC_ROW_THREE_ID) {
-            grid = dynamicRowThreeScroll;
+        else if (row == CATEGORY_ROW_THREE_ID) {
+            grid = categoryRowThreeScroll;
         }
-        else if (row == DYNAMIC_ROW_FOUR_ID) {
-            grid = dynamicRowFourScroll;
-        }
-        else if (row == DYNAMIC_ROW_FIVE_ID) {
-            grid = dynamicRowFiveScroll;
+        else if (row == CATEGORY_ROW_FOUR_ID) {
+            grid = categoryRowFourScroll;
         }
         return grid;
     }
@@ -1065,6 +995,33 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
     }
 
     /**
+     * Calls load newest programs by category id.
+     * @param categoryId
+     * @param index
+     */
+    private void loadNewestProgramsByCategoryId(int categoryId, int index) {
+        String type = null;
+        if (index == 0) {
+            type = CATEGORY_ROW_ONE_METHOD;
+            Utils.showProgressBar(root, R.id.categoryRowOneProgress);
+        }
+        else if (index == 1) {
+            type = CATEGORY_ROW_TWO_METHOD;
+            Utils.showProgressBar(root, R.id.categoryRowTwoProgress);
+        }
+        else if (index == 2) {
+            type = CATEGORY_ROW_THREE_METHOD;
+            Utils.showProgressBar(root, R.id.categoryRowThreeProgress);
+        }
+        else if (index == 3) {
+            type = CATEGORY_ROW_FOUR_METHOD;
+            Utils.showProgressBar(root, R.id.categoryRowFourProgress);
+        }
+
+        archiveViewModel.getNewestProgramsByCategoryId(Utils.getUtcFormattedLocalDate(DATE_INDEX_TODAY), categoryId, type, CATEGORY_ROW_LIMIT, 0, this);
+    }
+
+    /**
      * Calls load categories method (parent or subcategories).
      * @param isParent
      */
@@ -1075,23 +1032,6 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
         }
         else {
             archiveViewModel.getSubCategories(this);
-        }
-    }
-
-    /**
-     * Calls get guide by date.
-     * @param dateIndex
-     * @throws Exception
-     */
-    private void loadGuideData(int dateIndex) throws Exception {
-        Utils.showProgressBar(root, R.id.topicalSeriesProgress);
-
-        JSONArray jsonArray = archiveViewModel.getSeriesData();
-        if (jsonArray != null && jsonArray.length() > 0) {
-            this.addGuideItemElements(jsonArray, SERIES_METHOD);
-        }
-        else {
-            archiveViewModel.getGuideByDate(Utils.getUtcFormattedLocalDate(dateIndex), dateIndex, this);
         }
     }
 
@@ -1135,20 +1075,17 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
         else if (focusedRow == SERIES_ROW_ID) {
             progressBarId = R.id.topicalSeriesProgress;
         }
-        else if (focusedRow == DYNAMIC_ROW_ONE_ID) {
-            progressBarId = R.id.dynamicRowOneProgress;
+        else if (focusedRow == CATEGORY_ROW_ONE_ID) {
+            progressBarId = R.id.categoryRowOneProgress;
         }
-        else if (focusedRow == DYNAMIC_ROW_TWO_ID) {
-            progressBarId = R.id.dynamicRowTwoProgress;
+        else if (focusedRow == CATEGORY_ROW_TWO_ID) {
+            progressBarId = R.id.categoryRowTwoProgress;
         }
-        else if (focusedRow == DYNAMIC_ROW_THREE_ID) {
-            progressBarId = R.id.dynamicRowThreeProgress;
+        else if (focusedRow == CATEGORY_ROW_THREE_ID) {
+            progressBarId = R.id.categoryRowThreeProgress;
         }
-        else if (focusedRow == DYNAMIC_ROW_FOUR_ID) {
-            progressBarId = R.id.dynamicRowFourProgress;
-        }
-        else if (focusedRow == DYNAMIC_ROW_FIVE_ID) {
-            progressBarId = R.id.dynamicRowFiveProgress;
+        else if (focusedRow == CATEGORY_ROW_FOUR_ID) {
+            progressBarId = R.id.categoryRowFourProgress;
         }
 
         return progressBarId;
@@ -1378,20 +1315,17 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
         else if (focusedRow == NEWEST_ROW_ID) {
             program = archiveViewModel.getNewestByIndex(index);
         }
-        else if (focusedRow == DYNAMIC_ROW_ONE_ID) {
-            program = archiveViewModel.getDynamicRowElementByIndex(index, DYNAMIC_ROW_ONE);
+        else if (focusedRow == CATEGORY_ROW_ONE_ID) {
+            program = archiveViewModel.getCategoryRowElementByIndex(index, CATEGORY_ROW_ONE);
         }
-        else if (focusedRow == DYNAMIC_ROW_TWO_ID) {
-            program = archiveViewModel.getDynamicRowElementByIndex(index, DYNAMIC_ROW_TWO);
+        else if (focusedRow == CATEGORY_ROW_TWO_ID) {
+            program = archiveViewModel.getCategoryRowElementByIndex(index, CATEGORY_ROW_TWO);
         }
-        else if (focusedRow == DYNAMIC_ROW_THREE_ID) {
-            program = archiveViewModel.getDynamicRowElementByIndex(index, DYNAMIC_ROW_THREE);
+        else if (focusedRow == CATEGORY_ROW_THREE_ID) {
+            program = archiveViewModel.getCategoryRowElementByIndex(index, CATEGORY_ROW_THREE);
         }
-        else if (focusedRow == DYNAMIC_ROW_FOUR_ID) {
-            program = archiveViewModel.getDynamicRowElementByIndex(index, DYNAMIC_ROW_FOUR);
-        }
-        else if (focusedRow == DYNAMIC_ROW_FIVE_ID) {
-            program = archiveViewModel.getDynamicRowElementByIndex(index, DYNAMIC_ROW_FIVE);
+        else if (focusedRow == CATEGORY_ROW_FOUR_ID) {
+            program = archiveViewModel.getCategoryRowElementByIndex(index, CATEGORY_ROW_FOUR);
         }
 
         return program;

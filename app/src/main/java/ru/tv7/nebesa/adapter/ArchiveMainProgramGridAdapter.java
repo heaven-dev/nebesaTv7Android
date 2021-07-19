@@ -20,6 +20,7 @@ import ru.tv7.nebesa.R;
 import ru.tv7.nebesa.helpers.Utils;
 
 import static ru.tv7.nebesa.helpers.Constants.BROADCAST_DATE_TIME;
+import static ru.tv7.nebesa.helpers.Constants.CATEGORY_MORE_BOX;
 import static ru.tv7.nebesa.helpers.Constants.DURATION;
 import static ru.tv7.nebesa.helpers.Constants.EMPTY;
 import static ru.tv7.nebesa.helpers.Constants.ID_NULL;
@@ -35,15 +36,19 @@ public class ArchiveMainProgramGridAdapter extends RecyclerView.Adapter<ArchiveM
     private FragmentActivity activity = null;
     private Context context = null;
     private JSONArray elements = null;
+    private Double contentHeight = 0.0;
 
-    public ArchiveMainProgramGridAdapter(FragmentActivity activity, Context context, JSONArray jsonArray) {
+    public ArchiveMainProgramGridAdapter(FragmentActivity activity, Context context, JSONArray jsonArray, Double contentHeight) {
         this.activity = activity;
         this.context = context;
         this.elements = jsonArray;
+        this.contentHeight = contentHeight;
     }
 
     public static class SimpleViewHolder extends RecyclerView.ViewHolder {
         public RelativeLayout programContainer = null;
+        public RelativeLayout programItem = null;
+        public RelativeLayout moreBox = null;
         public ImageView programImage = null;
         public TextView programText = null;
         public TextView programDateTimeText = null;
@@ -53,6 +58,8 @@ public class ArchiveMainProgramGridAdapter extends RecyclerView.Adapter<ArchiveM
             super(view);
 
             programContainer = view.findViewById(R.id.mainArchiveProgramContainer);
+            programItem = view.findViewById(R.id.programItem);
+            moreBox = view.findViewById(R.id.moreBox);
             programImage = view.findViewById(R.id.mainArchiveProgramImage);
             programText = view.findViewById(R.id.mainArchiveProgramText);
             programDateTimeText = view.findViewById(R.id.mainArchiveProgramDateTime);
@@ -80,27 +87,42 @@ public class ArchiveMainProgramGridAdapter extends RecyclerView.Adapter<ArchiveM
         try {
             JSONObject obj = elements.getJSONObject(position);
             if (obj != null) {
-                String imagePath = Utils.getJsonStringValue(obj, IMAGE_PATH);
-                if (imagePath != null && !imagePath.equals(EMPTY) && !imagePath.equals(NULL_VALUE) && !imagePath.contains(ID_NULL)) {
-                    Glide.with(context).asBitmap().load(imagePath).into(holder.programImage);
+                Integer categoryMoreBox = Utils.getJsonIntValue(obj, CATEGORY_MORE_BOX);
+                if (categoryMoreBox == null) {
+                    holder.programItem.setVisibility(View.VISIBLE);
+                    holder.moreBox.setVisibility(View.GONE);
+
+                    String imagePath = Utils.getJsonStringValue(obj, IMAGE_PATH);
+                    if (imagePath != null && !imagePath.equals(EMPTY) && !imagePath.equals(NULL_VALUE) && !imagePath.contains(ID_NULL)) {
+                        Glide.with(context).asBitmap().load(imagePath).into(holder.programImage);
+                    }
+                    else {
+                        Glide.with(context).asBitmap().load(R.drawable.fallback).into(holder.programImage);
+                    }
+
+                    String dateTime = Utils.getJsonStringValue(obj, BROADCAST_DATE_TIME);
+                    if (dateTime != null) {
+                        holder.programDateTimeText.setText(dateTime);
+                    }
+
+                    String duration = Utils.getJsonStringValue(obj, DURATION);
+                    if (duration != null) {
+                        holder.programDurationText.setText(duration);
+                    }
+
+                    String seriesAndName = Utils.getJsonStringValue(obj, SERIES_AND_NAME);
+                    if (seriesAndName != null) {
+                        holder.programText.setText(seriesAndName);
+                    }
                 }
                 else {
-                    Glide.with(context).asBitmap().load(R.drawable.fallback).into(holder.programImage);
-                }
+                    holder.programItem.setVisibility(View.GONE);
+                    holder.moreBox.setVisibility(View.VISIBLE);
 
-                String dateTime = Utils.getJsonStringValue(obj, BROADCAST_DATE_TIME);
-                if (dateTime != null) {
-                    holder.programDateTimeText.setText(dateTime);
-                }
-
-                String duration = Utils.getJsonStringValue(obj, DURATION);
-                if (duration != null) {
-                    holder.programDurationText.setText(duration);
-                }
-
-                String seriesAndName = Utils.getJsonStringValue(obj, SERIES_AND_NAME);
-                if (seriesAndName != null) {
-                    holder.programText.setText(seriesAndName);
+                    if (contentHeight != null) {
+                        int moreBoxElementWidth = Utils.dpToPx(contentHeight) + 20;
+                        setElementWidth(holder, moreBoxElementWidth);
+                    }
                 }
             }
         }
@@ -117,6 +139,14 @@ public class ArchiveMainProgramGridAdapter extends RecyclerView.Adapter<ArchiveM
     @Override
     public int getItemCount() {
         return this.elements.length();
+    }
+
+    private static void setElementWidth(final ArchiveMainProgramGridAdapter.SimpleViewHolder holder, int width) {
+        if (holder.programContainer != null) {
+            ViewGroup.LayoutParams params = holder.programContainer.getLayoutParams();
+            params.width = width;
+            holder.programContainer.setLayoutParams(params);
+        }
     }
 
     private static double calculateItemWidth() {
