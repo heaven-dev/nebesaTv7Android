@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import ru.tv7.nebesa.BuildConfig;
 import ru.tv7.nebesa.NebesaTv7;
@@ -42,7 +43,9 @@ import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ID_PARAM;
 import static ru.tv7.nebesa.helpers.Constants.CATEGORY_NAME;
 import static ru.tv7.nebesa.helpers.Constants.CATEGORY_PARAM;
 import static ru.tv7.nebesa.helpers.Constants.CATEGORY_PROGRAMS_METHOD;
+import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ROW_COUNT;
 import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ROW_FOUR_METHOD;
+import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ROW_IDS;
 import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ROW_ONE_METHOD;
 import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ROW_THREE_METHOD;
 import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ROW_TWO_METHOD;
@@ -145,6 +148,7 @@ public class ArchiveViewModel extends ViewModel {
     private ArchiveDataCacheItem subCategories = null;
 
     private List<GuideItem> twoDaysGuide = null;
+    private List<Integer> selectedCategories = null;
 
     public JSONObject getRecommendedByIndex(int index) throws Exception {
         JSONObject jsonObject = null;
@@ -420,6 +424,32 @@ public class ArchiveViewModel extends ViewModel {
             }
         }
         return jsonObject;
+    }
+
+    public List<Integer> getSelectedCategories() {
+        if (selectedCategories == null) {
+            selectedCategories = new ArrayList<>();
+            selectedCategories.addAll(this.getCategoryIds());
+        }
+        return selectedCategories;
+    }
+
+    private List<Integer> getCategoryIds() {
+        List<Integer> selected = new ArrayList<>();
+        List<Integer> categories = new ArrayList<>(CATEGORY_ROW_IDS);
+
+        for(int i = 0; i < CATEGORY_ROW_COUNT; i++) {
+            int rnd = new Random().nextInt(categories.size());
+
+            if (rnd <= categories.size() - 1) {
+                int categoryId = categories.remove(rnd);
+                if (!selected.contains(categoryId)) {
+                    selected.add(categoryId);
+                }
+            }
+        }
+
+        return selected;
     }
 
     /**

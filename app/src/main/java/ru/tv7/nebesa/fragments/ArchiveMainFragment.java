@@ -51,7 +51,6 @@ import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ROW_COUNT;
 import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ROW_FOUR;
 import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ROW_FOUR_ID;
 import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ROW_FOUR_METHOD;
-import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ROW_IDS;
 import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ROW_LIMIT;
 import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ROW_ONE;
 import static ru.tv7.nebesa.helpers.Constants.CATEGORY_ROW_ONE_ID;
@@ -196,9 +195,16 @@ public class ArchiveMainFragment extends Fragment implements FragmentManager.OnB
 
             this.handleSeriesData();
 
-            for(int i = 0; i < CATEGORY_ROW_IDS.size(); i++) {
-                int categoryId = CATEGORY_ROW_IDS.get(i);
-                this.loadNewestProgramsByCategoryId(categoryId, i);
+            List<Integer> selectedCategories = archiveViewModel.getSelectedCategories();
+            if (selectedCategories != null) {
+                for(int i = 0; i < selectedCategories.size(); i++) {
+                    int categoryId = selectedCategories.get(i);
+                    this.loadNewestProgramsByCategoryId(categoryId, i);
+                }
+            }
+
+            if (BuildConfig.DEBUG) {
+                Log.d(LOG_TAG, "ArchiveMainFragment.onCreateView(): Selected category rows: " + selectedCategories.toString());
             }
         }
         catch(Exception e) {
