@@ -360,9 +360,16 @@ abstract public class Constants {
     }};
 
     public static final List<Integer> CATEGORY_ROW_IDS = new ArrayList<>(Arrays.asList(
-        4,
-        15,
         26,
-        1
+        1,
+        6,
+        3,
+        10,
+        35,
+        25,
+        8,
+        15,
+        4,
+        14
     ));
 }
