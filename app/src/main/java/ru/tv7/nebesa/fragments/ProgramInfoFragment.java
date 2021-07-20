@@ -144,7 +144,10 @@ public class ProgramInfoFragment extends Fragment {
             }
 
             if (BuildConfig.DEBUG) {
-                Log.d(LOG_TAG, "ProgramInfoFragment.onCreateView(): Selected program: " + selectedProgram.getString(SERIES_AND_NAME));
+                String sn = Utils.getJsonStringValue(selectedProgram, SERIES_AND_NAME);
+                if (sn != null) {
+                    Log.d(LOG_TAG, "ProgramInfoFragment.onCreateView(): Selected program: " + sn);
+                }
             }
 
             menuTexts = Sidebar.getMenuTextItems(root);
